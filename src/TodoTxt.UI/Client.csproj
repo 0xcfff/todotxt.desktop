@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -190,15 +190,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ColorFont\ColorFont.csproj">
+    <ProjectReference Include="ColorFont\ColorFont.csproj">
       <Project>{C51DEEDA-B581-401B-870B-DBB7D10119BF}</Project>
       <Name>ColorFont</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CommonExtensions\CommonExtensions.csproj">
+    <ProjectReference Include="..\TodoTxt.Shared\CommonExtensions.csproj">
       <Project>{5CE19CC1-833A-4950-B86E-CBF59FA00D6F}</Project>
       <Name>CommonExtensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToDoLib\ToDoLib.csproj">
+    <ProjectReference Include="..\TodoTxt.Lib\ToDoLib.csproj">
       <Project>{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}</Project>
       <Name>ToDoLib</Name>
     </ProjectReference>
