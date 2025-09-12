@@ -1,68 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>ToDoTests</RootNamespace>
     <AssemblyName>ToDoTests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="NUnit" Version="4.0.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Data.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Data.resx</DependentUpon>
-    </Compile>
-    <Compile Include="TaskListTests.cs" />
-    <Compile Include="TaskTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\TodoTxt.UI\Client.csproj">
-      <Project>{fc3f905a-dee1-454e-8746-936492d66cf2}</Project>
-      <Name>Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TodoTxt.Lib\ToDoLib.csproj">
-      <Project>{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}</Project>
-      <Name>ToDoLib</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\TodoTxt.UI\Client.csproj" />
+    <ProjectReference Include="..\TodoTxt.Lib\ToDoLib.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Data.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -70,18 +31,5 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
