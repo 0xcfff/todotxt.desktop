@@ -6,11 +6,9 @@
     <RootNamespace>ColorFont</RootNamespace>
     <AssemblyName>ColorFont</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\TodoTxt.Lib\ToDoLib.csproj" />

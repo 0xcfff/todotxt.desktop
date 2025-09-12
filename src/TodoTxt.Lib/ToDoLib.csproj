@@ -5,12 +5,10 @@
     <RootNamespace>ToDoLib</RootNamespace>
     <AssemblyName>ToDoLib</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\TodoTxt.UI\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
+  
 
   <ItemGroup>
     <ProjectReference Include="..\TodoTxt.Shared\CommonExtensions.csproj" />
