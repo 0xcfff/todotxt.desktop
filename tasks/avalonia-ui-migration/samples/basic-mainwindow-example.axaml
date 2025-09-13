@@ -1,0 +1,124 @@
+<!-- Basic MainWindow example for Avalonia TodoTxt application -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TodoTxt.Avalonia.ViewModels"
+        x:Class="TodoTxt.Avalonia.Views.MainWindow"
+        Title="todotxt.net - Avalonia"
+        Width="800" Height="600"
+        Icon="/Assets/icon.ico">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Menu -->
+            <RowDefinition Height="Auto"/> <!-- Task Input -->
+            <RowDefinition Height="*"/>    <!-- Task List -->
+            <RowDefinition Height="Auto"/> <!-- Status Bar -->
+        </Grid.RowDefinitions>
+
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Command="{Binding NewFileCommand}" InputGesture="Ctrl+N"/>
+                <MenuItem Header="_Open" Command="{Binding OpenFileCommand}" InputGesture="Ctrl+O"/>
+                <Separator/>
+                <MenuItem Header="_Print" Command="{Binding PrintCommand}" InputGesture="Ctrl+P"/>
+                <Separator/>
+                <MenuItem Header="_Options" Command="{Binding OptionsCommand}"/>
+                <Separator/>
+                <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGesture="Alt+F4"/>
+            </MenuItem>
+            
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Cut" Command="{Binding CutCommand}" InputGesture="Ctrl+X"/>
+                <MenuItem Header="_Copy" Command="{Binding CopyCommand}" InputGesture="Ctrl+C"/>
+                <MenuItem Header="_Paste" Command="{Binding PasteCommand}" InputGesture="Ctrl+V"/>
+            </MenuItem>
+            
+            <MenuItem Header="_Task">
+                <MenuItem Header="Add _New Task" Command="{Binding NewTaskCommand}" InputGesture="N"/>
+                <MenuItem Header="_Update Task" Command="{Binding UpdateTaskCommand}" InputGesture="U"/>
+                <MenuItem Header="_Delete Task" Command="{Binding DeleteTaskCommand}" InputGesture="D"/>
+                <Separator/>
+                <MenuItem Header="Toggle _Completion" Command="{Binding ToggleCompletionCommand}" InputGesture="X"/>
+                <Separator/>
+                <MenuItem Header="Set _Priority" Command="{Binding SetPriorityCommand}" InputGesture="I"/>
+            </MenuItem>
+            
+            <MenuItem Header="_Sort">
+                <MenuItem Header="_Alphabetical" Command="{Binding SortAlphabeticalCommand}" InputGesture="Ctrl+1"/>
+                <MenuItem Header="_Priority" Command="{Binding SortPriorityCommand}" InputGesture="Ctrl+2"/>
+                <MenuItem Header="_Due Date" Command="{Binding SortDueDateCommand}" InputGesture="Ctrl+3"/>
+            </MenuItem>
+            
+            <MenuItem Header="_Filter">
+                <MenuItem Header="Define _Filters" Command="{Binding DefineFiltersCommand}" InputGesture="F"/>
+                <MenuItem Header="_Remove Filter" Command="{Binding RemoveFilterCommand}" InputGesture="0"/>
+            </MenuItem>
+            
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Command="{Binding AboutCommand}" InputGesture="F1"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Task Input -->
+        <TextBox Grid.Row="1" 
+                 Text="{Binding NewTaskText}" 
+                 Watermark="Enter new task..."
+                 Margin="5"/>
+
+        <!-- Task List -->
+        <ListBox Grid.Row="2" 
+                 ItemsSource="{Binding FilteredTasks}"
+                 SelectedItem="{Binding SelectedTask}"
+                 SelectionMode="Multiple"
+                 Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Raw}">
+                        <TextBlock.Classes>
+                            <MultiBinding Converter="{StaticResource TaskToClassConverter}">
+                                <Binding Path="Completed"/>
+                                <Binding Path="Priority"/>
+                                <Binding Path="DueDate"/>
+                            </MultiBinding>
+                        </TextBlock.Classes>
+                    </TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="3" 
+                Background="{DynamicResource ThemeControlMidBrush}"
+                BorderBrush="{DynamicResource ThemeBorderMidBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="5,2">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Tasks: "/>
+                <TextBlock Text="{Binding FilteredTaskCount}"/>
+                <TextBlock Text=" of "/>
+                <TextBlock Text="{Binding TotalTaskCount}"/>
+                
+                <Rectangle Width="1" Fill="{DynamicResource ThemeBorderMidBrush}" Margin="10,0"/>
+                
+                <TextBlock Text="Incomplete: "/>
+                <TextBlock Text="{Binding IncompleteTaskCount}"/>
+                
+                <Rectangle Width="1" Fill="{DynamicResource ThemeBorderMidBrush}" Margin="10,0"/>
+                
+                <TextBlock Text="Due Today: "/>
+                <TextBlock Text="{Binding DueTodayCount}"/>
+                
+                <Rectangle Width="1" Fill="{DynamicResource ThemeBorderMidBrush}" Margin="10,0"/>
+                
+                <TextBlock Text="Overdue: "/>
+                <TextBlock Text="{Binding OverdueCount}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
