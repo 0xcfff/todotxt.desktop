@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
+using CollectionAssert = NUnit.Framework.Legacy.CollectionAssert;
 using ToDoLib;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using Task = ToDoLib.Task;
 
 namespace ToDoTests
 {
@@ -14,14 +17,14 @@ namespace ToDoTests
     class TaskListTests
     {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void TFSetup()
 		{
 			if (!File.Exists(Data.TestDataPath))
 				File.WriteAllText(Data.TestDataPath, "");
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void TearDown()
 		{
 			if (File.Exists(Data.TestDataPath))
