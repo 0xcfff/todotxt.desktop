@@ -1,0 +1,13 @@
+{
+    "configurations": [
+    {
+        "name": "C#: TodoTxt.Avalonia Debug",
+        "type": "dotnet",
+        // "request": "",
+        "projectPath": "${workspaceFolder}/src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj"
+    }
+    ]
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+}

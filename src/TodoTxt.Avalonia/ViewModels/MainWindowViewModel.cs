@@ -38,6 +38,11 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private SortType _currentSortType = SortType.None;
 
+    /// <summary>
+    /// Exposes the TaskList for IntellisenseTextBox autocompletion
+    /// </summary>
+    public TaskList? TaskList => _taskList;
+
     public MainWindowViewModel()
     {
         // Initialize with some sample tasks for demonstration
@@ -47,9 +52,26 @@ public partial class MainWindowViewModel : ViewModelBase
     private void LoadSampleTasks()
     {
         Tasks.Clear();
-        Tasks.Add(new ToDoLib.Task("(A) Call Mom +family @home"));
-        Tasks.Add(new ToDoLib.Task("Buy groceries @errands"));
-        Tasks.Add(new ToDoLib.Task("x 2024-01-15 Complete project documentation +work"));
+        
+        // Create a temporary TaskList for Intellisense functionality
+        var tempFilePath = Path.Combine(Path.GetTempPath(), "temp_todo.txt");
+        
+        // Create the temporary file if it doesn't exist
+        if (!File.Exists(tempFilePath))
+        {
+            File.WriteAllText(tempFilePath, "");
+        }
+        
+        _taskList = new TaskList(tempFilePath);
+        _taskList.Add(new ToDoLib.Task("(A) Call Mom +family @home"));
+        _taskList.Add(new ToDoLib.Task("Buy groceries @errands"));
+        _taskList.Add(new ToDoLib.Task("x 2024-01-15 Complete project documentation +work"));
+        
+        // Add tasks to the observable collection for display
+        foreach (var task in _taskList.Tasks)
+        {
+            Tasks.Add(task);
+        }
         
         UpdateTaskCounts();
     }

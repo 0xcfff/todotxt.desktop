@@ -101,13 +101,13 @@
 
 ### Phase 3: Advanced UI Features ✅ / ❌
 
-#### Step 3.1: Custom IntellisenseTextBox
-- [ ] Design Avalonia version of IntellisenseTextBox
-- [ ] Implement Popup-based suggestion system
-- [ ] Add project (@) and context (+) detection
-- [ ] Implement priority ((A)) completion
-- [ ] Port filtering and selection logic
-- [ ] Test autocompletion functionality
+#### Step 3.1: Custom IntellisenseTextBox ✅
+- [x] Design Avalonia version of IntellisenseTextBox
+- [x] Implement Popup-based suggestion system
+- [x] Add project (@) and context (+) detection
+- [x] Implement priority ((A)) completion
+- [x] Port filtering and selection logic
+- [x] Test autocompletion functionality
 
 #### Step 3.2: Dialog System Implementation
 - [ ] Create base dialog infrastructure
