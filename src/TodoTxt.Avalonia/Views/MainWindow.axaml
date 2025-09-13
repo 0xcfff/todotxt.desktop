@@ -80,10 +80,10 @@
                  Watermark="Enter a new task..."
                  VerticalAlignment="Center"
                  Height="25"
-                 Background="LightGray"
                  Foreground="White"
                  TaskList="{Binding TaskList}"
                  CaseSensitive="{Binding FilterCaseSensitive}"
+                 Margin="5,0,0,0"
                  KeyUp="TaskTextBox_KeyUp"/>
             
             <!-- Search TextBox -->
