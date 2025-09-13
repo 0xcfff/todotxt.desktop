@@ -30,6 +30,19 @@ dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj
 
 **Important:** The `src/TodoTxt.UI` project is a WPF application and cannot be built on macOS and Linux. Do not attempt to build or run this project.
 
+## Terminal and Development Environment Handling
+
+### Terminal State Management
+- Always verify terminal responsiveness before proceeding with critical operations
+- Use non-interactive commands when possible to avoid blocking states
+- Implement timeout mechanisms for long-running operations
+
+### .NET Command Best Practices  
+- Use `dotnet build --verbosity minimal --no-restore` to avoid verbose output
+- Add `--no-restore` flag when appropriate to speed up builds
+- Use `dotnet test --logger "console;verbosity=normal"` for controlled test output
+- Avoid commands that require user input in automated contexts
+
 ## Task Workflow
 
 Important! If a task changes any of GEMINI.md or AGENTS.md, make synchronous changes in other files in this list. 
