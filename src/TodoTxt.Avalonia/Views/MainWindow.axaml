@@ -1,0 +1,104 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TodoTxt.Avalonia.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TodoTxt.Avalonia.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="todotxt.net"
+        Width="562" 
+        Height="384">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid Name="MainGrid" ShowGridLines="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="23"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0" Height="23" VerticalAlignment="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" InputGesture="Ctrl+N"/>
+                <MenuItem Header="_Open" InputGesture="Ctrl+O"/>
+                <MenuItem Header="_Print" InputGesture="Ctrl+P"/>
+                <Separator />
+                <MenuItem Header="_Archive Completed Tasks"/>
+                <MenuItem Header="_Reload File" InputGesture="F5"/>
+                <Separator />
+                <MenuItem Header="Op_tions..." InputGesture="F10"/>
+                <Separator />
+                <MenuItem Header="E_xit" InputGesture="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="Cut" InputGesture="Ctrl+X"/>
+                <MenuItem Header="Copy" InputGesture="Ctrl+C"/>
+                <MenuItem Header="Paste" InputGesture="Ctrl+V"/>
+            </MenuItem>
+            <MenuItem Header="_Task">
+                <MenuItem Header="Add _New Task"/>
+                <MenuItem Header="_Update Task"/>
+                <MenuItem Header="_Delete Task"/>
+                <Separator />
+                <MenuItem Header="Toggle _Completion"/>
+            </MenuItem>
+            <MenuItem Header="_Sort">
+                <MenuItem Header="_Order in file"/>
+                <MenuItem Header="_Alphabetical"/>
+                <MenuItem Header="_Priority"/>
+            </MenuItem>
+            <MenuItem Header="Filter">
+                <MenuItem Header="Define _Filters"/>
+                <MenuItem Header="_Remove Filter"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About"/>
+            </MenuItem>
+        </Menu>
+        
+        <!-- Task Input TextBox -->
+        <TextBox Grid.Row="1" 
+                 Height="23" 
+                 Name="TaskTextBox"
+                 Watermark="Enter a new task..."
+                 VerticalAlignment="Top"/>
+        
+        <!-- Task List -->
+        <ListBox Grid.Row="2" 
+                 Name="TaskListBox"
+                 ItemsSource="{Binding Tasks}"
+                 SelectedItem="{Binding SelectedItem}"
+                 Margin="0,10,0,0"
+                 SelectionMode="Multiple">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Raw}" TextWrapping="Wrap"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <!-- Status Bar -->
+        <Border Grid.Row="3" Background="#F0F0F0" BorderBrush="#D0D0D0" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" Margin="5,2">
+                <TextBlock Text="Tasks:" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding FilteredTasks, FallbackValue=0}" Margin="0,0,5,0"/>
+                <TextBlock Text="of" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding TotalTasks, FallbackValue=0}" Margin="0,0,10,0"/>
+                <TextBlock Text="Incomplete:" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding IncompleteTasks, FallbackValue=0}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+
+</Window>ter"/>
+
+</Window>
