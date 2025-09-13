@@ -83,10 +83,12 @@ namespace TodoTxt.Avalonia.Core.Controls
                 this.Opacity = 1.0;
                 
                 // Set default styling to ensure visibility
+                this.Background = Brushes.Black;
                 if (this.Background == null)
                 {
                     this.Background = Brushes.White;
                 }
+                this.Foreground = Brushes.White;
                 if (this.Foreground == null)
                 {
                     this.Foreground = Brushes.Black;

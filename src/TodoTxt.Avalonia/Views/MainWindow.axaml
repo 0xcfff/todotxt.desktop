@@ -74,19 +74,27 @@
             </Grid.ColumnDefinitions>
             
             <!-- Task Input TextBox -->
-            <controls:IntellisenseTextBox Grid.Column="0"
+            <!-- <controls:IntellisenseTextBox Grid.Column="0"
                  Name="TaskTextBox"
                  Text="{Binding TaskInputText}"
                  Watermark="Enter a new task..."
                  VerticalAlignment="Center"
                  Height="25"
-                 // Do not touch the foreground
                  Foreground="White"
                  TaskList="{Binding TaskList}"
                  CaseSensitive="{Binding FilterCaseSensitive}"
                  Margin="5,0,0,0"
-                 KeyUp="TaskTextBox_KeyUp"/>
+                 KeyUp="TaskTextBox_KeyUp"/> -->
             
+            <TextBox Grid.Column="0"
+                 Name="TaskTextBox"
+                 Text="{Binding TaskInputText}"
+                 Watermark="Enter a new task..."
+                 VerticalAlignment="Center"
+                 Height="25"
+                 Foreground="White"
+                 Margin="5,0,0,0"
+                 KeyUp="TaskTextBox_KeyUp"/>
             <!-- Search TextBox -->
             <TextBox Grid.Column="1"
                  Name="SearchTextBox"
@@ -94,7 +102,6 @@
                  Watermark="Search tasks..."
                  VerticalAlignment="Center"
                  Height="25"
-                 // Do not touch the foreground
                  Foreground="White"
                  Margin="5,0,0,0"
                  KeyUp="SearchTextBox_KeyUp"/>
