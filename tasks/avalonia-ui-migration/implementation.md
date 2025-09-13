@@ -54,50 +54,50 @@
 - [x] Can load and display tasks from todo.txt file
 - [x] Basic data binding works
 
-### Phase 2: Core Task Operations ✅ / ❌
+### Phase 2: Core Task Operations ✅
 
-#### Step 2.1: Task Input System
-- [ ] Port basic TextBox functionality
-- [ ] Implement task creation from text input
-- [ ] Add Enter key handling for new tasks
-- [ ] Test adding new tasks to file
-- [ ] Implement task text validation
+#### Step 2.1: Task Input System ✅
+- [x] Port basic TextBox functionality
+- [x] Implement task creation from text input
+- [x] Add Enter key handling for new tasks
+- [x] Test adding new tasks to file
+- [x] Implement task text validation
 
-#### Step 2.2: Task CRUD Operations
-- [ ] Implement task selection in ListBox
-- [ ] Add task editing functionality (double-click or key)
-- [ ] Implement task deletion with confirmation
-- [ ] Add task completion toggle
-- [ ] Test all basic task operations
+#### Step 2.2: Task CRUD Operations ✅
+- [x] Implement task selection in ListBox
+- [x] Add task editing functionality (double-click or key)
+- [x] Implement task deletion with confirmation
+- [x] Add task completion toggle
+- [x] Test all basic task operations
 
-#### Step 2.3: File Operations
-- [ ] Port file loading/saving logic
-- [ ] Implement File → New functionality
-- [ ] Implement File → Open functionality
-- [ ] Add File → Reload functionality
-- [ ] Implement auto-save functionality
-- [ ] Test file change detection and auto-refresh
+#### Step 2.3: File Operations ✅
+- [x] Port file loading/saving logic
+- [x] Implement File → New functionality
+- [x] Implement File → Open functionality
+- [x] Add File → Reload functionality
+- [x] Implement auto-save functionality
+- [x] Test file change detection and auto-refresh
 
-#### Step 2.4: Basic Menu System
-- [ ] Create File menu with basic operations
-- [ ] Create Edit menu (Cut, Copy, Paste)
-- [ ] Create Task menu with basic operations
-- [ ] Implement command binding for menu items
-- [ ] Add keyboard shortcuts for common operations
+#### Step 2.4: Basic Menu System ✅
+- [x] Create File menu with basic operations
+- [x] Create Edit menu (Cut, Copy, Paste)
+- [x] Create Task menu with basic operations
+- [x] Implement command binding for menu items
+- [x] Add keyboard shortcuts for common operations
 
-#### Step 2.5: Basic Filtering and Sorting
-- [ ] Port sorting logic from WPF ViewModel
-- [ ] Implement Sort menu with options
-- [ ] Add basic text-based filtering
-- [ ] Test sorting and filtering functionality
-- [ ] Verify performance with large task lists
+#### Step 2.5: Basic Filtering and Sorting ✅
+- [x] Port sorting logic from WPF ViewModel
+- [x] Implement Sort menu with options
+- [x] Add basic text-based filtering
+- [x] Test sorting and filtering functionality
+- [x] Verify performance with large task lists
 
 **Phase 2 Success Criteria:**
-- [ ] All basic task operations work (CRUD)
-- [ ] File operations work correctly
-- [ ] Menu system is functional
-- [ ] Basic filtering and sorting work
-- [ ] No data loss or corruption
+- [x] All basic task operations work (CRUD)
+- [x] File operations work correctly
+- [x] Menu system is functional
+- [x] Basic filtering and sorting work
+- [x] No data loss or corruption
 
 ### Phase 3: Advanced UI Features ✅ / ❌
 

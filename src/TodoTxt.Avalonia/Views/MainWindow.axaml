@@ -28,33 +28,33 @@
         <!-- Menu Bar -->
         <Menu Grid.Row="0" Height="23" VerticalAlignment="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" InputGesture="Ctrl+N"/>
-                <MenuItem Header="_Open" InputGesture="Ctrl+O"/>
+                <MenuItem Header="_New" InputGesture="Ctrl+N" Command="{Binding NewFileCommand}"/>
+                <MenuItem Header="_Open" InputGesture="Ctrl+O" Command="{Binding OpenFileCommand}"/>
                 <MenuItem Header="_Print" InputGesture="Ctrl+P"/>
                 <Separator />
-                <MenuItem Header="_Archive Completed Tasks"/>
-                <MenuItem Header="_Reload File" InputGesture="F5"/>
+                <MenuItem Header="_Archive Completed Tasks" Command="{Binding ArchiveCompletedTasksCommand}"/>
+                <MenuItem Header="_Reload File" InputGesture="F5" Command="{Binding ReloadFileCommand}"/>
                 <Separator />
                 <MenuItem Header="Op_tions..." InputGesture="F10"/>
                 <Separator />
                 <MenuItem Header="E_xit" InputGesture="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="Cut" InputGesture="Ctrl+X"/>
-                <MenuItem Header="Copy" InputGesture="Ctrl+C"/>
-                <MenuItem Header="Paste" InputGesture="Ctrl+V"/>
+                <MenuItem Header="Cut" InputGesture="Ctrl+X" Command="{Binding CutSelectedTaskCommand}"/>
+                <MenuItem Header="Copy" InputGesture="Ctrl+C" Command="{Binding CopySelectedTaskCommand}"/>
+                <MenuItem Header="Paste" InputGesture="Ctrl+V" Command="{Binding PasteTasksCommand}"/>
             </MenuItem>
             <MenuItem Header="_Task">
-                <MenuItem Header="Add _New Task"/>
-                <MenuItem Header="_Update Task"/>
-                <MenuItem Header="_Delete Task"/>
+                <MenuItem Header="Add _New Task" Command="{Binding AddTaskCommand}"/>
+                <MenuItem Header="_Update Task" Command="{Binding EditSelectedTaskCommand}"/>
+                <MenuItem Header="_Delete Task" Command="{Binding DeleteSelectedTaskCommand}"/>
                 <Separator />
-                <MenuItem Header="Toggle _Completion"/>
+                <MenuItem Header="Toggle _Completion" Command="{Binding ToggleTaskCompletionCommand}"/>
             </MenuItem>
             <MenuItem Header="_Sort">
-                <MenuItem Header="_Order in file"/>
-                <MenuItem Header="_Alphabetical"/>
-                <MenuItem Header="_Priority"/>
+                <MenuItem Header="_Order in file" Command="{Binding SortByOrderInFileCommand}"/>
+                <MenuItem Header="_Alphabetical" Command="{Binding SortByAlphabeticalCommand}"/>
+                <MenuItem Header="_Priority" Command="{Binding SortByPriorityCommand}"/>
             </MenuItem>
             <MenuItem Header="Filter">
                 <MenuItem Header="Define _Filters"/>
@@ -69,8 +69,10 @@
         <TextBox Grid.Row="1" 
                  Height="23" 
                  Name="TaskTextBox"
+                 Text="{Binding TaskInputText}"
                  Watermark="Enter a new task..."
-                 VerticalAlignment="Top"/>
+                 VerticalAlignment="Top"
+                 KeyUp="TaskTextBox_KeyUp"/>
         
         <!-- Task List -->
         <ListBox Grid.Row="2" 
@@ -78,7 +80,9 @@
                  ItemsSource="{Binding Tasks}"
                  SelectedItem="{Binding SelectedItem}"
                  Margin="0,10,0,0"
-                 SelectionMode="Multiple">
+                 SelectionMode="Single"
+                 DoubleTapped="TaskListBox_DoubleTapped"
+                 KeyUp="TaskListBox_KeyUp">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Raw}" TextWrapping="Wrap"/>
