@@ -1,0 +1,122 @@
+---
+description: Task Implementation
+globs:
+alwaysApply: false
+---
+
+# Task Implementation Rule
+
+## Overview
+This rule guides agents through the systematic implementation of tasks that have already been planned using the Task Planning Rule. Implementation must follow the documented plan step-by-step, with user validation at key milestones.
+
+## Prerequisites
+Before starting implementation:
+1. A `tasks/{task_name}/` directory must exist with planning documents
+2. `tasks/{task_name}/plan.md` and `tasks/{task_name}/implementation.md` must be complete
+3. User has approved the implementation plan
+
+## Branch Management
+**CRITICAL**: Before any code changes:
+1. Check the current git branch
+2. If on `main`/`master` or branch name doesn't match the planned changes:
+   - Notify the user about the current branch
+   - Suggest creating a new branch with a logical name based on the task
+   - Wait for user confirmation or correction of branch name
+   - Create the new branch only after user approval
+
+## Implementation Process
+
+### Step-by-Step Execution
+1. **Load Implementation Plan**: Read `tasks/{task_name}/implementation.md`
+2. **Follow Phase Hierarchy**: Work through phases in order, then steps within each phase
+3. **Work on First Non-Completed Step**: 
+   - Identify the first step not marked as completed
+   - Complete all subtasks within that step sequentially
+   - Think before implementing a subtask. Define the most optimal way to implement it.
+   - Mark subtasks as completed in the implementation plan as you finish them
+4. **Step Completion**: Once all subtasks in a step are done, mark the step as completed
+5. **Milestone Reporting**: After completing each step, STOP and provide user with:
+   - Summary of what was accomplished
+   - Any deviations or issues encountered
+   - Confirmation before proceeding to next step
+
+### Strict Plan Adherence
+- **Follow the documented plan exactly** unless deviations are necessary
+- If deviation is needed:
+  - Explain why the planned approach won't work
+  - Propose alternative approach
+  - Ask user for approval before proceeding
+  - Update implementation plan to reflect the change
+- Do not make assumptions or skip steps without user approval
+
+### Implementation Documentation
+- Update `tasks/{task_name}/implementation.md` in real-time:
+  - Mark completed subtasks with `[x]`
+  - Mark completed steps with `[x]`
+  - Add notes about any deviations or issues
+- Create `tasks/{task_name}/changes.md` to document:
+  - Files modified
+  - Key changes made
+  - Decisions made during implementation
+
+### Progress Tracking
+Use the todo management tools to:
+- Create todos for each implementation step
+- Mark steps as `in_progress` when starting
+- Mark steps as `completed` when finished
+- Provide clear progress visibility to user
+
+## Validation Phase
+
+### Post-Implementation Validation
+After completing all implementation steps:
+1. **Think about validation opportunities**:
+   - Can the changes be compiled/built?
+   - Are there existing tests that should pass?
+   - Can functionality be manually tested?
+   - Are there integration points to verify?
+
+2. **Perform available validation**:
+   - Run builds, tests, or other automated checks
+   - Verify functionality works as expected
+   - Check for regression issues
+
+3. **Handle validation failures**:
+   - If validation fails, ask user if they want help fixing issues
+   - If user declines, respect their choice and don't spend time on fixes
+   - If user accepts, work together to resolve issues
+
+### Final Deliverables
+Upon completion, ensure these exist:
+- Updated `tasks/{task_name}/implementation.md` with all steps marked complete
+- `tasks/{task_name}/changes.md` documenting all modifications
+- All planned code changes implemented
+- Validation results (if applicable)
+
+## Guidelines
+
+### Communication
+- Provide clear, frequent updates on progress
+- Ask for user input when encountering ambiguity
+- Summarize accomplishments at each milestone
+- Be transparent about any challenges or deviations
+
+### Quality Assurance
+- Follow established code style and conventions
+- Ensure changes align with existing architecture
+- Maintain backward compatibility unless explicitly planned otherwise
+- Document any breaking changes or migration requirements
+
+### Error Handling
+- If implementation gets stuck, refer back to the plan
+- If plan is inadequate, work with user to refine it
+- Don't make major architectural decisions without user input
+- Keep detailed records of problems and solutions
+
+## Success Criteria
+Implementation is complete when:
+- All steps in implementation plan are marked complete
+- All planned code changes are made
+- Validation passes (if applicable)
+- Documentation is updated
+- User confirms satisfaction with results
