@@ -1,5 +1,17 @@
 # IntellisenseTextBox Implementation Steps
 
+## ⚠️ CRITICAL IMPLEMENTATION RULE ⚠️
+**DO NOT PERFORM MORE THAN ONE STEP AT A TIME! STRICTLY!!! NEVER!!!**
+
+**MANDATORY PROCESS:**
+1. Complete ONE step completely
+2. Test that step thoroughly 
+3. Get user confirmation that the step works
+4. ONLY THEN proceed to the next step
+5. If any step fails, STOP and get user input before continuing
+
+**VIOLATION OF THIS RULE WILL RESULT IN COMPLETE FAILURE**
+
 ## Overview
 This document provides a detailed, step-by-step implementation plan for reimplementing the IntellisenseTextBox component. Each step is designed to be small, testable, and build upon the previous step.
 
