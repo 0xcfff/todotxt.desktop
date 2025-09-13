@@ -48,6 +48,9 @@ public partial class MainWindow : Window
         
         // Add Loaded event handler
         this.Loaded += MainWindow_Loaded;
+        
+        // Add KeyDown event handler for global shortcuts
+        this.KeyDown += MainWindow_KeyDown;
     }
     
     private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -106,6 +109,82 @@ public partial class MainWindow : Window
                     viewModel.EditSelectedTaskCommand.Execute(null);
                     e.Handled = true;
                     break;
+            }
+        }
+    }
+
+    private void SearchTextBox_KeyUp(object? sender, KeyEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            if (e.Key == Key.Enter)
+            {
+                viewModel.SearchTasksCommand.Execute(null);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                viewModel.ClearSearchCommand.Execute(null);
+                e.Handled = true;
+            }
+        }
+    }
+
+    private void MainWindow_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            // Handle Ctrl+key combinations
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+            {
+                switch (e.Key)
+                {
+                    case Key.F:
+                        // Focus search box
+                        if (SearchTextBox != null)
+                        {
+                            SearchTextBox.Focus();
+                            e.Handled = true;
+                        }
+                        break;
+                    case Key.G:
+                        // Toggle grouping
+                        viewModel.ToggleGroupingCommand.Execute(null);
+                        e.Handled = true;
+                        break;
+                    case Key.H:
+                        // Toggle hidden tasks
+                        viewModel.ToggleShowHiddenTasksCommand.Execute(null);
+                        e.Handled = true;
+                        break;
+                    case Key.T:
+                        // Toggle future tasks filter
+                        viewModel.ToggleFilterFutureTasksCommand.Execute(null);
+                        e.Handled = true;
+                        break;
+                    case Key.C:
+                        // Toggle case sensitivity
+                        viewModel.ToggleFilterCaseSensitivityCommand.Execute(null);
+                        e.Handled = true;
+                        break;
+                }
+            }
+            // Handle F-key shortcuts
+            else
+            {
+                switch (e.Key)
+                {
+                    case Key.F3:
+                        // Clear search
+                        viewModel.ClearSearchCommand.Execute(null);
+                        e.Handled = true;
+                        break;
+                    case Key.F4:
+                        // Remove filter
+                        viewModel.RemoveFilterCommand.Execute(null);
+                        e.Handled = true;
+                        break;
+                }
             }
         }
     }

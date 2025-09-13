@@ -9,6 +9,8 @@ using CommunityToolkit.Mvvm.Input;
 using ToDoLib;
 using TodoTxt.Avalonia.Models;
 using TodoTxt.Avalonia.Core.Controls;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace TodoTxt.Avalonia.ViewModels;
 
@@ -39,6 +41,36 @@ public partial class MainWindowViewModel : ViewModelBase
     
     [ObservableProperty]
     private SortType _currentSortType = SortType.None;
+    
+    [ObservableProperty]
+    private bool _allowGrouping = true;
+    
+    [ObservableProperty]
+    private string _filterText = string.Empty;
+    
+    [ObservableProperty]
+    private bool _filterCaseSensitive = false;
+    
+    [ObservableProperty]
+    private bool _showHiddenTasks = false;
+    
+    [ObservableProperty]
+    private bool _filterFutureTasks = false;
+    
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+    
+    [ObservableProperty]
+    private int _tasksOverdue = 0;
+    
+    [ObservableProperty]
+    private int _tasksDueToday = 0;
+    
+    [ObservableProperty]
+    private int _tasksDueThisWeek = 0;
+    
+    private List<ToDoLib.Task> _allTasks = new();
+    private List<ToDoLib.Task> _currentFilteredTasks = new();
 
     /// <summary>
     /// Exposes the TaskList for IntellisenseTextBox autocompletion
@@ -54,6 +86,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private void LoadSampleTasks()
     {
         Tasks.Clear();
+        _allTasks.Clear();
         
         // Create a temporary TaskList for Intellisense functionality
         var tempFilePath = Path.Combine(Path.GetTempPath(), "temp_todo.txt");
@@ -65,15 +98,17 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         
         _taskList = new TaskList(tempFilePath);
-        _taskList.Add(new ToDoLib.Task("(A) Call Mom +family @home"));
-        _taskList.Add(new ToDoLib.Task("Buy groceries @errands"));
+        _taskList.Add(new ToDoLib.Task("(A) Call Mom +family @home due:2024-01-20"));
+        _taskList.Add(new ToDoLib.Task("(B) Buy groceries @errands due:2024-01-18"));
         _taskList.Add(new ToDoLib.Task("x 2024-01-15 Complete project documentation +work"));
+        _taskList.Add(new ToDoLib.Task("(C) Review code +work @office due:2024-01-19"));
+        _taskList.Add(new ToDoLib.Task("h:1 Private task +personal"));
         
-        // Add tasks to the observable collection for display
-        foreach (var task in _taskList.Tasks)
-        {
-            Tasks.Add(task);
-        }
+        // Store all tasks in the internal list
+        _allTasks.AddRange(_taskList.Tasks);
+        
+        // Apply current filtering and sorting
+        ApplyFiltersAndSorting();
         
         UpdateTaskCounts();
     }
@@ -84,11 +119,13 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             _taskList = new TaskList(filePath);
             Tasks.Clear();
+            _allTasks.Clear();
             
-            foreach (var task in _taskList.Tasks)
-            {
-                Tasks.Add(task);
-            }
+            // Store all tasks in the internal list
+            _allTasks.AddRange(_taskList.Tasks);
+            
+            // Apply current filtering and sorting
+            ApplyFiltersAndSorting();
             
             UpdateTaskCounts();
         }
@@ -99,11 +136,197 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// Applies current filters and sorting to the task list
+    /// </summary>
+    private void ApplyFiltersAndSorting()
+    {
+        // Start with all tasks
+        var tasks = new List<ToDoLib.Task>(_allTasks);
+        
+        // Apply filters
+        tasks = ApplyFilters(tasks);
+        
+        // Apply search
+        if (!string.IsNullOrWhiteSpace(SearchText))
+        {
+            tasks = ApplySearch(tasks, SearchText);
+        }
+        
+        // Store filtered tasks
+        _currentFilteredTasks = tasks;
+        
+        // Apply sorting
+        var sortedTasks = SortTasks(tasks, CurrentSortType);
+        
+        // Update the observable collection
+        Tasks.Clear();
+        foreach (var task in sortedTasks)
+        {
+            Tasks.Add(task);
+        }
+        
+        UpdateTaskCounts();
+    }
+    
+    /// <summary>
+    /// Applies filters to the task list
+    /// </summary>
+    private List<ToDoLib.Task> ApplyFilters(List<ToDoLib.Task> tasks)
+    {
+        var filteredTasks = new List<ToDoLib.Task>();
+        var comparer = FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+        
+        foreach (var task in tasks)
+        {
+            bool include = true;
+            
+            // Hide hidden tasks if not showing them
+            if (!ShowHiddenTasks && task.Raw.Contains("h:1"))
+                include = false;
+            
+            // Filter future tasks if enabled
+            if (include && FilterFutureTasks)
+            {
+                if (!string.IsNullOrEmpty(task.ThresholdDate) && 
+                    DateTime.TryParse(task.ThresholdDate, out var thresholdDate) &&
+                    thresholdDate > DateTime.Now.AddDays(1))
+                {
+                    include = false;
+                }
+            }
+            
+            // Apply text filters
+            if (include && !string.IsNullOrWhiteSpace(FilterText))
+            {
+                var filters = FilterText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                
+                foreach (var filter in filters)
+                {
+                    if (!ApplySingleFilter(task, filter, comparer))
+                    {
+                        include = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (include)
+                filteredTasks.Add(task);
+        }
+        
+        return filteredTasks;
+    }
+    
+    /// <summary>
+    /// Applies a single filter to a task
+    /// </summary>
+    private bool ApplySingleFilter(ToDoLib.Task task, string filter, StringComparison comparer)
+    {
+        // Handle special date filters
+        if (filter.Equals("due:today", StringComparison.OrdinalIgnoreCase))
+        {
+            return task.DueDate == DateTime.Now.ToString("yyyy-MM-dd");
+        }
+        if (filter.Equals("due:future", StringComparison.OrdinalIgnoreCase))
+        {
+            return !string.IsNullOrEmpty(task.DueDate) && 
+                   DateTime.TryParse(task.DueDate, out var dueDate) && 
+                   dueDate > DateTime.Now;
+        }
+        if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase))
+        {
+            return !string.IsNullOrEmpty(task.DueDate) && 
+                   DateTime.TryParse(task.DueDate, out var dueDate) && 
+                   dueDate < DateTime.Now;
+        }
+        if (filter.Equals("due:active", StringComparison.OrdinalIgnoreCase))
+        {
+            return !string.IsNullOrEmpty(task.DueDate) && 
+                   DateTime.TryParse(task.DueDate, out var dueDate) && 
+                   dueDate <= DateTime.Now;
+        }
+        
+        // Handle negative date filters
+        if (filter.Equals("-due:today", StringComparison.OrdinalIgnoreCase))
+        {
+            return task.DueDate != DateTime.Now.ToString("yyyy-MM-dd");
+        }
+        if (filter.Equals("-due:future", StringComparison.OrdinalIgnoreCase))
+        {
+            return string.IsNullOrEmpty(task.DueDate) || 
+                   !DateTime.TryParse(task.DueDate, out var dueDate) || 
+                   dueDate <= DateTime.Now;
+        }
+        if (filter.Equals("-due:past", StringComparison.OrdinalIgnoreCase))
+        {
+            return string.IsNullOrEmpty(task.DueDate) || 
+                   !DateTime.TryParse(task.DueDate, out var dueDate) || 
+                   dueDate >= DateTime.Now;
+        }
+        if (filter.Equals("-due:active", StringComparison.OrdinalIgnoreCase))
+        {
+            return string.IsNullOrEmpty(task.DueDate) || 
+                   !DateTime.TryParse(task.DueDate, out var dueDate) || 
+                   dueDate > DateTime.Now;
+        }
+        
+        // Handle completion filters
+        if (filter.Equals("DONE", StringComparison.Ordinal))
+        {
+            return task.Completed;
+        }
+        if (filter.Equals("-DONE", StringComparison.Ordinal))
+        {
+            return !task.Completed;
+        }
+        
+        // Handle text filters
+        if (filter.StartsWith("-"))
+        {
+            // Negative filter - exclude if contains
+            return !task.Raw.Contains(filter.Substring(1), comparer);
+        }
+        else
+        {
+            // Positive filter - include if contains
+            return task.Raw.Contains(filter, comparer);
+        }
+    }
+    
+    /// <summary>
+    /// Applies search to the task list
+    /// </summary>
+    private List<ToDoLib.Task> ApplySearch(List<ToDoLib.Task> tasks, string searchText)
+    {
+        var comparer = FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+        return tasks.Where(t => t.Raw.Contains(searchText, comparer)).ToList();
+    }
+    
+    /// <summary>
+    /// Updates task statistics
+    /// </summary>
     private void UpdateTaskCounts()
     {
-        TotalTasks = Tasks.Count;
-        FilteredTasks = Tasks.Count; // For now, no filtering
-        IncompleteTasks = Tasks.Count(t => !t.Completed);
+        TotalTasks = _allTasks.Count;
+        FilteredTasks = _currentFilteredTasks.Count;
+        IncompleteTasks = _currentFilteredTasks.Count(t => !t.Completed);
+        
+        // Calculate due date statistics
+        var today = DateTime.Now.ToString("yyyy-MM-dd");
+        var weekFromNow = DateTime.Now.AddDays(7).ToString("yyyy-MM-dd");
+        
+        TasksOverdue = _currentFilteredTasks.Count(t => !t.Completed && 
+            !string.IsNullOrEmpty(t.DueDate) && 
+            DateTime.TryParse(t.DueDate, out var dueDate) && 
+            dueDate < DateTime.Now);
+            
+        TasksDueToday = _currentFilteredTasks.Count(t => !t.Completed && t.DueDate == today);
+        
+        TasksDueThisWeek = _currentFilteredTasks.Count(t => !t.Completed && 
+            !string.IsNullOrEmpty(t.DueDate) && 
+            DateTime.TryParse(t.DueDate, out var dueDate) && 
+            dueDate >= DateTime.Now && dueDate <= DateTime.Now.AddDays(7));
     }
 
     /// <summary>
@@ -124,8 +347,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 _taskList.Add(newTask);
             }
             
-            Tasks.Add(newTask);
-            UpdateTaskCounts();
+            // Add to the internal list
+            _allTasks.Add(newTask);
+            
+            // Apply current filtering and sorting
+            ApplyFiltersAndSorting();
             
             // Clear the input text
             TaskInputText = string.Empty;
@@ -155,14 +381,15 @@ public partial class MainWindowViewModel : ViewModelBase
                 _taskList.Update(_updatingTask, updatedTask);
             }
             
-            // Find and replace the task in the collection
-            var index = Tasks.IndexOf(_updatingTask);
+            // Find and replace the task in the internal list
+            var index = _allTasks.IndexOf(_updatingTask);
             if (index >= 0)
             {
-                Tasks[index] = updatedTask;
+                _allTasks[index] = updatedTask;
             }
             
-            UpdateTaskCounts();
+            // Apply current filtering and sorting
+            ApplyFiltersAndSorting();
             
             // Clear the input text and reset updating state
             TaskInputText = string.Empty;
@@ -231,8 +458,11 @@ public partial class MainWindowViewModel : ViewModelBase
                     _taskList.Delete(SelectedItem);
                 }
                 
-                Tasks.Remove(SelectedItem);
-                UpdateTaskCounts();
+                // Remove from internal list
+                _allTasks.Remove(SelectedItem);
+                
+                // Apply current filtering and sorting
+                ApplyFiltersAndSorting();
             }
         }
     }
@@ -253,14 +483,15 @@ public partial class MainWindowViewModel : ViewModelBase
                 _taskList.Update(SelectedItem, updatedTask);
             }
             
-            // Find and replace the task in the collection
-            var index = Tasks.IndexOf(SelectedItem);
+            // Find and replace the task in the internal list
+            var index = _allTasks.IndexOf(SelectedItem);
             if (index >= 0)
             {
-                Tasks[index] = updatedTask;
+                _allTasks[index] = updatedTask;
             }
             
-            UpdateTaskCounts();
+            // Apply current filtering and sorting
+            ApplyFiltersAndSorting();
         }
     }
 
@@ -273,6 +504,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public void NewFile()
     {
         Tasks.Clear();
+        _allTasks.Clear();
+        _currentFilteredTasks.Clear();
         _taskList = null;
         _currentFilePath = null;
         UpdateTaskCounts();
@@ -343,7 +576,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (_taskList == null) return;
 
-        var completedTasks = Tasks.Where(t => t.Completed).ToList();
+        var completedTasks = _allTasks.Where(t => t.Completed).ToList();
         
         if (completedTasks.Count == 0)
         {
@@ -369,10 +602,12 @@ public partial class MainWindowViewModel : ViewModelBase
             foreach (var task in completedTasks)
             {
                 _taskList.Delete(task);
-                Tasks.Remove(task);
+                _allTasks.Remove(task);
             }
 
-            UpdateTaskCounts();
+            // Apply current filtering and sorting
+            ApplyFiltersAndSorting();
+            
             System.Diagnostics.Debug.WriteLine($"Archived {completedTasks.Count} completed tasks");
         }
         catch (System.Exception ex)
@@ -464,17 +699,8 @@ public partial class MainWindowViewModel : ViewModelBase
     /// </summary>
     private void ApplySorting()
     {
-        if (_taskList == null) return;
-
-        var sortedTasks = SortTasks(_taskList.Tasks, CurrentSortType);
-        
-        Tasks.Clear();
-        foreach (var task in sortedTasks)
-        {
-            Tasks.Add(task);
-        }
-        
-        UpdateTaskCounts();
+        // Apply current filtering and sorting
+        ApplyFiltersAndSorting();
     }
 
     /// <summary>
@@ -530,6 +756,91 @@ public partial class MainWindowViewModel : ViewModelBase
                 .ThenBy(t => string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate),
             _ => tasks
         };
+    }
+
+    #endregion
+
+    #region Filtering and Search Operations
+
+    /// <summary>
+    /// Applies a filter preset
+    /// </summary>
+    [RelayCommand]
+    public void ApplyFilterPreset(int presetNumber)
+    {
+        // TODO: Load filter presets from settings
+        // For now, just clear the filter
+        FilterText = string.Empty;
+        ApplyFiltersAndSorting();
+    }
+
+    /// <summary>
+    /// Removes the current filter
+    /// </summary>
+    [RelayCommand]
+    public void RemoveFilter()
+    {
+        FilterText = string.Empty;
+        ApplyFiltersAndSorting();
+    }
+
+    /// <summary>
+    /// Toggles case sensitivity for filtering
+    /// </summary>
+    [RelayCommand]
+    public void ToggleFilterCaseSensitivity()
+    {
+        FilterCaseSensitive = !FilterCaseSensitive;
+        ApplyFiltersAndSorting();
+    }
+
+    /// <summary>
+    /// Toggles showing hidden tasks
+    /// </summary>
+    [RelayCommand]
+    public void ToggleShowHiddenTasks()
+    {
+        ShowHiddenTasks = !ShowHiddenTasks;
+        ApplyFiltersAndSorting();
+    }
+
+    /// <summary>
+    /// Toggles filtering future tasks
+    /// </summary>
+    [RelayCommand]
+    public void ToggleFilterFutureTasks()
+    {
+        FilterFutureTasks = !FilterFutureTasks;
+        ApplyFiltersAndSorting();
+    }
+
+    /// <summary>
+    /// Performs a search on the task list
+    /// </summary>
+    [RelayCommand]
+    public void SearchTasks()
+    {
+        ApplyFiltersAndSorting();
+    }
+
+    /// <summary>
+    /// Clears the search text
+    /// </summary>
+    [RelayCommand]
+    public void ClearSearch()
+    {
+        SearchText = string.Empty;
+        ApplyFiltersAndSorting();
+    }
+
+    /// <summary>
+    /// Toggles grouping of tasks
+    /// </summary>
+    [RelayCommand]
+    public void ToggleGrouping()
+    {
+        AllowGrouping = !AllowGrouping;
+        ApplyFiltersAndSorting();
     }
 
     #endregion
@@ -646,3 +957,4 @@ public partial class MainWindowViewModel : ViewModelBase
 
     #endregion
 }
+

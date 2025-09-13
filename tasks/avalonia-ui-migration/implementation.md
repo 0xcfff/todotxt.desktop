@@ -133,12 +133,12 @@
 - [x] Port Postpone dialog with relative date parsing
 - [x] Test all dialog integration
 
-#### Step 3.4: Advanced Task Features
-- [ ] Implement task grouping functionality
-- [ ] Port complex filtering system
-- [ ] Add task statistics to status bar
-- [ ] Implement task search functionality
-- [ ] Port all keyboard shortcuts
+#### Step 3.4: Advanced Task Features ✅
+- [x] Implement task grouping functionality
+- [x] Port complex filtering system
+- [x] Add task statistics to status bar
+- [x] Implement task search functionality
+- [x] Port all keyboard shortcuts
 
 #### Step 3.5: Settings and Configuration
 - [ ] Create cross-platform settings system

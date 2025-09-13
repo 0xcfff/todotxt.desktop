@@ -52,8 +52,27 @@ namespace TodoTxt.Avalonia.Core.Controls
         {
             try
             {
-                // For now, let's simplify and just set up basic functionality
-                // We'll add the popup functionality later once we confirm the control renders
+                // Initialize the intellisense popup
+                _intellisensePopup = new Popup
+                {
+                    PlacementTarget = this,
+                    Placement = PlacementMode.Bottom,
+                    IsLightDismissEnabled = true
+                };
+
+                // Initialize the intellisense list
+                _intellisenseList = new ListBox
+                {
+                    MaxHeight = 200,
+                    MinWidth = 200
+                };
+
+                // Add the list to the popup
+                _intellisensePopup.Child = _intellisenseList;
+
+                // Set up event handlers
+                _intellisenseList.SelectionChanged += IntellisenseList_SelectionChanged;
+                _intellisenseList.KeyDown += IntellisenseList_KeyDown;
                 
                 // Set up an event handler on the text box to trigger Intellisense.
                 this.TextChanged += IntellisenseTextBox_TextChanged;
@@ -268,6 +287,32 @@ namespace TodoTxt.Avalonia.Core.Controls
             
             // We'll add the intellisense functionality back later
             // For now, just ensure the basic TextBox functionality works
+        }
+
+        private void IntellisenseList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            // Handle selection changes in the intellisense list
+            System.Diagnostics.Debug.WriteLine("IntellisenseList_SelectionChanged called");
+        }
+
+        private void IntellisenseList_KeyDown(object? sender, KeyEventArgs e)
+        {
+            // Handle key events in the intellisense list
+            System.Diagnostics.Debug.WriteLine("IntellisenseList_KeyDown called");
+            
+            if (e.Key == Key.Enter)
+            {
+                // Insert the selected item
+                InsertIntellisenseText();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                // Hide the popup
+                HideIntellisensePopup();
+                this.Focus();
+                e.Handled = true;
+            }
         }
 
         public void CheckKeyAndShowPopup()
