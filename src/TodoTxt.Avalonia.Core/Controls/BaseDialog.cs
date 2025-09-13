@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using System;
 
@@ -28,7 +29,21 @@ namespace TodoTxt.Avalonia.Core.Controls
         /// <returns>True if OK was clicked, false if Cancel was clicked</returns>
         public virtual async Task<bool?> ShowDialog()
         {
-            return await base.ShowDialog<bool?>(this);
+            // Find the main window to use as owner
+            var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+                ? desktop.MainWindow
+                : null;
+            
+            if (mainWindow != null)
+            {
+                return await base.ShowDialog<bool?>(mainWindow);
+            }
+            else
+            {
+                // If no main window is available, show as non-modal
+                Show();
+                return true; // Assume OK for non-modal dialogs
+            }
         }
 
         /// <summary>
