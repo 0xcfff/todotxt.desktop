@@ -7,6 +7,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TodoTxt.UI\Client.csproj" />
+    <!-- <ProjectReference Include="..\TodoTxt.UI\Client.csproj" /> -->
     <ProjectReference Include="..\TodoTxt.Lib\ToDoLib.csproj" />
   </ItemGroup>
 
