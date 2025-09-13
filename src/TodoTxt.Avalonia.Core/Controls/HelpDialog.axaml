@@ -1,0 +1,73 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TodoTxt.Avalonia.Core.Controls"
+        x:Class="TodoTxt.Avalonia.Core.Controls.HelpDialog"
+        Title="Help"
+        Width="400"
+        Height="500"
+        WindowStartupLocation="CenterScreen"
+        CanResize="True">
+    
+    <ScrollViewer MaxHeight="500">
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Name="TitleTextBlock"
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       FontSize="20"
+                       LineHeight="35"
+                       Text="todotxt.net" />
+            <TextBlock Name="VersionTextBlock"
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       LineHeight="35"
+                       Text="Version 1.0" />
+            
+            <StackPanel Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                <TextBlock Name="HelpTextBlock"
+                           Margin="0,12,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           TextWrapping="Wrap"
+                           Text="A cross-platform todo.txt client built with Avalonia UI.
+
+Features:
+• Create, edit, and manage todo.txt tasks
+• Cross-platform support (Windows, macOS, Linux)
+• Intellisense autocompletion for projects and contexts
+• Task filtering and sorting
+• Keyboard shortcuts for efficient task management
+
+Keyboard Shortcuts:
+• Ctrl+N: New file
+• Ctrl+O: Open file
+• F5: Reload file
+• F2: Edit selected task
+• X: Toggle task completion
+• Delete: Delete selected task
+• Enter: Add new task
+• Escape: Cancel editing" />
+                
+                <TextBlock Margin="0,12,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Text="More info available at benrhughes.com/todotxt.net"
+                           Foreground="Blue"
+                           Cursor="Hand"
+                           PointerPressed="WebsiteLink_PointerPressed" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Window>

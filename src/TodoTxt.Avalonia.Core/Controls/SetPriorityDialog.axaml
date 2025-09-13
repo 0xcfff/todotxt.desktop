@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TodoTxt.Avalonia.Core.Controls"
+        x:Class="TodoTxt.Avalonia.Core.Controls.SetPriorityDialog"
+        Title="Set priority"
+        Width="300"
+        Height="120"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="False">
+    
+    <Window.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Height" Value="23" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Height" Value="23"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+        </Style>
+    </Window.Styles>
+
+    <StackPanel Orientation="Horizontal" Margin="12">
+        <TextBlock Text="Set priority to:" 
+                   Padding="0,5,5,5" 
+                   VerticalAlignment="Center" />
+        <TextBox Name="PriorityTextBox" 
+                 MaxLength="1" 
+                 Width="75"
+                 KeyUp="PriorityTextBox_KeyUp" />
+        <Button Content="OK" 
+                Name="OkButton" 
+                IsDefault="True" 
+                Click="OnOkClick" />
+        <Button Content="Cancel" 
+                Name="CancelButton" 
+                IsCancel="True" 
+                Click="OnCancelClick" />
+    </StackPanel>
+</Window>

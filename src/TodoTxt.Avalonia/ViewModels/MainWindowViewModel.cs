@@ -2,11 +2,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ToDoLib;
 using TodoTxt.Avalonia.Models;
+using TodoTxt.Avalonia.Core.Controls;
 
 namespace TodoTxt.Avalonia.ViewModels;
 
@@ -216,17 +218,22 @@ public partial class MainWindowViewModel : ViewModelBase
     /// Deletes the selected task
     /// </summary>
     [RelayCommand]
-    public void DeleteSelectedTask()
+    public async System.Threading.Tasks.Task DeleteSelectedTask()
     {
         if (SelectedItem != null)
         {
-            if (_taskList != null)
+            // Show confirmation dialog
+            var confirmed = await ShowDeleteConfirmationDialog();
+            if (confirmed)
             {
-                _taskList.Delete(SelectedItem);
+                if (_taskList != null)
+                {
+                    _taskList.Delete(SelectedItem);
+                }
+                
+                Tasks.Remove(SelectedItem);
+                UpdateTaskCounts();
             }
-            
-            Tasks.Remove(SelectedItem);
-            UpdateTaskCounts();
         }
     }
 
@@ -403,7 +410,7 @@ public partial class MainWindowViewModel : ViewModelBase
             // TODO: Implement clipboard functionality
             // For now, just copy and delete
             System.Diagnostics.Debug.WriteLine($"Cutting task: {SelectedItem.Raw}");
-            DeleteSelectedTask();
+            _ = DeleteSelectedTask();
         }
     }
 
@@ -523,6 +530,118 @@ public partial class MainWindowViewModel : ViewModelBase
                 .ThenBy(t => string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate),
             _ => tasks
         };
+    }
+
+    #endregion
+
+    #region Dialog Operations
+
+    /// <summary>
+    /// Shows the Options dialog
+    /// </summary>
+    [RelayCommand]
+    public async System.Threading.Tasks.Task ShowOptionsDialog()
+    {
+        var dialog = new OptionsDialog();
+        // TODO: Load current settings into dialog
+        var result = await dialog.ShowDialog();
+        if (result == true)
+        {
+            // TODO: Save settings from dialog
+            System.Diagnostics.Debug.WriteLine("Options saved");
+        }
+    }
+
+    /// <summary>
+    /// Shows the Filter dialog
+    /// </summary>
+    [RelayCommand]
+    public async System.Threading.Tasks.Task ShowFilterDialog()
+    {
+        var dialog = new FilterDialog();
+        // TODO: Load current filter settings
+        var result = await dialog.ShowDialog();
+        if (result == true)
+        {
+            // TODO: Apply filter settings
+            System.Diagnostics.Debug.WriteLine("Filter settings applied");
+        }
+    }
+
+    /// <summary>
+    /// Shows the Help dialog
+    /// </summary>
+    [RelayCommand]
+    public async System.Threading.Tasks.Task ShowHelpDialog()
+    {
+        var dialog = new HelpDialog();
+        await dialog.ShowDialog();
+    }
+
+    /// <summary>
+    /// Shows the Delete Confirmation dialog
+    /// </summary>
+    public async System.Threading.Tasks.Task<bool> ShowDeleteConfirmationDialog()
+    {
+        var dialog = new DeleteConfirmationDialog();
+        var result = await dialog.ShowDialog();
+        return result == true;
+    }
+
+    /// <summary>
+    /// Shows the Append Text dialog
+    /// </summary>
+    public async System.Threading.Tasks.Task<string?> ShowAppendTextDialog()
+    {
+        var dialog = new AppendTextDialog();
+        var result = await dialog.ShowDialog();
+        if (result == true)
+        {
+            return dialog.TextToAppend;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Shows the Set Priority dialog
+    /// </summary>
+    public async System.Threading.Tasks.Task<string?> ShowSetPriorityDialog()
+    {
+        var dialog = new SetPriorityDialog();
+        var result = await dialog.ShowDialog();
+        if (result == true)
+        {
+            return dialog.Priority;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Shows the Set Due Date dialog
+    /// </summary>
+    public async System.Threading.Tasks.Task<DateTime?> ShowSetDueDateDialog()
+    {
+        var dialog = new SetDueDateDialog();
+        var result = await dialog.ShowDialog();
+        if (result == true)
+        {
+            return dialog.DueDate;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Shows the Postpone dialog
+    /// </summary>
+    public async System.Threading.Tasks.Task<int?> ShowPostponeDialog()
+    {
+        var dialog = new PostponeDialog();
+        var result = await dialog.ShowDialog();
+        if (result == true)
+        {
+            return dialog.DaysToPostpone;
+        }
+        return null;
     }
 
     #endregion

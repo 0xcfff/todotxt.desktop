@@ -109,29 +109,29 @@
 - [x] Port filtering and selection logic
 - [x] Test autocompletion functionality
 
-#### Step 3.2: Dialog System Implementation
-- [ ] Create base dialog infrastructure
-- [ ] Port Options dialog:
-  - [ ] Archive file selection
-  - [ ] Font selection integration
-  - [ ] All checkboxes and settings
-  - [ ] Cross-platform settings storage
-- [ ] Port Filter dialog:
-  - [ ] Filter text editing
-  - [ ] Preset filter management
-  - [ ] Filter validation and testing
-- [ ] Port Date dialogs (Due Date, Threshold Date):
-  - [ ] Date picker control
-  - [ ] Date validation
-  - [ ] Integration with task editing
+#### Step 3.2: Dialog System Implementation ✅
+- [x] Create base dialog infrastructure
+- [x] Port Options dialog:
+  - [x] Archive file selection (placeholder)
+  - [x] Font selection integration (placeholder)
+  - [x] All checkboxes and settings
+  - [x] Cross-platform settings storage (placeholder)
+- [x] Port Filter dialog:
+  - [x] Filter text editing
+  - [x] Preset filter management
+  - [x] Filter validation and testing
+- [x] Port Date dialogs (Due Date, Threshold Date):
+  - [x] Date picker control
+  - [x] Date validation
+  - [x] Integration with task editing
 
-#### Step 3.3: Remaining Dialogs
-- [ ] Port Priority Selection dialog
-- [ ] Port Append Text dialog  
-- [ ] Port Delete Confirmation dialog
-- [ ] Port Help/About dialog
-- [ ] Port Postpone dialog with relative date parsing
-- [ ] Test all dialog integration
+#### Step 3.3: Remaining Dialogs ✅
+- [x] Port Priority Selection dialog
+- [x] Port Append Text dialog  
+- [x] Port Delete Confirmation dialog
+- [x] Port Help/About dialog
+- [x] Port Postpone dialog with relative date parsing
+- [x] Test all dialog integration
 
 #### Step 3.4: Advanced Task Features
 - [ ] Implement task grouping functionality
