@@ -295,11 +295,46 @@ namespace TodoTxt.Avalonia.Core.Controls
         /// <param name="e">Event arguments</param>
         private void IntellisenseTextBox_TextChanged(object? sender, TextChangedEventArgs e)
         {
-            // For now, just log that the event is working
-            System.Diagnostics.Debug.WriteLine("IntellisenseTextBox_TextChanged called");
-            
-            // We'll add the intellisense functionality back later
-            // For now, just ensure the basic TextBox functionality works
+            try
+            {
+                // Basic text change detection
+                if (string.IsNullOrEmpty(this.Text) || this.CaretIndex < 1)
+                    return;
+
+                var lastChar = this.Text[this.CaretIndex - 1];
+                if (lastChar == '+' || lastChar == '@' || lastChar == '(')
+                {
+                    // Log for debugging
+                    System.Diagnostics.Debug.WriteLine($"Trigger character detected: {lastChar}");
+                    
+                    // Show appropriate popup based on trigger character
+                    if (lastChar == '+')
+                    {
+                        _intelliPos = this.CaretIndex - 1;
+                        ShowIntellisensePopup(TaskList?.Projects ?? new List<string>(), GetRectFromCharacterIndex(_intelliPos));
+                    }
+                    else if (lastChar == '@')
+                    {
+                        _intelliPos = this.CaretIndex - 1;
+                        ShowIntellisensePopup(TaskList?.Contexts ?? new List<string>(), GetRectFromCharacterIndex(_intelliPos));
+                    }
+                    else if (lastChar == '(')
+                    {
+                        var currentText = this.Text ?? string.Empty;
+                        if (this.CaretIndex == 1 ||
+                            (this.CaretIndex == 12 && _startDateWithPriorityRegex.IsMatch(currentText.Substring(0, 12))))
+                        {
+                            _intelliPos = this.CaretIndex - 1;
+                            ShowIntellisensePopup(_priorities, GetRectFromCharacterIndex(_intelliPos));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in text changed handler: {ex.Message}");
+                // Don't let errors break text input
+            }
         }
 
         private void IntellisenseList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
