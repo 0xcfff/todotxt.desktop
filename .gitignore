@@ -87,3 +87,6 @@ gen
 # ctag generated file
 tags
 .tags
+
+# coverage output
+coverage/
