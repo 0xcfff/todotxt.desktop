@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using ToDoLib;
 
 namespace TodoTxt.Avalonia.Core.Controls
@@ -80,6 +81,16 @@ namespace TodoTxt.Avalonia.Core.Controls
                 // Ensure the control is visible
                 this.IsVisible = true;
                 this.Opacity = 1.0;
+                
+                // Set default styling to ensure visibility
+                if (this.Background == null)
+                {
+                    this.Background = Brushes.White;
+                }
+                if (this.Foreground == null)
+                {
+                    this.Foreground = Brushes.Black;
+                }
                 
                 System.Diagnostics.Debug.WriteLine("IntellisenseTextBox constructor completed successfully");
             }

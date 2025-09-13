@@ -80,6 +80,7 @@
                  Watermark="Enter a new task..."
                  VerticalAlignment="Center"
                  Height="25"
+                 // Do not touch the foreground
                  Foreground="White"
                  TaskList="{Binding TaskList}"
                  CaseSensitive="{Binding FilterCaseSensitive}"
@@ -93,6 +94,7 @@
                  Watermark="Search tasks..."
                  VerticalAlignment="Center"
                  Height="25"
+                 // Do not touch the foreground
                  Foreground="White"
                  Margin="5,0,0,0"
                  KeyUp="SearchTextBox_KeyUp"/>
