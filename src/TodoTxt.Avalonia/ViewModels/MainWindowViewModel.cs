@@ -10,10 +10,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private TaskList? _taskList;
     
     [ObservableProperty]
-    private ObservableCollection<Task> _tasks = new();
+    private ObservableCollection<ToDoLib.Task> _tasks = new();
     
     [ObservableProperty]
-    private Task? _selectedItem;
+    private ToDoLib.Task? _selectedItem;
     
     [ObservableProperty]
     private int _totalTasks;
@@ -33,9 +33,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private void LoadSampleTasks()
     {
         Tasks.Clear();
-        Tasks.Add(new Task("(A) Call Mom +family @home"));
-        Tasks.Add(new Task("Buy groceries @errands"));
-        Tasks.Add(new Task("x 2024-01-15 Complete project documentation +work"));
+        Tasks.Add(new ToDoLib.Task("(A) Call Mom +family @home"));
+        Tasks.Add(new ToDoLib.Task("Buy groceries @errands"));
+        Tasks.Add(new ToDoLib.Task("x 2024-01-15 Complete project documentation +work"));
         
         UpdateTaskCounts();
     }
@@ -67,5 +67,4 @@ public partial class MainWindowViewModel : ViewModelBase
         FilteredTasks = Tasks.Count; // For now, no filtering
         IncompleteTasks = Tasks.Count(t => !t.Completed);
     }
-}";
 }
