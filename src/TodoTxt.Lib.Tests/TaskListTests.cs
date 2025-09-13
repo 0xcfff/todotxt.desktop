@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-using CollectionAssert = NUnit.Framework.Legacy.CollectionAssert;
 using ToDoLib;
 using System.IO;
 using System.Threading;
@@ -59,10 +57,10 @@ namespace ToDoTests
 
             var newTasks = tl.Tasks.ToList();
 
-            Assert.AreEqual(tasks.Count, newTasks.Count);
+            Assert.That(newTasks.Count, Is.EqualTo(tasks.Count));
 
             for (int i = 0; i < tasks.Count; i++)
-                Assert.AreEqual(tasks[i].ToString(), newTasks[i].ToString());
+                Assert.That(newTasks[i].ToString(), Is.EqualTo(tasks[i].ToString()));
         }
 
         [Test]
@@ -76,7 +74,7 @@ namespace ToDoTests
             tl.Add(task);
 
             var newFileContents = File.ReadAllLines(Data.TestDataPath);
-            CollectionAssert.AreEquivalent(fileContents, newFileContents);
+            Assert.That(newFileContents, Is.EquivalentTo(fileContents));
         }
 
         [Test]
@@ -89,7 +87,7 @@ namespace ToDoTests
             var tl = new TaskList(Data.TestDataPath);
             tl.Add(new Task("A task"));
 
-            Assert.AreEqual(1,tl.Tasks.Count());
+            Assert.That(tl.Tasks.Count(), Is.EqualTo(1));
 
         }
 
@@ -105,7 +103,7 @@ namespace ToDoTests
             var task2 = new Task("Add_Multiple task two");
             tl.Add(task2);
 
-            Assert.AreEqual(c + 2, tl.Tasks.Count());
+            Assert.That(tl.Tasks.Count(), Is.EqualTo(c + 2));
         }
 
         [Test]
@@ -123,10 +121,10 @@ namespace ToDoTests
 
             var newTasks = tl.Tasks.ToList();
 
-            Assert.AreEqual(tasks.Count, newTasks.Count);
+            Assert.That(newTasks.Count, Is.EqualTo(tasks.Count));
 
             for (int i = 0; i < tasks.Count; i++)
-                Assert.AreEqual(tasks[i].ToString(), newTasks[i].ToString());
+                Assert.That(newTasks[i].ToString(), Is.EqualTo(tasks[i].ToString()));
         }
 
         [Test]
@@ -140,7 +138,7 @@ namespace ToDoTests
             tl.Delete(task);
 
             var newFileContents = File.ReadAllLines(Data.TestDataPath);
-            CollectionAssert.AreEquivalent(fileContents, newFileContents);
+            Assert.That(newFileContents, Is.EquivalentTo(fileContents));
         }
 
         [Test]
@@ -157,7 +155,7 @@ namespace ToDoTests
             tl.Update(task, task2);
 
             var newTask = tl.Tasks.Last();
-            Assert.IsTrue(newTask.Completed);
+            Assert.That(newTask.Completed, Is.True);
         }
 
 		[Test]
@@ -192,7 +190,7 @@ namespace ToDoTests
 			}
 			catch (Exception ex)
 			{
-				Assert.Fail(ex.Message);
+				Assert.That(false, Is.True, ex.Message);
 			}
 			finally
 			{

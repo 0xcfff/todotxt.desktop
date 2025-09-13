@@ -275,7 +275,7 @@ namespace ToDoTests
         {
             var task = new Task("(A) 2011-05-07 due:2011-05-08 @work @home +test This is a test task");
 
-            Assert.AreEqual("2011-05-07", task.CreationDate);
+            Assert.That(task.CreationDate, Is.EqualTo("2011-05-07"));
         }
 
 		[Test]
@@ -283,7 +283,7 @@ namespace ToDoTests
 		{
 			var task = new Task("This is a test task +work&home");
 
-			Assert.AreEqual("+work&home", task.Projects[0]);
+			Assert.That(task.Projects[0], Is.EqualTo("+work&home"));
 		}
         #endregion
 
@@ -292,14 +292,14 @@ namespace ToDoTests
         public void ToString_From_Raw()
         {
             var task = new Task("(A) @work +test This is a test task");
-            Assert.AreEqual("(A) @work +test This is a test task", task.ToString());
+            Assert.That(task.ToString(), Is.EqualTo("(A) @work +test This is a test task"));
         }
 
         [Test]
         public void ToString_From_Parameters()
         {
             var task = new Task("(A)", _projects, _contexts, "This is a test task");
-            Assert.AreEqual("(A) This is a test task +test @work", task.ToString());
+            Assert.That(task.ToString(), Is.EqualTo("(A) This is a test task +test @work"));
         }
         #endregion
 
@@ -314,12 +314,12 @@ namespace ToDoTests
 
         void AssertEquivalence(Task t1, Task t2)
         {
-            Assert.AreEqual(t1.Priority, t2.Priority);
-            CollectionAssert.AreEquivalent(t1.Projects, t2.Projects);
-            CollectionAssert.AreEquivalent(t1.Contexts, t2.Contexts);
-            Assert.AreEqual(t1.DueDate, t2.DueDate);
-            Assert.AreEqual(t1.Completed, t2.Completed);
-            Assert.AreEqual(t1.Body, t2.Body);
+            Assert.That(t1.Priority, Is.EqualTo(t2.Priority));
+            Assert.That(t1.Projects, Is.EquivalentTo(t2.Projects));
+            Assert.That(t1.Contexts, Is.EquivalentTo(t2.Contexts));
+            Assert.That(t1.DueDate, Is.EqualTo(t2.DueDate));
+            Assert.That(t1.Completed, Is.EqualTo(t2.Completed));
+            Assert.That(t1.Body, Is.EqualTo(t2.Body));
         }
 
         #region Test Propery IsTaskDue
@@ -328,49 +328,49 @@ namespace ToDoTests
         public void Task_with_out_due_date()
         {
             var t = new Task("Task with out due date task");
-            Assert.AreEqual(t.IsTaskDue, Due.NotDue);
+            Assert.That(t.IsTaskDue, Is.EqualTo(Due.NotDue));
         }
 
         [Test]
         public void Task_Complete_with_out_due_date()
         {
             var t = new Task("x Task Complete with out due date task");
-            Assert.AreEqual(t.IsTaskDue, Due.NotDue);
+            Assert.That(t.IsTaskDue, Is.EqualTo(Due.NotDue));
         }
 
         [Test]
         public void Task_with_future_due_date()
         {
             var t = new Task("Task with future task due:" + DateTime.Now.AddDays(2).ToString("yyyy-MM-dd"));
-            Assert.AreEqual(t.IsTaskDue, Due.NotDue);
+            Assert.That(t.IsTaskDue, Is.EqualTo(Due.NotDue));
         }
 
         [Test]
         public void Task_Complete_with_future_due_date()
         {
             var t = new Task("x Task Complete with future task due:" + DateTime.Now.AddDays(2).ToString("yyyy-MM-dd"));
-            Assert.AreEqual(t.IsTaskDue, Due.NotDue);
+            Assert.That(t.IsTaskDue, Is.EqualTo(Due.NotDue));
         }
 
         [Test]
         public void Task_with_today_due_date()
         {
             var t = new Task("Task with today due:" + DateTime.Now.ToString("yyyy-MM-dd"));
-            Assert.AreEqual(t.IsTaskDue, Due.Today);
+            Assert.That(t.IsTaskDue, Is.EqualTo(Due.Today));
         }
 
         [Test]
         public void Task_Complete_with_today_due_date()
         {
             var t = new Task("x Task Complete with today due:" + DateTime.Now.ToString("yyyy-MM-dd"));
-            Assert.AreEqual(t.IsTaskDue, Due.NotDue);
+            Assert.That(t.IsTaskDue, Is.EqualTo(Due.NotDue));
         }
 
         [Test]
         public void Task_with_over_due_date()
         {
             var t = new Task("Task with overdue date due:" + DateTime.Now.AddDays(-4).ToString("yyyy-MM-dd"));
-            Assert.AreEqual(t.IsTaskDue, Due.Overdue);
+            Assert.That(t.IsTaskDue, Is.EqualTo(Due.Overdue));
 
         }
 
@@ -378,7 +378,7 @@ namespace ToDoTests
         public void Task_Complete_with_over_due_date()
         {
             var t = new Task("x Task Complete with overdue date due:" + DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd"));
-            Assert.AreEqual(t.IsTaskDue, Due.NotDue);
+            Assert.That(t.IsTaskDue, Is.EqualTo(Due.NotDue));
         }
 
         #endregion
