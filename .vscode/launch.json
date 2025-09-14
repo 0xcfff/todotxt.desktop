@@ -1,10 +1,11 @@
 {
     "configurations": [
     {
-        "name": "C#: TodoTxt.Avalonia Debug",
-        "type": "dotnet",
-        // "request": "",
-        "projectPath": "${workspaceFolder}/src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj"
+        "name": "debug",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/src/TodoTxt.Avalonia/bin/Debug/net9.0/TodoTxt.Avalonia.dll"
     }
     ]
     // Use IntelliSense to learn about possible attributes.

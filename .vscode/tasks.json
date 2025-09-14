@@ -7,16 +7,9 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "${workspaceFolder}/src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj"
             ],
             "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "echo Workspace Folder",
-            "type": "shell",
-            "command": "echo ${workspaceFolder}"
         }
     ]
 }

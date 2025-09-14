@@ -1,7 +1,10 @@
+using System.Net.Http.Headers;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Media;
 using ToDoLib;
 
 namespace TodoTxt.Avalonia.Core.Controls
@@ -51,23 +54,29 @@ namespace TodoTxt.Avalonia.Core.Controls
         public IntellisenseTextBox()
         {
             this.TextChanged += IntellisenseTextBox_TextChanged;
-            
+
             _intellisenseList = new ListBox
             {
-                MaxHeight = 200,
-                MinWidth = 200
+                MinHeight = 200,
+                MinWidth = 200,
+                Foreground = Brushes.Black,
+                Background = Brushes.Green,
             };
-            
+
             _intellisenseList.SelectionChanged += IntellisenseList_SelectionChanged;
-            _intellisenseList.KeyDown += IntellisenseList_KeyDown;
-            
+            // _intellisenseList.KeyDown += IntellisenseList_KeyDown;
+            _intellisenseList.AddHandler(InputElement.KeyDownEvent, IntellisenseList_KeyDown, RoutingStrategies.Bubble, true);
+            AddHandler(InputElement.KeyDownEvent, IntellisenseList_KeyDown, RoutingStrategies.Bubble, true);
+
+
             _intellisensePopup = new Popup
             {
                 PlacementTarget = this,
-                Placement = PlacementMode.Bottom,
+                Placement = PlacementMode.BottomEdgeAlignedLeft,
                 IsLightDismissEnabled = true,
                 Child = _intellisenseList
             };
+            this.LogicalChildren.Add(_intellisensePopup);
         }
 
         /// <summary>
@@ -76,6 +85,10 @@ namespace TodoTxt.Avalonia.Core.Controls
         public void ShowPopup()
         {
             _intellisensePopup!.IsOpen = true;
+            _intellisensePopup.Focus();
+            _intellisensePopup.UpdateLayout();
+            // _intellisensePopup.Height = 100;
+            // _intellisensePopup.Width = 100;
         }
 
         /// <summary>
@@ -135,12 +148,13 @@ namespace TodoTxt.Avalonia.Core.Controls
         {
             if (_intellisenseList!.SelectedItem != null)
             {
-                InsertSelectedText();
+                // InsertSelectedText();
             }
         }
 
         private void IntellisenseList_KeyDown(object? sender, KeyEventArgs e)
         {
+            //TODO This is where the issue is. The components bubble the events and not all events can be handled propely. Handler should be split into 2
             switch (e.Key)
             {
                 case Key.Enter:
@@ -151,6 +165,9 @@ namespace TodoTxt.Avalonia.Core.Controls
                     HidePopup();
                     this.Focus();
                     e.Handled = true;
+                    break;
+                default:
+                    Console.WriteLine($"test: {e.Key}");
                     break;
             }
         }
