@@ -54,19 +54,23 @@ namespace TodoTxt.Avalonia.Core.Controls
         public IntellisenseTextBox()
         {
             this.TextChanged += IntellisenseTextBox_TextChanged;
+            this.KeyDown += IntellisenseTextBox_KeyDown;
+            this.KeyUp += IntellisenseTextBox_KeyUp;
+            this.LostFocus += IntellisenseTextBox_LostFocus;
 
             _intellisenseList = new ListBox
             {
                 MinHeight = 200,
                 MinWidth = 200,
-                Foreground = Brushes.Black,
-                Background = Brushes.Green,
+                MaxHeight = 400,
+                MaxWidth = 200,
+                Focusable = false,
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(2)
             };
 
             _intellisenseList.SelectionChanged += IntellisenseList_SelectionChanged;
-            // _intellisenseList.KeyDown += IntellisenseList_KeyDown;
-            _intellisenseList.AddHandler(InputElement.KeyDownEvent, IntellisenseList_KeyDown, RoutingStrategies.Bubble, true);
-            AddHandler(InputElement.KeyDownEvent, IntellisenseList_KeyDown, RoutingStrategies.Bubble, true);
+            _intellisenseList.KeyDown += IntellisenseList_KeyDown;
 
 
             _intellisensePopup = new Popup
@@ -74,7 +78,8 @@ namespace TodoTxt.Avalonia.Core.Controls
                 PlacementTarget = this,
                 Placement = PlacementMode.BottomEdgeAlignedLeft,
                 IsLightDismissEnabled = true,
-                Child = _intellisenseList
+                Child = _intellisenseList,
+                Focusable = false,
             };
             this.LogicalChildren.Add(_intellisensePopup);
         }
@@ -85,10 +90,12 @@ namespace TodoTxt.Avalonia.Core.Controls
         public void ShowPopup()
         {
             _intellisensePopup!.IsOpen = true;
-            _intellisensePopup.Focus();
-            _intellisensePopup.UpdateLayout();
-            // _intellisensePopup.Height = 100;
-            // _intellisensePopup.Width = 100;
+            // Always select the first item when popup opens
+            if (_intellisenseList!.Items.Count > 0)
+            {
+                _intellisenseList.SelectedIndex = 0;
+            }
+            // Don't change focus - keep the TextBox focused so user can continue typing
         }
 
         /// <summary>
@@ -152,24 +159,109 @@ namespace TodoTxt.Avalonia.Core.Controls
             }
         }
 
+        private void IntellisenseTextBox_KeyDown(object? sender, KeyEventArgs e)
+        {
+            // Only handle keys when popup is closed
+            if (!_intellisensePopup!.IsOpen)
+            {
+                switch (e.Key)
+                {
+                    case Key.Up:
+                    case Key.Down:
+                    case Key.PageUp:
+                    case Key.PageDown:
+                    case Key.Home:
+                    case Key.End:
+                        // Let TextBox handle these keys normally when popup is closed
+                        e.Handled = false;
+                        break;
+                    case Key.Left:
+                    case Key.Right:
+                        // Let TextBox handle cursor movement normally
+                        e.Handled = false;
+                        break;
+                    default:
+                        // Let TextBox handle all other keys normally
+                        e.Handled = false;
+                        break;
+                }
+            }
+            else
+            {
+                // If popup is open, only handle specific keys that should work in TextBox
+                switch (e.Key)
+                {
+                    case Key.Left:
+                    case Key.Right:
+                        // Allow cursor movement even when popup is open
+                        e.Handled = false;
+                        break;
+                    case Key.Up:
+                        // Move selection up in the list
+                        if (_intellisenseList!.Items.Count > 0)
+                        {
+                            if (_intellisenseList.SelectedIndex > 0)
+                            {
+                                _intellisenseList.SelectedIndex--;
+                            }
+                            else
+                            {
+                                _intellisenseList.SelectedIndex = _intellisenseList.Items.Count - 1; // Wrap to last item
+                            }
+                        }
+                        e.Handled = true;
+                        break;
+                    case Key.Down:
+                        // Move selection down in the list
+                        if (_intellisenseList!.Items.Count > 0)
+                        {
+                            if (_intellisenseList.SelectedIndex < _intellisenseList.Items.Count - 1)
+                            {
+                                _intellisenseList.SelectedIndex++;
+                            }
+                            else
+                            {
+                                _intellisenseList.SelectedIndex = 0; // Wrap to first item
+                            }
+                        }
+                        e.Handled = true;
+                        break;
+                    case Key.Enter:
+                        // Prevent Enter from being processed by TextBox when popup is open
+                        // The KeyUp handler will handle the selection
+                        e.Handled = true;
+                        break;
+                    default:
+                        // For typing and other keys, let TextBox handle them
+                        // This allows filtering of the popup list
+                        e.Handled = false;
+                        break;
+                }
+            }
+        }
+
+        private void IntellisenseTextBox_KeyUp(object? sender, KeyEventArgs e)
+        {
+            // Handle Enter in KeyUp to prevent double processing
+            if (e.Key == Key.Enter && _intellisensePopup!.IsOpen)
+            {
+                InsertSelectedText();
+                e.Handled = true;
+            }
+        }
+
+        private void IntellisenseTextBox_LostFocus(object? sender, RoutedEventArgs e)
+        {
+            // Hide popup when TextBox loses focus (e.g., Tab to next control)
+            HidePopup();
+        }
+
         private void IntellisenseList_KeyDown(object? sender, KeyEventArgs e)
         {
-            //TODO This is where the issue is. The components bubble the events and not all events can be handled propely. Handler should be split into 2
-            switch (e.Key)
-            {
-                case Key.Enter:
-                    InsertSelectedText();
-                    e.Handled = true;
-                    break;
-                case Key.Escape:
-                    HidePopup();
-                    this.Focus();
-                    e.Handled = true;
-                    break;
-                default:
-                    Console.WriteLine($"test: {e.Key}");
-                    break;
-            }
+            // Since the list is not focusable, this handler should rarely be called
+            // Most key events will be handled by the TextBox
+            // This is kept as a fallback for any edge cases
+            e.Handled = false;
         }
 
         private void InsertSelectedText()
@@ -196,6 +288,9 @@ namespace TodoTxt.Avalonia.Core.Controls
                 
                 HidePopup();
                 _triggerPosition = -1;
+                
+                // Ensure focus is on the TextBox and prevent further key processing
+                this.Focus();
             }
             catch (Exception ex)
             {
@@ -324,34 +419,6 @@ namespace TodoTxt.Avalonia.Core.Controls
             return Enumerable.Range('A', 26).Select(i => $"({Convert.ToChar(i)})").ToList();
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            
-            if (_intellisensePopup!.IsOpen)
-            {
-                switch (e.Key)
-                {
-                    case Key.Down:
-                        if (_intellisenseList!.Items.Count > 0)
-                        {
-                            _intellisenseList.SelectedIndex = 0;
-                            _intellisenseList.Focus();
-                        }
-                        e.Handled = true;
-                        break;
-                    case Key.Escape:
-                        HidePopup();
-                        e.Handled = true;
-                        break;
-                    case Key.Space:
-                    case Key.Enter:
-                        HidePopup();
-                        e.Handled = false; // Allow normal text input
-                        break;
-                }
-            }
-        }
 
         protected override Type StyleKeyOverride { get { return typeof(TextBox); } }
     }
