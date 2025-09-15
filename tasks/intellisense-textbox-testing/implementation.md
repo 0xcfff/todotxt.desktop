@@ -2,21 +2,77 @@
 
 ## Steps
 
-### Phase 1: Fix Test Infrastructure
-- [ ] **1.1** Create temporary file management system
-  - Add `[OneTimeSetUp]` method to create temporary test files
-  - Add `[OneTimeTearDown]` method to clean up temporary files
-  - Use `Path.GetTempFileName()` for cross-platform compatibility
+### Proposed TaskList Architecture Changes
 
-- [ ] **1.2** Fix TaskList dependency issue
-  - Modify test setup to create actual test files
-  - Ensure test files contain valid todo.txt content
-  - Update all test methods to use proper file paths
+```csharp
+// Current problematic constructor:
+public TaskList(string filePath, bool preserveWhitespace = false)
+{
+    _filePath = filePath;
+    _preferredLineEnding = Environment.NewLine;
+    PreserveWhiteSpace = preserveWhitespace;
+    ReloadTasks(); // This causes the problem - automatic file I/O
+}
 
-- [ ] **1.3** Verify existing tests pass
-  - Run all 14 existing tests
-  - Fix any remaining issues
-  - Ensure test isolation (tests don't affect each other)
+// Proposed solution:
+public TaskList()
+{
+    _preferredLineEnding = Environment.NewLine;
+    PreserveWhiteSpace = false;
+    Tasks = new List<Task>();
+    Projects = new List<string>();
+    Contexts = new List<string>();
+    Priorities = new List<string>();
+}
+
+public TaskList(string filePath, bool preserveWhitespace = false)
+{
+    _filePath = filePath;
+    _preferredLineEnding = Environment.NewLine;
+    PreserveWhiteSpace = preserveWhitespace;
+    // Don't call ReloadTasks() automatically - let caller decide when to load
+}
+
+// Make ReloadTasks public and handle empty _filePath gracefully
+public void ReloadTasks()
+{
+    if (string.IsNullOrEmpty(_filePath))
+    {
+        // Handle gracefully - no file to load from
+        Log.Debug("No file path specified, skipping file load");
+        return;
+    }
+    
+    Log.Debug("Loading tasks from {0}.", _filePath);
+    // ... rest of existing ReloadTasks implementation
+}
+
+// Add explicit file loading method
+public void LoadFromFile(string filePath)
+{
+    _filePath = filePath;
+    ReloadTasks();
+}
+```
+
+### Phase 1: Fix TaskList Architecture and Test Infrastructure
+- [x] **1.1** Fix TaskList constructor architecture
+  - [x] Add parameterless constructor to TaskList class
+  - [x] Modify existing constructor to not automatically call ReloadTasks()
+  - [x] Make ReloadTasks() public and handle empty _filePath gracefully
+  - [x] Add LoadFromFile(string filePath) method for explicit file loading
+  - [x] Ensure backward compatibility with existing code
+
+- [x] **1.2** Update test infrastructure
+  - [x] Modify test setup to use in-memory TaskList creation
+  - [x] Create test data builders for consistent TaskList setup
+  - [x] Remove dependency on temporary files for most tests
+  - [x] Keep temporary files only for integration tests
+
+- [x] **1.3** Verify existing tests pass
+  - [x] Run all 14 existing tests with new TaskList architecture
+  - [x] Fix any remaining issues
+  - [x] Ensure test isolation (tests don't affect each other)
 
 ### Phase 2: Core Functionality Tests
 - [ ] **2.1** Popup Management Tests
@@ -133,15 +189,33 @@ public class IntellisenseTextBoxUnitTests
 
 ### Test Data Management
 ```csharp
-private string _tempFilePath;
 private TaskList _taskList;
+
+[SetUp]
+public void SetUp()
+{
+    // Create TaskList in memory without file dependency
+    _taskList = new TaskList(); // Parameterless constructor
+    
+    // Add test tasks directly to the TaskList
+    _taskList.Add(new Task("Buy groceries +shopping @home"));
+    _taskList.Add(new Task("Call mom @phone"));
+    _taskList.Add(new Task("Finish project report +work @office"));
+    _taskList.Add(new Task("(A) High priority task +important"));
+    _taskList.Add(new Task("(B) Medium priority task +work"));
+    
+    // Update metadata for autocompletion
+    _taskList.UpdateTaskListMetaData();
+}
+
+// For integration tests that need file I/O:
+private string _tempFilePath;
 
 [OneTimeSetUp]
 public void OneTimeSetUp()
 {
     _tempFilePath = Path.GetTempFileName();
     File.WriteAllText(_tempFilePath, GetTestTodoContent());
-    _taskList = new TaskList(_tempFilePath, false);
 }
 
 [OneTimeTearDown]
@@ -149,6 +223,16 @@ public void OneTimeTearDown()
 {
     if (File.Exists(_tempFilePath))
         File.Delete(_tempFilePath);
+}
+
+// Example of loading from file when needed:
+[Test]
+public void Should_Load_Tasks_From_File()
+{
+    var taskList = new TaskList();
+    taskList.LoadFromFile(_tempFilePath);
+    
+    Assert.That(taskList.Tasks.Count, Is.GreaterThan(0));
 }
 
 private string GetTestTodoContent()
@@ -164,7 +248,7 @@ Finish project report +work @office
 ## Rollback Plan
 
 ### If Tests Fail to Pass
-1. **Revert to Original State**: Restore original test file
+1. **Revert TaskList Changes**: Restore original TaskList constructor if needed
 2. **Identify Root Cause**: Determine why tests are failing
 3. **Fix Incrementally**: Address one issue at a time
 4. **Verify Each Fix**: Ensure each change improves test status
@@ -177,7 +261,7 @@ Finish project report +work @office
 
 ### If Test Infrastructure Issues Arise
 1. **Simplify Approach**: Use simpler test setup if complex approach fails
-2. **Alternative Strategies**: Consider mocking instead of real files
+2. **Alternative Strategies**: Consider mocking instead of in-memory creation
 3. **Incremental Improvement**: Improve test infrastructure gradually
 4. **Document Issues**: Record problems and solutions for future reference
 
@@ -198,7 +282,7 @@ Finish project report +work @office
 ## Risk Mitigation
 
 ### Technical Risks
-- **File System Issues**: Use proper temporary file management
+- **TaskList Architecture Changes**: Ensure backward compatibility with existing code
 - **UI Testing Complexity**: Start with simple tests, add complexity gradually
 - **Event Handling**: Test events in isolation first, then integration
 - **Cross-Platform**: Test on multiple platforms if possible

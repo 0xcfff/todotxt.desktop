@@ -13,14 +13,18 @@ public class IntellisenseTextBoxUnitTests
     [SetUp]
     public void Setup()
     {
-        _taskList = new TaskList("test.txt", false);
+        // Create TaskList in memory without file dependency
+        _taskList = new TaskList();
         
-        // Add some test tasks with projects and contexts
-        _taskList.Add(new Task("Buy groceries +shopping @home"));
-        _taskList.Add(new Task("Call mom @phone"));
-        _taskList.Add(new Task("Finish project report +work @office"));
-        _taskList.Add(new Task("(A) High priority task +important"));
-        _taskList.Add(new Task("(B) Medium priority task +work"));
+        // Add test tasks directly to the TaskList
+        _taskList.Tasks.Add(new Task("Buy groceries +shopping @home"));
+        _taskList.Tasks.Add(new Task("Call mom @phone"));
+        _taskList.Tasks.Add(new Task("Finish project report +work @office"));
+        _taskList.Tasks.Add(new Task("(A) High priority task +important"));
+        _taskList.Tasks.Add(new Task("(B) Medium priority task +work"));
+        
+        // Update metadata for autocompletion
+        _taskList.UpdateTaskListMetaData();
     }
 
     [Test]
@@ -62,7 +66,7 @@ public class IntellisenseTextBoxUnitTests
     [Test]
     public void Should_Handle_Empty_TaskList()
     {
-        var emptyTaskList = new TaskList("empty.txt", false);
+        var emptyTaskList = new TaskList();
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = emptyTaskList;
         
@@ -154,8 +158,9 @@ public class IntellisenseTextBoxUnitTests
     [Test]
     public void Should_Handle_Multiple_Projects_And_Contexts()
     {
-        var complexTaskList = new TaskList("complex.txt", false);
-        complexTaskList.Add(new Task("Task with +project1 +project2 @context1 @context2"));
+        var complexTaskList = new TaskList();
+        complexTaskList.Tasks.Add(new Task("Task with +project1 +project2 @context1 @context2"));
+        complexTaskList.UpdateTaskListMetaData();
         
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = complexTaskList;

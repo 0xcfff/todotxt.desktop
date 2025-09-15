@@ -65,6 +65,8 @@ var _taskList = new TaskList("test.txt", false); // File doesn't exist
 
 This causes `FileNotFoundException` in the `TaskList.ReloadTasks()` method.
 
+**Architectural Issue**: The TaskList constructor calls `ReloadTasks()` immediately, which violates the principle of separation of concerns. The constructor should not perform I/O operations, making the class difficult to test and use in scenarios where file I/O is not desired.
+
 ## Architecture Patterns
 
 ### Test Infrastructure Patterns
@@ -129,17 +131,22 @@ The IntellisenseTextBox has a strong dependency on `TaskList` which requires fil
 ## Recommendations
 
 ### Immediate Actions
-1. Fix TaskList dependency issue using temporary files
-2. Get existing 14 tests passing
+1. **Fix TaskList Architecture**: 
+   - Add parameterless constructor for in-memory creation
+   - Modify existing constructor to not automatically load files
+   - Make ReloadTasks() public and handle empty _filePath gracefully
+   - Add LoadFromFile(string filePath) method for explicit file loading
+2. Get existing 14 tests passing with improved TaskList design
 3. Add proper test cleanup
 
 ### Testing Strategy
 1. **Unit Tests**: Test individual methods in isolation
-2. **Integration Tests**: Test TaskList interaction
+2. **Integration Tests**: Test TaskList interaction with proper file management
 3. **UI Tests**: Test user interactions and events
 4. **Mocking**: Consider mocking TaskList for pure unit tests
 
 ### Test Data Management
-- Use temporary files for TaskList tests
+- Use temporary files for TaskList tests when file I/O is needed
 - Create test data builders for consistent setup
 - Implement proper cleanup in teardown methods
+- **Prefer in-memory TaskList creation** for most unit tests

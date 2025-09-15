@@ -5,7 +5,8 @@ This task focuses on creating comprehensive test coverage for the IntellisenseTe
 
 ## Current Status
 - **Existing Tests**: 14 tests (all currently failing)
-- **Root Cause**: TaskList file dependency issue
+- **Root Cause**: TaskList constructor automatically loads files, making testing difficult
+- **Solution**: Fix TaskList architecture to support in-memory creation
 - **Priority**: High - component needs reliable test coverage
 
 ## Task Structure
@@ -18,15 +19,18 @@ This task focuses on creating comprehensive test coverage for the IntellisenseTe
 
 ### Key Findings
 1. **Component Complexity**: IntellisenseTextBox has rich functionality including popup management, autocompletion logic, and user interaction handling
-2. **Test Infrastructure Issues**: Current tests fail due to TaskList requiring real file paths
+2. **Architectural Issue**: TaskList constructor automatically loads files, violating separation of concerns and making testing difficult
 3. **Coverage Gaps**: Missing tests for core functionality like popup management, autocompletion logic, and user interactions
-4. **Technical Challenges**: UI testing complexity, file system dependencies, and event handling
+4. **Technical Challenges**: UI testing complexity, event handling, and the need for proper TaskList architecture
 
 ## Implementation Phases
 
-### Phase 1: Fix Test Infrastructure (1-2 days)
-- Fix TaskList file dependency issue
-- Establish proper temporary file management
+### Phase 1: Fix TaskList Architecture and Test Infrastructure (2-3 days)
+- Fix TaskList constructor to not automatically load files
+- Add parameterless constructor for in-memory creation
+- Make ReloadTasks() public and handle empty _filePath gracefully
+- Add LoadFromFile(string filePath) method for explicit file loading
+- Establish in-memory TaskList creation for testing
 - Get all 14 existing tests passing
 
 ### Phase 2: Core Functionality Tests (2-3 days)
@@ -45,6 +49,7 @@ This task focuses on creating comprehensive test coverage for the IntellisenseTe
 - Final validation
 
 ## Success Criteria
+- TaskList architecture fixed with proper separation of concerns
 - All existing tests pass
 - 30+ comprehensive tests covering all major functionality
 - 80%+ code coverage
@@ -60,10 +65,11 @@ This task focuses on creating comprehensive test coverage for the IntellisenseTe
 ## Related Files
 - **Component**: `src/TodoTxt.Avalonia/Controls/IntellisenseTextBox.cs`
 - **Existing Tests**: `src/TodoTxt.Avalonia.Tests/IntellisenseTextBoxUnitTests.cs`
-- **Dependencies**: `src/TodoTxt.Lib/TaskList.cs`, `src/TodoTxt.Shared/`
+- **Dependencies**: `src/TodoTxt.Lib/TaskList.cs` (needs architectural fix), `src/TodoTxt.Shared/`
 
 ## Notes
 - This is a C#/.NET project using Avalonia UI framework
 - Tests use NUnit framework
 - Component is part of a todo.txt desktop application
 - Focus on behavior testing rather than implementation details
+- **Key Architectural Change**: TaskList constructor should not perform I/O operations

@@ -35,12 +35,20 @@ namespace ToDoLib
 
         #region Constructor
 
-        public TaskList(string filePath, bool preserveWhitespace = false)
+        public TaskList(bool preserveWhitespace = false)
         {
-            _filePath = filePath;
             _preferredLineEnding = Environment.NewLine;
             PreserveWhiteSpace = preserveWhitespace;
-            ReloadTasks();
+            Tasks = new List<Task>();
+            Projects = new List<string>();
+            Contexts = new List<string>();
+            Priorities = new List<string>();
+        }
+
+        public TaskList(string filePath, bool preserveWhitespace = false)
+			: this(preserveWhitespace)
+        {
+            LoadFromFile(filePath);
         }
 
         #endregion
@@ -79,6 +87,13 @@ namespace ToDoLib
 
         public void ReloadTasks()
 		{
+			if (string.IsNullOrEmpty(_filePath))
+			{
+				// Handle gracefully - no file to load from
+				Log.Debug("No file path specified, skipping file load");
+				return;
+			}
+
 			Log.Debug("Loading tasks from {0}.", _filePath);
 
 			try
@@ -118,6 +133,16 @@ namespace ToDoLib
                 UpdateTaskListMetaData();
                 RaiseModifiedEvent();
             }
+		}
+
+		/// <summary>
+		/// Loads tasks from a specified file path
+		/// </summary>
+		/// <param name="filePath">The path to the file to load tasks from</param>
+		public void LoadFromFile(string filePath)
+		{
+			_filePath = filePath;
+			ReloadTasks();
 		}
 
 		public void Add(Task task)
