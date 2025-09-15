@@ -31,58 +31,82 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Initialize_With_Default_Values()
+    public void IntellisenseTextBoxCtor_WithDefaultValuesProvided_SetsCorrectProperties()
     {
+        // arrange
+        
+        // act
         var textBox = new IntellisenseTextBox();
         
+        // assert
         Assert.That(textBox.TaskList, Is.Null);
         Assert.That(textBox.CaseSensitive, Is.False);
     }
 
     [Test]
-    public void Should_Set_TaskList_Property()
+    public void TaskList_WithValidTaskListProvided_SetsProperty()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.TaskList = _taskList;
         
+        // assert
         Assert.That(textBox.TaskList, Is.EqualTo(_taskList));
     }
 
     [Test]
-    public void Should_Set_CaseSensitive_Property()
+    public void CaseSensitive_WithTrueValueSet_SetsProperty()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.CaseSensitive = true;
         
+        // assert
         Assert.That(textBox.CaseSensitive, Is.True);
     }
 
     [Test]
-    public void Should_Handle_Null_TaskList()
+    public void TaskList_WithNullValueProvided_SetsToNull()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.TaskList = null;
         
+        // assert
         Assert.That(textBox.TaskList, Is.Null);
     }
 
     [Test]
-    public void Should_Handle_Empty_TaskList()
+    public void TaskList_WithEmptyTaskListProvided_SetsPropertyAndHasZeroTasks()
     {
+        // arrange
         var emptyTaskList = new TaskList();
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.TaskList = emptyTaskList;
         
+        // assert
         Assert.That(textBox.TaskList, Is.EqualTo(emptyTaskList));
         Assert.That(textBox.TaskList.Tasks.Count, Is.EqualTo(0));
     }
 
     [Test]
-    public void Should_Extract_Projects_From_TaskList()
+    public void TaskList_WithValidTasksProvided_ExtractsProjects()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.TaskList = _taskList;
         
+        // assert
         // The TaskList should have extracted projects from the tasks
         Assert.That(_taskList.Projects, Contains.Item("+shopping"));
         Assert.That(_taskList.Projects, Contains.Item("+work"));
@@ -90,11 +114,15 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Extract_Contexts_From_TaskList()
+    public void TaskList_WithValidTasksProvided_ExtractsContexts()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.TaskList = _taskList;
         
+        // assert
         // The TaskList should have extracted contexts from the tasks
         Assert.That(_taskList.Contexts, Contains.Item("@home"));
         Assert.That(_taskList.Contexts, Contains.Item("@phone"));
@@ -102,72 +130,99 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Extract_Priorities_From_TaskList()
+    public void TaskList_WithValidTasksProvided_ExtractsPriorities()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.TaskList = _taskList;
         
+        // assert
         // The TaskList should have extracted priorities from the tasks
         Assert.That(_taskList.Priorities, Contains.Item("(A)"));
         Assert.That(_taskList.Priorities, Contains.Item("(B)"));
     }
 
     [Test]
-    public void Should_Handle_Text_Input()
+    public void Text_WithValidInputProvided_SetsProperty()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.Text = "Test input";
         
+        // assert
         Assert.That(textBox.Text, Is.EqualTo("Test input"));
     }
 
     [Test]
-    public void Should_Handle_Caret_Position()
+    public void CaretIndex_WithValidPositionSet_SetsProperty()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.Text = "Hello World";
         textBox.CaretIndex = 5;
         
+        // assert
         Assert.That(textBox.CaretIndex, Is.EqualTo(5));
     }
 
     [Test]
-    public void Should_Handle_Project_Trigger_Character()
+    public void Text_WithProjectTriggerProvided_ContainsPlusCharacter()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.Text = "Test +";
         
+        // assert
         Assert.That(textBox.Text, Does.Contain("+"));
     }
 
     [Test]
-    public void Should_Handle_Context_Trigger_Character()
+    public void Text_WithContextTriggerProvided_ContainsAtCharacter()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.Text = "Test @";
         
+        // assert
         Assert.That(textBox.Text, Does.Contain("@"));
     }
 
     [Test]
-    public void Should_Handle_Priority_Trigger_Character()
+    public void Text_WithPriorityTriggerProvided_ContainsParenthesisCharacter()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.Text = "Test (";
         
+        // assert
         Assert.That(textBox.Text, Does.Contain("("));
     }
 
     [Test]
-    public void Should_Handle_Multiple_Projects_And_Contexts()
+    public void TaskList_WithMultipleProjectsAndContextsProvided_ExtractsAllItems()
     {
+        // arrange
         var complexTaskList = new TaskList();
         complexTaskList.Tasks.Add(new Task("Task with +project1 +project2 @context1 @context2"));
         complexTaskList.UpdateTaskListMetaData();
-        
         var textBox = new IntellisenseTextBox();
+        
+        // act
         textBox.TaskList = complexTaskList;
         
+        // assert
         Assert.That(complexTaskList.Projects, Contains.Item("+project1"));
         Assert.That(complexTaskList.Projects, Contains.Item("+project2"));
         Assert.That(complexTaskList.Contexts, Contains.Item("@context1"));
@@ -178,48 +233,48 @@ public class IntellisenseTextBoxUnitTests
 
     // Dropdown Management Tests
     [Test]
-    public void Should_Show_DropDown_When_Called()
+    [TestCase(true)]
+    [TestCase(false)]
+    public void ShowDropDown_WithInitialVisibilityStateProvided_MakesDropdownVisibleIrrespectiveOfPreviousState(bool initialIsOpen)
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
-        
-        // Get popup reference using the new DropDown property
         var popup = textBox.DropDown as Popup;
+        popup!.IsOpen = initialIsOpen;
         
-        // Initially dropdown should be hidden
-        Assert.That(popup?.IsOpen, Is.False);
-        
-        // Show dropdown
+        // act
         textBox.ShowDropDown();
         
-        // Dropdown should now be open
+        // assert
+        // Dropdown should now be open regardless of initial state
         Assert.That(popup?.IsOpen, Is.True);
     }
 
     [Test]
-    public void Should_Hide_DropDown_When_Called()
+    public void HideDropDown_WhenCalled_ClosesDropdown()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
         
         // Show dropdown first
         textBox.ShowDropDown();
-        
-        // Get popup reference using the new DropDown property
         var popup = textBox.DropDown as Popup;
-        
         Assert.That(popup?.IsOpen, Is.True);
         
-        // Hide dropdown
+        // act
         textBox.HideDropDown();
         
+        // assert
         // Dropdown should now be closed
         Assert.That(popup?.IsOpen, Is.False);
     }
 
     [Test]
-    public void Should_Select_First_Item_When_DropDown_Shows()
+    public void ShowDropDown_WithPopulatedListConfigured_SelectsFirstItem()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
         
@@ -228,35 +283,36 @@ public class IntellisenseTextBoxUnitTests
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         showMethod?.Invoke(textBox, new object[] { '+' });
         
-        // Get list reference using the new DropDown property
         var popup = textBox.DropDown as Popup;
         var list = popup?.Child as ListBox;
         
         // Verify list has items
         Assert.That(list?.Items.Count, Is.GreaterThan(0));
         
+        // act
         // Show dropdown (this should select first item)
         textBox.ShowDropDown();
         
+        // assert
         // First item should be selected
         Assert.That(list?.SelectedIndex, Is.EqualTo(0));
     }
 
     // Autocompletion Logic Tests
     [Test]
-    public void Should_Show_Project_Suggestions_For_Plus_Trigger()
+    public void ShowSuggestions_WithPlusTriggerProvided_ShowsProjectSuggestions()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
-        
-        // Use reflection to call the private ShowSuggestions method directly
         var method = textBox.GetType().GetMethod("ShowSuggestions", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         
+        // act
         // Call ShowSuggestions with '+' trigger
         method?.Invoke(textBox, new object[] { '+' });
         
-        // Get list reference using the new DropDown property
+        // assert
         var popup = textBox.DropDown as Popup;
         var list = popup?.Child as ListBox;
         
@@ -271,19 +327,19 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Show_Context_Suggestions_For_At_Trigger()
+    public void ShowSuggestions_WithAtTriggerProvided_ShowsContextSuggestions()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
-        
-        // Use reflection to call the private ShowSuggestions method directly
         var method = textBox.GetType().GetMethod("ShowSuggestions", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         
+        // act
         // Call ShowSuggestions with '@' trigger
         method?.Invoke(textBox, new object[] { '@' });
         
-        // Get list reference using the new DropDown property
+        // assert
         var popup = textBox.DropDown as Popup;
         var list = popup?.Child as ListBox;
         
@@ -298,8 +354,9 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Show_Priority_Suggestions_For_Parenthesis_Trigger()
+    public void ShowSuggestions_WithParenthesisTriggerProvided_ShowsPrioritySuggestions()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
         
@@ -307,14 +364,14 @@ public class IntellisenseTextBoxUnitTests
         textBox.Text = "(";
         textBox.CaretIndex = 1;
         
-        // Use reflection to call the private ShowSuggestions method directly
         var method = textBox.GetType().GetMethod("ShowSuggestions", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         
+        // act
         // Call ShowSuggestions with '(' trigger
         method?.Invoke(textBox, new object[] { '(' });
         
-        // Get list reference using the new DropDown property
+        // assert
         var popup = textBox.DropDown as Popup;
         var list = popup?.Child as ListBox;
         
@@ -329,8 +386,9 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Filter_Suggestions_Case_Insensitive_By_Default()
+    public void UpdateFiltering_WithCaseInsensitiveConfigured_MatchesPartialText()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
         textBox.CaseSensitive = false;
@@ -344,18 +402,17 @@ public class IntellisenseTextBoxUnitTests
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         triggerField?.SetValue(textBox, 5); // Position of '+'
         
-        // Use reflection to call the private UpdateFiltering method
         var method = textBox.GetType().GetMethod("UpdateFiltering", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
-        // First show suggestions, then filter
         var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
         
+        // act
+        // First show suggestions, then filter
+        showMethod?.Invoke(textBox, new object[] { '+' });
         method?.Invoke(textBox, null);
         
-        // Get list reference using the new DropDown property
+        // assert
         var popup = textBox.DropDown as Popup;
         var list = popup?.Child as ListBox;
         
@@ -367,8 +424,9 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Filter_Suggestions_Case_Sensitive_When_Enabled()
+    public void UpdateFiltering_WithCaseSensitiveConfigured_DoesNotMatchDifferentCase()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
         textBox.CaseSensitive = true;
@@ -382,18 +440,17 @@ public class IntellisenseTextBoxUnitTests
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         triggerField?.SetValue(textBox, 5); // Position of '+'
         
-        // Use reflection to call the private UpdateFiltering method
         var method = textBox.GetType().GetMethod("UpdateFiltering", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
-        // First show suggestions, then filter
         var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
         
+        // act
+        // First show suggestions, then filter
+        showMethod?.Invoke(textBox, new object[] { '+' });
         method?.Invoke(textBox, null);
         
-        // Get list reference using the new DropDown property
+        // assert
         var popup = textBox.DropDown as Popup;
         var list = popup?.Child as ListBox;
         
@@ -406,8 +463,9 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Validate_Priority_Position_At_Start_Of_Line()
+    public void IsValidPriorityPosition_AtStartOfLineConfigured_ReturnsTrue()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
         
@@ -415,19 +473,21 @@ public class IntellisenseTextBoxUnitTests
         textBox.Text = "(";
         textBox.CaretIndex = 1;
         
-        // Use reflection to call the private IsValidPriorityPosition method
         var method = textBox.GetType().GetMethod("IsValidPriorityPosition", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         
+        // act
         var result = method?.Invoke(textBox, null) as bool?;
         
+        // assert
         // Should be valid at start of line
         Assert.That(result, Is.True);
     }
 
     [Test]
-    public void Should_Validate_Priority_Position_After_Date()
+    public void IsValidPriorityPosition_AfterDateConfigured_ReturnsBoolean()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
         
@@ -445,12 +505,13 @@ public class IntellisenseTextBoxUnitTests
         textBox.Text = "2024-01-15 (";
         textBox.CaretIndex = 12;
         
-        // Use reflection to call the private IsValidPriorityPosition method
         var method = textBox.GetType().GetMethod("IsValidPriorityPosition", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         
+        // act
         var result = method?.Invoke(textBox, null) as bool?;
         
+        // assert
         // The method should return a boolean (even if it's false due to the potential bug)
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.InstanceOf<bool>());
@@ -460,8 +521,9 @@ public class IntellisenseTextBoxUnitTests
     }
 
     [Test]
-    public void Should_Reject_Priority_Position_In_Middle_Of_Text()
+    public void IsValidPriorityPosition_InMiddleOfTextConfigured_ReturnsFalse()
     {
+        // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
         
@@ -469,12 +531,13 @@ public class IntellisenseTextBoxUnitTests
         textBox.Text = "Some text (";
         textBox.CaretIndex = 11;
         
-        // Use reflection to call the private IsValidPriorityPosition method
         var method = textBox.GetType().GetMethod("IsValidPriorityPosition", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         
+        // act
         var result = method?.Invoke(textBox, null) as bool?;
         
+        // assert
         // Should not be valid in middle of text
         Assert.That(result, Is.False);
     }

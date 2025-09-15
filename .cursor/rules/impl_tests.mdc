@@ -1,0 +1,351 @@
+---
+description: C# Test Implementation - AAA Pattern
+globs:
+  - "*.Test?.cs"
+alwaysApply: false
+---
+
+# C# Test Implementation Rule
+
+## Overview
+This rule enforces the AAA (Arrange, Act, Assert) pattern for C# unit tests with explicit section comments.
+
+## Test Structure Requirements
+
+### Mandatory AAA Pattern
+Every test method MUST follow the AAA pattern with explicit comments:
+
+```csharp
+[Test]
+public void MethodUnderTest_WithValidInputProvided_ReturnsExpectedResult()
+{
+    // arrange
+    var input = "test data";
+    
+    // act
+    var actual = MethodUnderTest(input);
+    
+    // assert
+    Assert.AreEqual("expected result", actual);
+}
+```
+
+### Section Distribution
+
+#### Arrange Section
+- **Purpose**: Set up test data, mocks, and initial state
+- **Content**: 
+  - Variable declarations and initialization
+  - Mock object setup
+  - Test data preparation
+  - Configuration of dependencies
+- **Comment**: `// arrange`
+- **Requirements**:
+  - **NO expectations**: Do not define expected values in arrange section
+  - **NO assertions**: Do not include assertion logic in arrange section
+  - **Focus on setup**: Only prepare the test environment and input data
+
+#### Act Section
+- **Purpose**: Execute the method or operation being tested
+- **Content**:
+  - Single method call or operation
+  - Capture the result in a variable
+  - **Special Case**: When no explicit act is needed, the arrange statement that produces the result being asserted becomes the act
+- **Comment**: `// act`
+
+#### Assert Section
+- **Purpose**: Verify the expected outcome
+- **Content**:
+  - Assertion statements
+  - Result verification
+  - State validation
+  - **Expected values**: Define expected values directly in assertions
+- **Comment**: `// assert`
+- **Requirements**:
+  - **MUST be simple**: No conditional logic (if/else, switch)
+  - **MUST be linear**: No loops or cycles
+  - **MUST use proper assert constructs**: Use framework assertion methods
+  - **MUST contain expectations**: Expected values should be defined in assert section, not arrange
+  - **Exception**: Only when standard asserts cannot handle the verification and implementing with simple asserts would be overly complex
+
+### Two-Phase Pattern (Arrange-Act Combined)
+When testing default states or properties that are set during initialization, the arrange statement that produces the result being asserted serves as both setup and the operation being tested:
+
+```csharp
+[Test]
+public void MyClassCtor_WithDefaultValuesProvided_SetsCorrectProperties()
+{
+    // arrange
+    
+    // act
+    var instance = new MyClass();
+    
+    // assert
+    Assert.AreEqual("Default", instance.Name);
+    Assert.AreEqual(0, instance.Value);
+}
+```
+
+In this case, the constructor call in the arrange section serves as both setup and the operation being tested. The act section contains the statement that produces the result being asserted.
+
+## Code Style Requirements
+
+### Test Method Naming
+- **Pattern**: `Method_Scenario_ExpectedResult`
+- **Structure**: Three parts separated by underscores
+- **Rules**:
+  - **Method**: The method or feature being tested (e.g., `Login`, `CalculateTotal`, `ProcessOrder`)
+  - **Scenario**: The condition or input being tested (e.g., `ValidCredentials`, `WithNullInput`, `EmptyList`)
+  - **ExpectedResult**: The expected behavior or outcome (e.g., `ShouldReturnDashboard`, `ThrowsException`, `ReturnsZero`)
+- **Formatting**:
+  - Use PascalCase for each part
+  - No underscores within each part
+  - Use descriptive, clear language
+- **Examples**:
+  - `Login_WithValidCredentialsProvided_ShouldReturnDashboard`
+  - `CalculateTotal_WithEmptyListProvided_ReturnsZero`
+  - `ProcessOrder_WithNullOrderProvided_ThrowsArgumentNullException`
+  - `TaskCtor_WithDefaultValuesProvided_SetsCorrectProperties`
+  - `UserCtor_WithValidInputProvided_CreatesUserWithName`
+
+#### Condition Naming Patterns
+- **Use past participles** to clearly indicate what action was taken to establish the condition:
+  - `Provided` - when input data is provided to methods or constructors (e.g., `WithValidInputProvided`, `WithDefaultValuesProvided`)
+  - `Set` - when values are set to properties or attributes (e.g., `WithPropertySet`, `WithAttributeSet`)
+  - `Configured` - when settings are configured (e.g., `WithMockConfigured`)
+  - `Initialized` - when objects are initialized (e.g., `WithServiceInitialized`)
+  - `Created` - when objects are created (e.g., `WithTaskCreated`)
+- **Common patterns**:
+  - `WithValidInputProvided` instead of `WithValidInput`
+  - `WithNullParameterProvided` instead of `WithNullParameter`
+  - `WithEmptyListProvided` instead of `WithEmptyList`
+  - `WithDefaultValuesProvided` instead of `WithDefaultValues` (for constructors)
+  - `WithPropertySet` instead of `WithProperty` (for property assignments)
+
+#### Constructor Testing Naming
+- **Always use `ClassNameCtor`** for constructor tests to maintain consistency and clarity
+  - `TaskCtor_WithDefaultValuesProvided_SetsCorrectProperties`
+  - `TaskCtor_WithNullParameterProvided_ThrowsArgumentNullException`
+  - `UserCtor_WithValidInputProvided_CreatesUserWithName`
+  - `OrderCtor_WithEmptyItemsProvided_ThrowsValidationException`
+
+### Variable Naming
+- Use descriptive variable names
+- Follow C# naming conventions (camelCase for local variables)
+- Use `actual` and `expected` for result comparisons
+
+### Assert Section Best Practices
+- **Use framework assertion methods**:
+  - `Assert.AreEqual(expected, actual)`
+  - `Assert.IsTrue(condition)`
+  - `Assert.IsFalse(condition)`
+  - `Assert.IsNull(object)`
+  - `Assert.IsNotNull(object)`
+  - `Assert.Throws<ExceptionType>(() => method())`
+  - `Assert.Contains(item, collection)`
+  - `Assert.DoesNotContain(item, collection)`
+- **Avoid custom logic**: Don't write if/else statements in assert sections
+- **Keep it linear**: One assertion per line, executed sequentially
+- **Be specific**: Use the most specific assertion method available
+- **Exception handling**: Use `Assert.Throws<>()` for exception testing instead of try/catch
+
+### Parameterized Tests
+- **Use `[TestCase]` attributes** to test multiple scenarios with the same test logic
+- **Naming**: Include the parameter in the condition part (e.g., `WithInitialVisibilityStateProvided`)
+- **Parameter naming**: Use descriptive parameter names that match the test condition
+- **Structure**: Follow the same AAA pattern with parameterized setup
+- **Examples**:
+  - `[TestCase(true)]` and `[TestCase(false)]` for boolean scenarios
+  - `[TestCase("value1")]` and `[TestCase("value2")]` for string scenarios
+  - `[TestCase(0)]` and `[TestCase(100)]` for numeric scenarios
+
+### Comments
+- **MANDATORY**: Each section must have its comment on its own line
+- Comments must be exactly: `// arrange`, `// act`, `// assert`
+- No additional text on comment lines
+- Comments must precede the section content
+
+## Exceptions
+
+### When AAA Pattern Cannot Be Applied
+The AAA pattern may be relaxed only in these specific cases:
+
+1. **Setup/Teardown Methods**: `[SetUp]`, `[TearDown]`, `[OneTimeSetUp]`, `[OneTimeTearDown]`
+2. **Parameterized Tests**: When using `[TestCase]` or `[Values]` attributes with minimal test logic
+3. **Simple Property Tests**: Single-line property getter/setter tests
+4. **Exception Tests**: When testing for specific exceptions with minimal setup
+
+### Exception Documentation
+If AAA pattern cannot be followed, add a comment explaining why:
+```csharp
+[Test]
+public void Property_WithValidObject_ReturnsValue()
+{
+    // Simple property test - AAA pattern not applicable
+    Assert.AreEqual("expected", _object.Property);
+}
+```
+
+## Examples
+
+### Good Example - Full AAA Pattern
+```csharp
+[Test]
+public void CalculateTotal_WithValidItemsProvided_ReturnsCorrectSum()
+{
+    // arrange
+    var items = new List<Item>
+    {
+        new Item { Price = 10.00m },
+        new Item { Price = 15.50m }
+    };
+    var calculator = new PriceCalculator();
+    
+    // act
+    var actual = calculator.CalculateTotal(items);
+    
+    // assert
+    Assert.AreEqual(25.50m, actual);
+}
+```
+
+### Good Example - With Mock Setup
+```csharp
+[Test]
+public void ProcessOrder_WithValidOrderProvided_CallsPaymentService()
+{
+    // arrange
+    var mockPaymentService = new Mock<IPaymentService>();
+    var order = new Order { Amount = 100.00m };
+    var orderProcessor = new OrderProcessor(mockPaymentService.Object);
+    
+    // act
+    orderProcessor.ProcessOrder(order);
+    
+    // assert
+    mockPaymentService.Verify(x => x.ProcessPayment(100.00m), Times.Once);
+}
+```
+
+### Good Example - Two-Phase Pattern (Default State Testing)
+```csharp
+[Test]
+public void TaskCtor_WithDefaultValuesProvided_HasEmptyDescription()
+{
+    // arrange
+    
+    // act
+    var task = new Task();
+    
+    // assert
+    Assert.AreEqual("", task.Description);
+}
+```
+
+### Bad Example - Missing Comments
+```csharp
+[Test]
+public void Method_WithTestInputProvided_ReturnsExpected()
+{
+    var input = "test";
+    var result = Method(input);
+    Assert.AreEqual("expected", result);
+}
+```
+
+### Bad Example - Expectations in Arrange Section
+```csharp
+[Test]
+public void CalculateTotal_WithValidItemsProvided_ReturnsCorrectSum()
+{
+    // arrange - BAD: Expected values should not be in arrange section
+    var items = new List<Item>
+    {
+        new Item { Price = 10.00m },
+        new Item { Price = 15.50m }
+    };
+    var calculator = new PriceCalculator();
+    var expected = 25.50m; // BAD: Expected value in arrange
+    
+    // act
+    var actual = calculator.CalculateTotal(items);
+    
+    // assert
+    Assert.AreEqual(expected, actual);
+}
+```
+
+### Bad Example - Complex Assert Logic
+```csharp
+[Test]
+public void GetItems_WithValidInputProvided_ReturnsCorrectItems()
+{
+    // arrange
+    var input = "test";
+    var expectedCount = 3;
+    
+    // act
+    var result = GetItems(input);
+    
+    // assert - BAD: Complex conditional logic
+    if (result.Count == expectedCount)
+    {
+        for (int i = 0; i < result.Count; i++)
+        {
+            if (result[i].Name != $"Item{i}")
+            {
+                Assert.Fail($"Item {i} has wrong name");
+            }
+        }
+    }
+    else
+    {
+        Assert.Fail("Wrong count");
+    }
+}
+```
+
+### Good Example - Simple Assert Logic
+```csharp
+[Test]
+public void GetItems_WithValidInputProvided_ReturnsCorrectItems()
+{
+    // arrange
+    var input = "test";
+    
+    // act
+    var result = GetItems(input);
+    
+    // assert - GOOD: Simple, linear assertions with inline expected values
+    Assert.AreEqual(3, result.Count);
+    Assert.AreEqual("Item0", result[0].Name);
+    Assert.AreEqual("Item1", result[1].Name);
+    Assert.AreEqual("Item2", result[2].Name);
+}
+```
+
+### Good Example - Parameterized Test with Multiple Scenarios
+```csharp
+[Test]
+[TestCase(true)]
+[TestCase(false)]
+public void ShowDropDown_WithInitialVisibilityStateProvided_MakesDropdownVisibleIrrespectiveOfPreviousState(bool initialIsOpen)
+{
+    // arrange
+    var textBox = new IntellisenseTextBox();
+    var popup = (Popup)textBox.DropDown;
+    popup.IsOpen = initialIsOpen;
+    
+    // act
+    textBox.ShowDropDown();
+    
+    // assert
+    Assert.That(popup.IsOpen, Is.True);
+}
+```
+
+## Enforcement
+- All new tests MUST follow this pattern
+- Existing tests should be refactored to follow this pattern when modified
+- Code reviews should verify AAA pattern compliance
+- Test failures due to unclear structure should be addressed by applying this pattern
