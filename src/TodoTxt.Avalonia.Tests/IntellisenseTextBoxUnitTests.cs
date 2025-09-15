@@ -241,7 +241,7 @@ public class IntellisenseTextBoxUnitTests
         // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
-        var popup = textBox.DropDown as Popup;
+        var popup = textBox.DropDownPopup;
         popup!.IsOpen = initialIsOpen;
         
         // act
@@ -261,7 +261,7 @@ public class IntellisenseTextBoxUnitTests
         
         // Show dropdown first
         textBox.ShowDropDown();
-        var popup = textBox.DropDown as Popup;
+        var popup = textBox.DropDownPopup;
         Assert.That(popup?.IsOpen, Is.True);
         
         // act
@@ -280,12 +280,10 @@ public class IntellisenseTextBoxUnitTests
         textBox.TaskList = _taskList;
         
         // First populate the list with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Verify list has items
         Assert.That(list?.Items.Count, Is.GreaterThan(0));
@@ -306,16 +304,13 @@ public class IntellisenseTextBoxUnitTests
         // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
-        var method = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
         // act
         // Call ShowSuggestions with '+' trigger
-        method?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
         // assert
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Should have project suggestions
         Assert.That(list?.ItemsSource, Is.Not.Null);
@@ -333,16 +328,13 @@ public class IntellisenseTextBoxUnitTests
         // arrange
         var textBox = new IntellisenseTextBox();
         textBox.TaskList = _taskList;
-        var method = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
         // act
         // Call ShowSuggestions with '@' trigger
-        method?.Invoke(textBox, new object[] { '@' });
+        textBox.ShowSuggestions('@');
         
         // assert
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Should have context suggestions
         Assert.That(list?.ItemsSource, Is.Not.Null);
@@ -365,16 +357,13 @@ public class IntellisenseTextBoxUnitTests
         textBox.Text = "(";
         textBox.CaretIndex = 1;
         
-        var method = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
         // act
         // Call ShowSuggestions with '(' trigger
-        method?.Invoke(textBox, new object[] { '(' });
+        textBox.ShowSuggestions('(');
         
         // assert
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Should have priority suggestions
         Assert.That(list?.ItemsSource, Is.Not.Null);
@@ -405,17 +394,14 @@ public class IntellisenseTextBoxUnitTests
         
         var method = textBox.GetType().GetMethod("UpdateFiltering", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
         // act
         // First show suggestions, then filter
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         method?.Invoke(textBox, null);
         
         // assert
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Should have filtered suggestions (case insensitive)
         Assert.That(list?.ItemsSource, Is.Not.Null);
@@ -443,17 +429,14 @@ public class IntellisenseTextBoxUnitTests
         
         var method = textBox.GetType().GetMethod("UpdateFiltering", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
         // act
         // First show suggestions, then filter
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         method?.Invoke(textBox, null);
         
         // assert
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Should have filtered suggestions (case sensitive)
         Assert.That(list?.ItemsSource, Is.Not.Null);
@@ -553,12 +536,10 @@ public class IntellisenseTextBoxUnitTests
         textBox.TaskList = _taskList;
         
         // Set up dropdown with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Verify dropdown is open and has items
         Assert.That(popup?.IsOpen, Is.True);
@@ -592,12 +573,10 @@ public class IntellisenseTextBoxUnitTests
         textBox.TaskList = _taskList;
         
         // Set up dropdown with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Verify dropdown is open and has items
         Assert.That(popup?.IsOpen, Is.True);
@@ -631,12 +610,10 @@ public class IntellisenseTextBoxUnitTests
         textBox.TaskList = _taskList;
         
         // Set up dropdown with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Verify dropdown is open and has items
         Assert.That(popup?.IsOpen, Is.True);
@@ -671,12 +648,10 @@ public class IntellisenseTextBoxUnitTests
         textBox.TaskList = _taskList;
         
         // Set up dropdown with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Verify dropdown is open and has items
         Assert.That(popup?.IsOpen, Is.True);
@@ -720,12 +695,10 @@ public class IntellisenseTextBoxUnitTests
         triggerField?.SetValue(textBox, 5); // Position of '+'
         
         // Set up dropdown with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Verify dropdown is open and has items
         Assert.That(popup?.IsOpen, Is.True);
@@ -771,12 +744,10 @@ public class IntellisenseTextBoxUnitTests
         triggerField?.SetValue(textBox, 5); // Position of '+'
         
         // Set up dropdown with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Select first item
         list!.SelectedIndex = 0;
@@ -815,12 +786,10 @@ public class IntellisenseTextBoxUnitTests
         triggerField?.SetValue(textBox, 5); // Position of '+'
         
         // Set up dropdown with suggestions but no selection
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
-        var list = popup?.Child as ListBox;
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
         
         // Ensure no item is selected
         list!.SelectedIndex = -1;
@@ -845,11 +814,9 @@ public class IntellisenseTextBoxUnitTests
         textBox.TaskList = _taskList;
         
         // Set up dropdown with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
+        var popup = textBox.DropDownPopup;
         
         // Verify dropdown is open
         Assert.That(popup?.IsOpen, Is.True);
@@ -874,11 +841,9 @@ public class IntellisenseTextBoxUnitTests
         textBox.TaskList = _taskList;
         
         // Set up dropdown with suggestions
-        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        showMethod?.Invoke(textBox, new object[] { '+' });
+        textBox.ShowSuggestions('+');
         
-        var popup = textBox.DropDown as Popup;
+        var popup = textBox.DropDownPopup;
         
         // Verify dropdown is open
         Assert.That(popup?.IsOpen, Is.True);
@@ -909,5 +874,313 @@ public class IntellisenseTextBoxUnitTests
         // assert
         // Right arrow should not be handled (allows TextBox to process it)
         Assert.That(keyEventArgs.Handled, Is.False);
+    }
+
+    // ===== PHASE 3.1: ERROR HANDLING TESTS =====
+
+    [Test]
+    public void TextChanged_WithInvalidCaretIndex_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up a scenario that could cause an exception
+        textBox.Text = "Test +";
+        textBox.CaretIndex = 10; // Invalid caret index (beyond text length)
+        
+        // act
+        // Simulate TextChanged event - this should not crash
+        var textChangedMethod = textBox.GetType().GetMethod("IntellisenseTextBox_TextChanged", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        
+        // The test passes if this doesn't throw an exception
+        Assert.DoesNotThrow(() => 
+        {
+            textChangedMethod?.Invoke(textBox, new object[] { textBox, null! });
+        });
+        
+        // assert
+        // Should handle gracefully - the method should not crash
+        // Just verify the method executed without throwing an exception
+        // The exact UI state after error conditions may vary based on implementation
+    }
+
+    [Test]
+    public void TextChanged_WithNullText_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up a scenario with null text
+        textBox.Text = null;
+        textBox.CaretIndex = 0;
+        
+        // act
+        // Simulate TextChanged event
+        var textChangedMethod = textBox.GetType().GetMethod("IntellisenseTextBox_TextChanged", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        textChangedMethod?.Invoke(textBox, new object[] { textBox, null! });
+        
+        // assert
+        // Should handle gracefully - dropdown should be closed
+        var popup = textBox.DropDownPopup;
+        Assert.That(popup?.IsOpen, Is.False);
+        
+        // Trigger position should be reset
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var triggerPosition = triggerField?.GetValue(textBox);
+        Assert.That(triggerPosition, Is.EqualTo(-1));
+    }
+
+    [Test]
+    public void InsertSelectedText_WithInvalidTriggerPosition_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up text and invalid trigger position
+        textBox.Text = "Test +sho";
+        textBox.CaretIndex = 9;
+        
+        // Set invalid trigger position (beyond text length)
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        triggerField?.SetValue(textBox, 20); // Invalid position
+        
+        // Set up dropdown with suggestions
+        textBox.ShowSuggestions('+');
+        
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
+        list!.SelectedIndex = 0;
+        
+        var originalText = textBox.Text;
+        var originalCaretIndex = textBox.CaretIndex;
+        
+        // act
+        // Call InsertSelectedText directly
+        var insertMethod = textBox.GetType().GetMethod("InsertSelectedText", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        insertMethod?.Invoke(textBox, null);
+        
+        // assert
+        // Should handle gracefully - text should remain unchanged
+        Assert.That(textBox.Text, Is.EqualTo(originalText));
+        Assert.That(textBox.CaretIndex, Is.EqualTo(originalCaretIndex));
+        
+        // The method should execute without throwing an exception
+        // The exact UI state after error conditions may vary based on implementation
+    }
+
+    [Test]
+    public void InsertSelectedText_WithNullSelectedItem_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up text and trigger position
+        textBox.Text = "Test +sho";
+        textBox.CaretIndex = 9;
+        
+        // Set valid trigger position
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        triggerField?.SetValue(textBox, 5); // Valid position
+        
+        // Set up dropdown with suggestions but no selection
+        textBox.ShowSuggestions('+');
+        
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
+        
+        // Ensure no item is selected
+        list!.SelectedIndex = -1;
+        
+        var originalText = textBox.Text;
+        var originalCaretIndex = textBox.CaretIndex;
+        
+        // act
+        // Call InsertSelectedText directly
+        var insertMethod = textBox.GetType().GetMethod("InsertSelectedText", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        insertMethod?.Invoke(textBox, null);
+        
+        // assert
+        // Should handle gracefully - text should remain unchanged
+        Assert.That(textBox.Text, Is.EqualTo(originalText));
+        Assert.That(textBox.CaretIndex, Is.EqualTo(originalCaretIndex));
+    }
+
+    [Test]
+    public void ShowSuggestions_WithNullTaskList_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = null; // Null TaskList
+        
+        // act
+        // Call ShowSuggestions with '+' trigger
+        textBox.ShowSuggestions('+');
+        
+        // assert
+        // Should handle gracefully - dropdown should be closed
+        var popup = textBox.DropDownPopup;
+        Assert.That(popup?.IsOpen, Is.False);
+    }
+
+    [Test]
+    public void ShowSuggestions_WithEmptyTaskList_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = new TaskList(); // Empty TaskList
+        
+        // act
+        // Call ShowSuggestions with '+' trigger
+        textBox.ShowSuggestions('+');
+        
+        // assert
+        // Should handle gracefully - dropdown should be closed
+        var popup = textBox.DropDownPopup;
+        Assert.That(popup?.IsOpen, Is.False);
+    }
+
+    [Test]
+    public void UpdateFiltering_WithInvalidTriggerPosition_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up text and invalid trigger position
+        textBox.Text = "Test +sho";
+        textBox.CaretIndex = 9;
+        
+        // Set invalid trigger position (beyond text length)
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        triggerField?.SetValue(textBox, 20); // Invalid position
+        
+        // Set up dropdown with suggestions
+        textBox.ShowSuggestions('+');
+        
+        var popup = textBox.DropDownPopup;
+        
+        // act
+        // Call UpdateFiltering directly
+        var updateMethod = textBox.GetType().GetMethod("UpdateFiltering", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        updateMethod?.Invoke(textBox, null);
+        
+        // assert
+        // Should handle gracefully - the method should execute without throwing an exception
+        // The exact UI state after error conditions may vary based on implementation
+    }
+
+    [Test]
+    public void UpdateFiltering_WithNullItemsSource_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up text and trigger position
+        textBox.Text = "Test +sho";
+        textBox.CaretIndex = 9;
+        
+        // Set valid trigger position
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        triggerField?.SetValue(textBox, 5); // Valid position
+        
+        // Set up dropdown but with null ItemsSource
+        textBox.ShowSuggestions('+');
+        
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
+        list!.ItemsSource = null; // Set to null
+        
+        // act
+        // Call UpdateFiltering directly
+        var updateMethod = textBox.GetType().GetMethod("UpdateFiltering", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        updateMethod?.Invoke(textBox, null);
+        
+        // assert
+        // Should handle gracefully - method should return early without error
+        // Dropdown state should remain unchanged
+        Assert.That(popup?.IsOpen, Is.True);
+    }
+
+    [Test]
+    public void InsertSelectedText_WithNegativeTriggerPosition_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up text and negative trigger position
+        textBox.Text = "Test +sho";
+        textBox.CaretIndex = 9;
+        
+        // Set negative trigger position
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        triggerField?.SetValue(textBox, -1); // Negative position
+        
+        // Set up dropdown with suggestions
+        textBox.ShowSuggestions('+');
+        
+        var popup = textBox.DropDownPopup;
+        var list = textBox.DropDownList;
+        list!.SelectedIndex = 0;
+        
+        var originalText = textBox.Text;
+        var originalCaretIndex = textBox.CaretIndex;
+        
+        // act
+        // Call InsertSelectedText directly
+        var insertMethod = textBox.GetType().GetMethod("InsertSelectedText", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        insertMethod?.Invoke(textBox, null);
+        
+        // assert
+        // Should handle gracefully - text should remain unchanged
+        Assert.That(textBox.Text, Is.EqualTo(originalText));
+        Assert.That(textBox.CaretIndex, Is.EqualTo(originalCaretIndex));
+    }
+
+    [Test]
+    public void TextChanged_WithEmptyString_HandlesExceptionGracefully()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up empty text
+        textBox.Text = "";
+        textBox.CaretIndex = 0;
+        
+        // act
+        // Simulate TextChanged event
+        var textChangedMethod = textBox.GetType().GetMethod("IntellisenseTextBox_TextChanged", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        textChangedMethod?.Invoke(textBox, new object[] { textBox, null! });
+        
+        // assert
+        // Should handle gracefully - dropdown should be closed
+        var popup = textBox.DropDownPopup;
+        Assert.That(popup?.IsOpen, Is.False);
+        
+        // Trigger position should be reset
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var triggerPosition = triggerField?.GetValue(textBox);
+        Assert.That(triggerPosition, Is.EqualTo(-1));
     }
 }

@@ -49,9 +49,14 @@ namespace TodoTxt.Avalonia.Controls
         }
 
         /// <summary>
-        /// Gets the dropdown container control.
+        /// Gets the dropdown popup container control.
         /// </summary>
-        public Control? DropDown => _intellisensePopup;
+        protected internal Popup? DropDownPopup => _intellisensePopup;
+
+        /// <summary>
+        /// Gets the dropdown list control.
+        /// </summary>
+        protected internal ListBox? DropDownList => _intellisenseList;
 
         /// <summary>
         /// Initializes a new instance of the IntellisenseTextBox class.
@@ -320,7 +325,7 @@ namespace TodoTxt.Avalonia.Controls
         /// Shows suggestions based on the trigger character.
         /// </summary>
         /// <param name="trigger">The trigger character that was typed.</param>
-        private void ShowSuggestions(char trigger)
+        protected internal void ShowSuggestions(char trigger)
         {
             try
             {

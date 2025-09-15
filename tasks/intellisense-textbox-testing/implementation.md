@@ -103,11 +103,11 @@ public void LoadFromFile(string filePath)
   - [x] Test focus handling and lost focus events
 
 ### Phase 3: Comprehensive Coverage
-- [ ] **3.1** Error Handling Tests
-  - Test exception handling in `TextChanged` event
-  - Test exception handling in `InsertSelectedText`
-  - Test exception handling in `UpdateFiltering`
-  - Test invalid cursor positions
+- [x] **3.1** Error Handling Tests
+  - [x] Test exception handling in `TextChanged` event
+  - [x] Test exception handling in `InsertSelectedText`
+  - [x] Test exception handling in `UpdateFiltering`
+  - [x] Test invalid cursor positions
 
 - [ ] **3.2** Edge Case Tests
   - Test empty TaskList scenarios
