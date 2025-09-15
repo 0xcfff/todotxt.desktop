@@ -48,6 +48,11 @@ Create these files in the task directory:
 - [ ] Task 2 description
 - [ ] Task 3 description
 
+**Documentation References:**
+- [ ] Reference: `samples/basic-example.axaml` for implementation pattern
+- [ ] Reference: `api-docs/framework-differences.md` for migration guidance
+- [ ] Reference: `references/existing-pattern.cs` for consistency
+
 **Testing:**
 - [ ] Test 1 description
 - [ ] Test 2 description
@@ -63,6 +68,10 @@ Create these files in the task directory:
 - [ ] Task 1 description
 - [ ] Task 2 description
 
+**Documentation References:**
+- [ ] Reference: `samples/advanced-example.axaml` for complex implementation
+- [ ] Reference: `api-docs/troubleshooting.md` for common issues
+
 **Testing:**
 - [ ] Test 1 description
 - [ ] Test 2 description
@@ -77,6 +86,10 @@ Create these files in the task directory:
 **Tasks:**
 - [ ] Task 1 description
 - [ ] Task 2 description
+
+**Documentation References:**
+- [ ] Reference: `references/best-practices.md` for implementation guidance
+- [ ] Reference: `samples/validation-example.cs` for testing patterns
 
 **Testing:**
 - [ ] Test 1 description
@@ -98,10 +111,12 @@ Create these files in the task directory:
 - Use `Phase X: {Name} {emoji}` format for phases
 - Use `Step X.Y: {Name} {emoji}` format for steps
 - Each step MUST have "Tasks:" section with bullet points
+- Each step MUST have "Documentation References:" section with bullet points
 - Each step MUST have "Testing:" section with bullet points
 - Each step MUST have "Success Criteria:" section with bullet points
 - Use `[ ]` for incomplete items, `[x]` for completed items
 - Start all phases and steps as not touched yet (⏳)
+- Documentation References should include specific file paths and brief descriptions of their purpose
 
 ### 4. Interactive Planning
 - Ask clarifying questions about requirements
@@ -111,11 +126,26 @@ Create these files in the task directory:
 - Balance user involvement with task complexity
 
 ### 5. Supporting Documentation
-As needed, create:
-- `api-docs/`: External API documentation
-- `samples/`: Example requests/responses
-- `references/`: Relevant code samples or patterns
-- `mockups/`: UI sketches or wireframes
+**CRITICAL**: Create comprehensive documentation and samples during planning to guide implementation:
+
+#### Required Documentation Structure
+- `api-docs/`: External API documentation, framework differences, migration guides
+- `samples/`: Working code examples, project structures, configuration templates
+- `references/`: Relevant code samples, patterns, and best practices from existing codebase
+- `mockups/`: UI sketches, wireframes, or design specifications
+
+#### Documentation Quality Standards
+- **Samples must be complete and runnable** where possible
+- **Include both "before" and "after" examples** for migration tasks
+- **Document all assumptions and decisions** made during research
+- **Provide clear file paths and references** for easy lookup during implementation
+- **Include troubleshooting guides** for common issues identified during research
+
+#### Sample Organization
+- Use descriptive filenames: `basic-mainwindow-example.axaml`, `project-structure-template.md`
+- Group related samples in subdirectories: `samples/controls/`, `samples/dialogs/`
+- Include README files explaining sample purpose and usage
+- Reference samples explicitly in implementation steps for easy discovery
 
 ## Implementation Trigger
 Do not perform any implementation, the only purpose at this point is to make the plan and adjust it based on user asks.

@@ -26,17 +26,44 @@ This rule guides agents through systematic implementation of tasks following the
 
 ### Step-by-Step Execution
 1. **Load Plan**: Read `tasks/{task_name}/implementation.md`
-2. **Follow Hierarchy**: Work through phases in order, then steps within each phase
-3. **Work on First Incomplete Step**: 
+2. **Initial Context Review**: Read essential context documents once at the start:
+   - Read `tasks/{task_name}/research.md` for overall context and decisions
+   - Check `tasks/{task_name}/plan.md` for approach and constraints
+3. **Follow Hierarchy**: Work through phases in order, then steps within each phase
+4. **Work on First Incomplete Step**: 
    - Identify first step not marked as completed
+   - **Consult Step-Specific Documentation**: Read only the files listed in that step's "Documentation References" section
    - Complete all tasks within that step sequentially
-   - Think before implementing each task
+   - Think before implementing each task, using referenced documentation as guidance
    - Mark tasks as completed `[x]` in real-time
-4. **Step Completion**: Mark step as completed when all tasks done
-5. **Milestone Reporting**: After each step, STOP and provide:
+5. **Step Completion**: Mark step as completed when all tasks done
+6. **Milestone Reporting**: After each step, STOP and provide:
    - Summary of accomplishments
    - Any deviations or issues
    - Confirmation before proceeding
+
+### Documentation Utilization
+**CRITICAL**: Leverage planning documentation efficiently during implementation:
+
+#### Before Each Step
+- **Read Step-Specific References**: Consult only the files listed in that step's "Documentation References" section
+- **Apply Context**: Use the initial context from research.md and plan.md as background knowledge
+
+#### During Implementation
+- **Follow Referenced Patterns**: Use the specific samples and examples referenced for that step
+- **Apply Documented Insights**: Incorporate findings from the referenced documentation
+- **Reference Best Practices**: Follow patterns documented in the step's referenced files
+
+#### Documentation Quality Checks
+- **Verify Referenced Samples**: Ensure step-specific referenced samples are complete and usable
+- **Validate Step Assumptions**: Confirm assumptions relevant to the current step are still valid
+
+#### Handling Missing Documentation
+If step-specific referenced documentation is missing or inadequate:
+1. **Notify User**: Explain what referenced documentation is missing or insufficient
+2. **Request Clarification**: Ask for the specific missing samples or documentation
+3. **Proceed with Caution**: If user approves, proceed but document assumptions
+4. **Note Gap**: Document the missing reference for future planning improvement
 
 ### Plan Adherence
 - **Follow documented plan exactly** unless deviations necessary
@@ -50,11 +77,14 @@ This rule guides agents through systematic implementation of tasks following the
 - Update `tasks/{task_name}/implementation.md` in real-time:
   - Mark completed tasks with `[x]`
   - Mark completed steps with `[x]`
+  - Mark documentation references as consulted `[x]`
   - Add notes about deviations
 - Create `tasks/{task_name}/changes.md` documenting:
   - Files modified
   - Key changes made
   - Decisions made
+  - Documentation and samples utilized
+  - Any issues with planning documentation
 
 ## Validation
 After completing all steps:
