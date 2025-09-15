@@ -33,9 +33,75 @@ Create these files in the task directory:
 - **Risks**: Potential challenges or blockers
 
 #### `tasks/{task_name}/implementation.md`
-- **Steps**: Ordered list of implementation steps with checkmarks
-- **Testing Strategy**: How changes will be tested
-- **Rollback Plan**: How to undo changes if needed
+**MUST follow this exact format:**
+
+```markdown
+# {Task Name} Implementation Guide
+
+## Implementation Steps
+
+### Phase 1: {Phase Name} ⏳
+
+#### Step 1.1: {Step Name}
+**Tasks:**
+- [ ] Task 1 description
+- [ ] Task 2 description
+- [ ] Task 3 description
+
+**Testing:**
+- [ ] Test 1 description
+- [ ] Test 2 description
+- [ ] Test 3 description
+
+**Success Criteria:**
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] Criterion 3
+
+#### Step 1.2: {Step Name}
+**Tasks:**
+- [ ] Task 1 description
+- [ ] Task 2 description
+
+**Testing:**
+- [ ] Test 1 description
+- [ ] Test 2 description
+
+**Success Criteria:**
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+### Phase 2: {Phase Name} ⏳
+
+#### Step 2.1: {Step Name}
+**Tasks:**
+- [ ] Task 1 description
+- [ ] Task 2 description
+
+**Testing:**
+- [ ] Test 1 description
+- [ ] Test 2 description
+
+**Success Criteria:**
+- [ ] Criterion 1
+- [ ] Criterion 2
+```
+
+**Format Requirements:**
+- Use emoji status indicators for phases and steps:
+  - `⏳` = Phase not touched yet (initial state)
+  - No emoji = Step not touched yet (initial state)
+  - `🌾` = Phase in progress (partially complete)
+  - `👈` = Step in progress (partially complete)
+  - `🏆` = Phase completed (fully complete)
+  - `✅` = Step completed (fully complete)
+- Use `Phase X: {Name} {emoji}` format for phases
+- Use `Step X.Y: {Name} {emoji}` format for steps
+- Each step MUST have "Tasks:" section with bullet points
+- Each step MUST have "Testing:" section with bullet points
+- Each step MUST have "Success Criteria:" section with bullet points
+- Use `[ ]` for incomplete items, `[x]` for completed items
+- Start all phases and steps as not touched yet (⏳)
 
 ### 4. Interactive Planning
 - Ask clarifying questions about requirements
@@ -59,3 +125,4 @@ Do not perform any implementation, the only purpose at this point is to make the
 - Focus on understanding
 - Document decisions and rationale
 - Use the task folder for future reference and documentation
+- Follow the exact implementation.md format specified above
