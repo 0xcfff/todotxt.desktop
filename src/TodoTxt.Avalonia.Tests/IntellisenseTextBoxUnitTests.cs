@@ -5,6 +5,7 @@ using Task = ToDoLib.Task;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Input;
 
 namespace TodoTxt.Avalonia.Tests;
 
@@ -540,5 +541,373 @@ public class IntellisenseTextBoxUnitTests
         // assert
         // Should not be valid in middle of text
         Assert.That(result, Is.False);
+    }
+
+    // ===== PHASE 2.4: USER INTERACTION TESTS =====
+
+    [Test]
+    public void KeyDown_WithUpArrowWhenDropdownOpen_MovesSelectionUp()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up dropdown with suggestions
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        var list = popup?.Child as ListBox;
+        
+        // Verify dropdown is open and has items
+        Assert.That(popup?.IsOpen, Is.True);
+        Assert.That(list?.Items.Count, Is.GreaterThan(1)); // Need at least 2 items to test navigation
+        
+        // Set initial selection to second item
+        list!.SelectedIndex = 1;
+        
+        // act
+        // Simulate Up arrow key press
+        var keyDownMethod = textBox.GetType().GetMethod("IntellisenseTextBox_KeyDown", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var keyEventArgs = new KeyEventArgs
+        {
+            Key = Key.Up,
+            Handled = false
+        };
+        keyDownMethod?.Invoke(textBox, new object[] { textBox, keyEventArgs });
+        
+        // assert
+        // Selection should move up to first item
+        Assert.That(list.SelectedIndex, Is.EqualTo(0));
+        Assert.That(keyEventArgs.Handled, Is.True);
+    }
+
+    [Test]
+    public void KeyDown_WithDownArrowWhenDropdownOpen_MovesSelectionDown()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up dropdown with suggestions
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        var list = popup?.Child as ListBox;
+        
+        // Verify dropdown is open and has items
+        Assert.That(popup?.IsOpen, Is.True);
+        Assert.That(list?.Items.Count, Is.GreaterThan(1)); // Need at least 2 items to test navigation
+        
+        // Set initial selection to first item
+        list!.SelectedIndex = 0;
+        
+        // act
+        // Simulate Down arrow key press
+        var keyDownMethod = textBox.GetType().GetMethod("IntellisenseTextBox_KeyDown", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var keyEventArgs = new KeyEventArgs
+        {
+            Key = Key.Down,
+            Handled = false
+        };
+        keyDownMethod?.Invoke(textBox, new object[] { textBox, keyEventArgs });
+        
+        // assert
+        // Selection should move down to second item
+        Assert.That(list.SelectedIndex, Is.EqualTo(1));
+        Assert.That(keyEventArgs.Handled, Is.True);
+    }
+
+    [Test]
+    public void KeyDown_WithUpArrowAtFirstItemWhenDropdownOpen_WrapsToLastItem()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up dropdown with suggestions
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        var list = popup?.Child as ListBox;
+        
+        // Verify dropdown is open and has items
+        Assert.That(popup?.IsOpen, Is.True);
+        Assert.That(list?.Items.Count, Is.GreaterThan(1)); // Need at least 2 items to test wrapping
+        
+        // Set initial selection to first item
+        list!.SelectedIndex = 0;
+        var lastIndex = list.Items.Count - 1;
+        
+        // act
+        // Simulate Up arrow key press
+        var keyDownMethod = textBox.GetType().GetMethod("IntellisenseTextBox_KeyDown", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var keyEventArgs = new KeyEventArgs
+        {
+            Key = Key.Up,
+            Handled = false
+        };
+        keyDownMethod?.Invoke(textBox, new object[] { textBox, keyEventArgs });
+        
+        // assert
+        // Selection should wrap to last item
+        Assert.That(list.SelectedIndex, Is.EqualTo(lastIndex));
+        Assert.That(keyEventArgs.Handled, Is.True);
+    }
+
+    [Test]
+    public void KeyDown_WithDownArrowAtLastItemWhenDropdownOpen_WrapsToFirstItem()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up dropdown with suggestions
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        var list = popup?.Child as ListBox;
+        
+        // Verify dropdown is open and has items
+        Assert.That(popup?.IsOpen, Is.True);
+        Assert.That(list?.Items.Count, Is.GreaterThan(1)); // Need at least 2 items to test wrapping
+        
+        // Set initial selection to last item
+        var lastIndex = list!.Items.Count - 1;
+        list.SelectedIndex = lastIndex;
+        
+        // act
+        // Simulate Down arrow key press
+        var keyDownMethod = textBox.GetType().GetMethod("IntellisenseTextBox_KeyDown", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var keyEventArgs = new KeyEventArgs
+        {
+            Key = Key.Down,
+            Handled = false
+        };
+        keyDownMethod?.Invoke(textBox, new object[] { textBox, keyEventArgs });
+        
+        // assert
+        // Selection should wrap to first item
+        Assert.That(list.SelectedIndex, Is.EqualTo(0));
+        Assert.That(keyEventArgs.Handled, Is.True);
+    }
+
+    [Test]
+    public void KeyUp_WithEnterKeyWhenDropdownOpen_InsertsSelectedText()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up text and trigger position
+        textBox.Text = "Test +";
+        textBox.CaretIndex = 6;
+        
+        // Set trigger position manually
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        triggerField?.SetValue(textBox, 5); // Position of '+'
+        
+        // Set up dropdown with suggestions
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        var list = popup?.Child as ListBox;
+        
+        // Verify dropdown is open and has items
+        Assert.That(popup?.IsOpen, Is.True);
+        Assert.That(list?.Items.Count, Is.GreaterThan(0));
+        
+        // Select first item
+        list!.SelectedIndex = 0;
+        var selectedItem = list.SelectedItem?.ToString();
+        Assert.That(selectedItem, Is.Not.Null);
+        
+        // act
+        // Simulate Enter key press
+        var keyUpMethod = textBox.GetType().GetMethod("IntellisenseTextBox_KeyUp", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var keyEventArgs = new KeyEventArgs
+        {
+            Key = Key.Enter,
+            Handled = false
+        };
+        keyUpMethod?.Invoke(textBox, new object[] { textBox, keyEventArgs });
+        
+        // assert
+        // Text should be inserted and dropdown should be closed
+        Assert.That(textBox.Text, Is.EqualTo($"Test {selectedItem}"));
+        Assert.That(popup?.IsOpen, Is.False);
+        Assert.That(keyEventArgs.Handled, Is.True);
+    }
+
+    [Test]
+    public void InsertSelectedText_WithValidSelection_ReplacesTextFromTriggerPosition()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up text and trigger position
+        textBox.Text = "Test +sho";
+        textBox.CaretIndex = 9;
+        
+        // Set trigger position manually
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        triggerField?.SetValue(textBox, 5); // Position of '+'
+        
+        // Set up dropdown with suggestions
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        var list = popup?.Child as ListBox;
+        
+        // Select first item
+        list!.SelectedIndex = 0;
+        var selectedItem = list.SelectedItem?.ToString();
+        Assert.That(selectedItem, Is.Not.Null);
+        
+        // act
+        // Call InsertSelectedText directly
+        var insertMethod = textBox.GetType().GetMethod("InsertSelectedText", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        insertMethod?.Invoke(textBox, null);
+        
+        // assert
+        // Text should be replaced from trigger position
+        Assert.That(textBox.Text, Is.EqualTo($"Test {selectedItem}"));
+        Assert.That(textBox.CaretIndex, Is.EqualTo(5 + selectedItem!.Length));
+        Assert.That(popup?.IsOpen, Is.False);
+    }
+
+    [Test]
+    public void InsertSelectedText_WithNoSelection_DoesNotModifyText()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up text and trigger position
+        textBox.Text = "Test +sho";
+        textBox.CaretIndex = 9;
+        var originalText = textBox.Text;
+        var originalCaretIndex = textBox.CaretIndex;
+        
+        // Set trigger position manually
+        var triggerField = textBox.GetType().GetField("_triggerPosition", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        triggerField?.SetValue(textBox, 5); // Position of '+'
+        
+        // Set up dropdown with suggestions but no selection
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        var list = popup?.Child as ListBox;
+        
+        // Ensure no item is selected
+        list!.SelectedIndex = -1;
+        
+        // act
+        // Call InsertSelectedText directly
+        var insertMethod = textBox.GetType().GetMethod("InsertSelectedText", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        insertMethod?.Invoke(textBox, null);
+        
+        // assert
+        // Text should remain unchanged
+        Assert.That(textBox.Text, Is.EqualTo(originalText));
+        Assert.That(textBox.CaretIndex, Is.EqualTo(originalCaretIndex));
+    }
+
+    [Test]
+    public void LostFocus_WhenCalled_HidesDropdown()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up dropdown with suggestions
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        
+        // Verify dropdown is open
+        Assert.That(popup?.IsOpen, Is.True);
+        
+        // act
+        // Simulate lost focus event
+        var lostFocusMethod = textBox.GetType().GetMethod("IntellisenseTextBox_LostFocus", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var routedEventArgs = new RoutedEventArgs();
+        lostFocusMethod?.Invoke(textBox, new object[] { textBox, routedEventArgs });
+        
+        // assert
+        // Dropdown should be closed
+        Assert.That(popup?.IsOpen, Is.False);
+    }
+
+    [Test]
+    public void KeyDown_WithLeftRightArrowsWhenDropdownOpen_AllowsCursorMovement()
+    {
+        // arrange
+        var textBox = new IntellisenseTextBox();
+        textBox.TaskList = _taskList;
+        
+        // Set up dropdown with suggestions
+        var showMethod = textBox.GetType().GetMethod("ShowSuggestions", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        showMethod?.Invoke(textBox, new object[] { '+' });
+        
+        var popup = textBox.DropDown as Popup;
+        
+        // Verify dropdown is open
+        Assert.That(popup?.IsOpen, Is.True);
+        
+        // act
+        // Simulate Left arrow key press
+        var keyDownMethod = textBox.GetType().GetMethod("IntellisenseTextBox_KeyDown", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var keyEventArgs = new KeyEventArgs
+        {
+            Key = Key.Left,
+            Handled = false
+        };
+        keyDownMethod?.Invoke(textBox, new object[] { textBox, keyEventArgs });
+        
+        // assert
+        // Left arrow should not be handled (allows TextBox to process it)
+        Assert.That(keyEventArgs.Handled, Is.False);
+        
+        // Test Right arrow as well
+        keyEventArgs = new KeyEventArgs
+        {
+            Key = Key.Right,
+            Handled = false
+        };
+        keyDownMethod?.Invoke(textBox, new object[] { textBox, keyEventArgs });
+        
+        // assert
+        // Right arrow should not be handled (allows TextBox to process it)
+        Assert.That(keyEventArgs.Handled, Is.False);
     }
 }
