@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TodoTxt.Avalonia.Controls"
+        x:Class="TodoTxt.Avalonia.Controls.PostponeDialog"
+        Title="Postpone"
+        Width="300"
+        Height="120"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="False">
+    
+    <Window.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Height" Value="23"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Height" Value="23"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+        </Style>
+    </Window.Styles>
+
+    <StackPanel Orientation="Horizontal" Margin="12">
+        <TextBlock Text="Days to postpone:" 
+                   Padding="0,5,5,5" 
+                   VerticalAlignment="Center" />
+        <TextBox AcceptsReturn="False" 
+                 Name="PostponeTextBox" 
+                 Width="75"
+                 KeyUp="PostponeTextBox_KeyUp" />
+        <Button Content="OK" 
+                Name="OkButton" 
+                IsDefault="True" 
+                Click="OnOkClick" />
+        <Button Content="Cancel" 
+                Name="CancelButton" 
+                IsCancel="True" 
+                Click="OnCancelClick" />
+    </StackPanel>
+</Window>

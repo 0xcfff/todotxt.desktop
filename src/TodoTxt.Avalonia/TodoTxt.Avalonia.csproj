@@ -18,6 +18,7 @@
     <PackageReference Include="Avalonia.Desktop" Version="11.3.6" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.6" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.6" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.6" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Include="Avalonia.Diagnostics" Version="11.3.6">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
@@ -29,7 +30,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TodoTxt.Lib\ToDoLib.csproj" />
     <ProjectReference Include="..\TodoTxt.Shared\CommonExtensions.csproj" />
-    <ProjectReference Include="..\TodoTxt.Avalonia.Core\TodoTxt.Avalonia.Core.csproj" />
     <ProjectReference Include="..\TodoTxt.Platform\TodoTxt.Platform.csproj" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ToDoLib;
 using TodoTxt.Avalonia.Models;
-using TodoTxt.Avalonia.Core.Controls;
+using TodoTxt.Avalonia.Controls;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
