@@ -49,6 +49,11 @@ namespace TodoTxt.Avalonia.Controls
         }
 
         /// <summary>
+        /// Gets the dropdown container control.
+        /// </summary>
+        public Control? DropDown => _intellisensePopup;
+
+        /// <summary>
         /// Initializes a new instance of the IntellisenseTextBox class.
         /// </summary>
         public IntellisenseTextBox()
@@ -85,12 +90,12 @@ namespace TodoTxt.Avalonia.Controls
         }
 
         /// <summary>
-        /// Shows the autocompletion popup.
+        /// Shows the autocompletion dropdown.
         /// </summary>
-        public void ShowPopup()
+        public void ShowDropDown()
         {
             _intellisensePopup!.IsOpen = true;
-            // Always select the first item when popup opens
+            // Always select the first item when dropdown opens
             if (_intellisenseList!.Items.Count > 0)
             {
                 _intellisenseList.SelectedIndex = 0;
@@ -99,9 +104,9 @@ namespace TodoTxt.Avalonia.Controls
         }
 
         /// <summary>
-        /// Hides the autocompletion popup.
+        /// Hides the autocompletion dropdown.
         /// </summary>
-        public void HidePopup()
+        public void HideDropDown()
         {
             _intellisensePopup!.IsOpen = false;
         }
@@ -112,7 +117,7 @@ namespace TodoTxt.Avalonia.Controls
             {
                 if (string.IsNullOrEmpty(this.Text) || this.CaretIndex < 1)
                 {
-                    HidePopup();
+                    HideDropDown();
                     _triggerPosition = -1;
                     return;
                 }
@@ -120,7 +125,7 @@ namespace TodoTxt.Avalonia.Controls
                 // Validate cursor position
                 if (this.CaretIndex > this.Text.Length)
                 {
-                    HidePopup();
+                    HideDropDown();
                     _triggerPosition = -1;
                     return;
                 }
@@ -138,15 +143,15 @@ namespace TodoTxt.Avalonia.Controls
                 }
                 else
                 {
-                    HidePopup();
+                    HideDropDown();
                     _triggerPosition = -1;
                 }
             }
             catch (Exception ex)
             {
-                // Log error and gracefully handle by hiding popup
+                // Log error and gracefully handle by hiding dropdown
                 System.Diagnostics.Debug.WriteLine($"Error in text changed handler: {ex.Message}");
-                HidePopup();
+                HideDropDown();
                 _triggerPosition = -1;
             }
         }
@@ -252,8 +257,8 @@ namespace TodoTxt.Avalonia.Controls
 
         private void IntellisenseTextBox_LostFocus(object? sender, RoutedEventArgs e)
         {
-            // Hide popup when TextBox loses focus (e.g., Tab to next control)
-            HidePopup();
+            // Hide dropdown when TextBox loses focus (e.g., Tab to next control)
+            HideDropDown();
         }
 
         private void IntellisenseList_KeyDown(object? sender, KeyEventArgs e)
@@ -286,7 +291,7 @@ namespace TodoTxt.Avalonia.Controls
                 this.Text = newText;
                 this.CaretIndex = _triggerPosition + selectedText.Length;
                 
-                HidePopup();
+                HideDropDown();
                 _triggerPosition = -1;
                 
                 // Ensure focus is on the TextBox and prevent further key processing
@@ -295,7 +300,7 @@ namespace TodoTxt.Avalonia.Controls
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error in InsertSelectedText: {ex.Message}");
-                HidePopup();
+                HideDropDown();
                 _triggerPosition = -1;
             }
         }
@@ -324,7 +329,7 @@ namespace TodoTxt.Avalonia.Controls
                 {
                     if (!IsValidPriorityPosition())
                     {
-                        HidePopup();
+                        HideDropDown();
                         return;
                     }
                 }
@@ -341,14 +346,14 @@ namespace TodoTxt.Avalonia.Controls
                 if (data.Any())
                 {
                     _intellisenseList!.ItemsSource = data;
-                    ShowPopup();
+                    ShowDropDown();
                 }
             }
             catch (Exception ex)
             {
-                // Log error and gracefully handle by hiding popup
+                // Log error and gracefully handle by hiding dropdown
                 System.Diagnostics.Debug.WriteLine($"Error in ShowSuggestions: {ex.Message}");
-                HidePopup();
+                HideDropDown();
             }
         }
 
@@ -379,9 +384,9 @@ namespace TodoTxt.Avalonia.Controls
             }
             catch (Exception ex)
             {
-                // Log error and gracefully handle by hiding popup
+                // Log error and gracefully handle by hiding dropdown
                 System.Diagnostics.Debug.WriteLine($"Error in UpdateFiltering: {ex.Message}");
-                HidePopup();
+                HideDropDown();
             }
         }
 

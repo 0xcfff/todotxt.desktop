@@ -75,19 +75,28 @@ public void LoadFromFile(string filePath)
   - [x] Ensure test isolation (tests don't affect each other)
 
 ### Phase 2: Core Functionality Tests
-- [ ] **2.1** Popup Management Tests
-  - Test `ShowPopup()` method
-  - Test `HidePopup()` method
-  - Test popup visibility states
-  - Test popup positioning and sizing
+- [x] **2.1** Popup Management Tests
+  - [x] Test `ShowPopup()` method
+  - [x] Test `HidePopup()` method
+  - [x] Test popup visibility states
+  - [x] Test popup positioning and sizing
 
-- [ ] **2.2** Autocompletion Logic Tests
-  - Test `ShowSuggestions()` with different trigger characters (+, @, ()
-  - Test `UpdateFiltering()` with various input scenarios
-  - Test case-sensitive vs case-insensitive filtering
-  - Test priority position validation (`IsValidPriorityPosition`)
+- [x] **2.2** Autocompletion Logic Tests
+  - [x] Test `ShowSuggestions()` with different trigger characters (+, @, ()
+  - [x] Test `UpdateFiltering()` with various input scenarios
+  - [x] Test case-sensitive vs case-insensitive filtering
+  - [x] Test priority position validation (`IsValidPriorityPosition`)
 
-- [ ] **2.3** User Interaction Tests
+- [x] **2.3** Test Infrastructure Improvement
+  - [x] Added public `DropDown` property to IntellisenseTextBox for better testability
+  - [x] Renamed `ShowPopup()` to `ShowDropDown()` for API consistency
+  - [x] Renamed `HidePopup()` to `HideDropDown()` for API consistency
+  - [x] Updated all tests to use `DropDown` property instead of reflection
+  - [x] Improved test maintainability and clarity
+  - [x] Eliminated brittle reflection-based popup access
+  - [x] Created consistent API naming throughout the component
+
+- [ ] **2.4** User Interaction Tests
   - Test keyboard navigation (Up/Down arrows)
   - Test Enter key selection
   - Test text insertion (`InsertSelectedText`)
