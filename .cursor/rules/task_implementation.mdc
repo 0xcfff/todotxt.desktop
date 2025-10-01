@@ -42,6 +42,63 @@ This rule guides agents through systematic implementation of tasks following the
    - Any deviations or issues
    - Confirmation before proceeding
 
+### Progress Tracking with Emojis
+**CRITICAL**: Agents must update emoji status indicators in real-time to show progress:
+
+#### Emoji Status System
+- `⏳` = Phase/Step not touched yet (initial state)
+- `🌾` = Phase in progress (partially complete - has started steps)
+- `👈` = Step in progress (partially complete - has started tasks)
+- `🏆` = Phase completed (all steps completed)
+- `✅` = Step completed (all tasks completed)
+
+#### When to Update Emojis
+1. **Starting a Phase**: When beginning work on the first step of a phase:
+   - Change phase emoji from `⏳` to `🌾`
+   - Example: `### Phase 1: Setup ⏳` → `### Phase 1: Setup 🌾`
+
+2. **Starting a Step**: When beginning work on any step:
+   - Change step emoji from no emoji to `👈`
+   - Example: `#### Step 1.1: Create Base Class` → `#### Step 1.1: Create Base Class 👈`
+
+3. **Completing a Step**: When all tasks in a step are finished:
+   - Change step emoji from `👈` to `✅`
+   - Example: `#### Step 1.1: Create Base Class 👈` → `#### Step 1.1: Create Base Class ✅`
+
+4. **Completing a Phase**: When all steps in a phase are completed:
+   - Change phase emoji from `🌾` to `🏆`
+   - Example: `### Phase 1: Setup 🌾` → `### Phase 1: Setup 🏆`
+
+#### Emoji Update Process
+- **Update immediately** when status changes
+- **Use search_replace tool** to update the implementation.md file
+- **Be precise** with emoji placement - they go after the phase/step name
+- **Maintain consistency** - always use the exact emoji specified above
+- **Update both** phase and step emojis as appropriate
+
+#### Example Progression
+```
+Initial state:
+### Phase 1: Setup ⏳
+#### Step 1.1: Create Base Class
+#### Step 1.2: Add Properties
+
+After starting Phase 1:
+### Phase 1: Setup 🌾
+#### Step 1.1: Create Base Class 👈
+#### Step 1.2: Add Properties
+
+After completing Step 1.1:
+### Phase 1: Setup 🌾
+#### Step 1.1: Create Base Class ✅
+#### Step 1.2: Add Properties 👈
+
+After completing Phase 1:
+### Phase 1: Setup 🏆
+#### Step 1.1: Create Base Class ✅
+#### Step 1.2: Add Properties ✅
+```
+
 ### Documentation Utilization
 **CRITICAL**: Leverage planning documentation efficiently during implementation:
 
@@ -78,6 +135,7 @@ If step-specific referenced documentation is missing or inadequate:
   - Mark completed tasks with `[x]`
   - Mark completed steps with `[x]`
   - Mark documentation references as consulted `[x]`
+  - **Update emoji status indicators** for phases and steps as work progresses
   - Add notes about deviations
 - Create `tasks/{task_name}/changes.md` documenting:
   - Files modified
@@ -85,6 +143,7 @@ If step-specific referenced documentation is missing or inadequate:
   - Decisions made
   - Documentation and samples utilized
   - Any issues with planning documentation
+  - Emoji status changes made during implementation
 
 ## Validation
 After completing all steps:
@@ -103,7 +162,8 @@ After completing all steps:
 ## Success Criteria
 Implementation complete when:
 - All steps marked complete in implementation plan
+- All phases and steps have correct emoji status indicators (🏆 for completed phases, ✅ for completed steps)
 - All planned code changes made
 - Validation passes (if applicable)
-- Documentation updated
+- Documentation updated with emoji progress tracking
 - User confirms satisfaction

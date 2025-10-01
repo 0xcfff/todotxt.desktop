@@ -2,7 +2,7 @@
 description: C# Test Implementation - AAA Pattern
 globs:
   - "*.Test?.cs"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # C# Test Implementation Rule
