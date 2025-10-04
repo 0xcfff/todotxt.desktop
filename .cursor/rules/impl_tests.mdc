@@ -66,6 +66,7 @@ public void MethodUnderTest_WithValidInputProvided_ReturnsExpectedResult()
   - **MUST be linear**: No loops or cycles
   - **MUST use proper assert constructs**: Use framework assertion methods
   - **MUST contain expectations**: Expected values should be defined in assert section, not arrange
+  - **NO expected variables**: Never create variables to store expected values - put them directly in assertions
   - **Exception**: Only when standard asserts cannot handle the verification and implementing with simple asserts would be overly complex
 
 ### Two-Phase Pattern (Arrange-Act Combined)
@@ -132,7 +133,8 @@ In this case, the constructor call in the arrange section serves as both setup a
 ### Variable Naming
 - Use descriptive variable names
 - Follow C# naming conventions (camelCase for local variables)
-- Use `actual` and `expected` for result comparisons
+- Use `actual` for capturing method results
+- **DO NOT create `expected` variables** - put expected values directly in assertions
 
 ### Assert Section Best Practices
 - **Use framework assertion methods**:
@@ -253,7 +255,29 @@ public void Method_WithTestInputProvided_ReturnsExpected()
 }
 ```
 
-### Bad Example - Expectations in Arrange Section
+### Bad Example - Expected Values in Variables
+```csharp
+[Test]
+public void CalculateTotal_WithValidItemsProvided_ReturnsCorrectSum()
+{
+    // arrange
+    var items = new List<Item>
+    {
+        new Item { Price = 10.00m },
+        new Item { Price = 15.50m }
+    };
+    var calculator = new PriceCalculator();
+    var expected = 25.50m; // BAD: Expected value stored in variable
+    
+    // act
+    var actual = calculator.CalculateTotal(items);
+    
+    // assert
+    Assert.AreEqual(expected, actual); // BAD: Using expected variable
+}
+```
+
+### Bad Example - Expected Values in Arrange Section
 ```csharp
 [Test]
 public void CalculateTotal_WithValidItemsProvided_ReturnsCorrectSum()
@@ -305,7 +329,7 @@ public void GetItems_WithValidInputProvided_ReturnsCorrectItems()
 }
 ```
 
-### Good Example - Simple Assert Logic
+### Good Example - Simple Assert Logic with Direct Values
 ```csharp
 [Test]
 public void GetItems_WithValidInputProvided_ReturnsCorrectItems()
@@ -316,7 +340,7 @@ public void GetItems_WithValidInputProvided_ReturnsCorrectItems()
     // act
     var result = GetItems(input);
     
-    // assert - GOOD: Simple, linear assertions with inline expected values
+    // assert - GOOD: Simple, linear assertions with direct expected values
     Assert.AreEqual(3, result.Count);
     Assert.AreEqual("Item0", result[0].Name);
     Assert.AreEqual("Item1", result[1].Name);
