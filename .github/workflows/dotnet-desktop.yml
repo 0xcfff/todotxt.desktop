@@ -41,7 +41,7 @@ jobs:
     - name: Restore dependencies
       run: |
         dotnet restore src/TodoTxt.Lib/ToDoLib.csproj
-        dotnet restore src/TodoTxt.Shared/CommonExtensions.csproj
+        dotnet restore src/TodoTxt.Shared/TodoTxt.Shared.csproj
         dotnet restore src/TodoTxt.Platform/TodoTxt.Platform.csproj
         dotnet restore src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj
         dotnet restore src/TodoTxt.Lib.Tests/ToDoTests.csproj
@@ -50,7 +50,7 @@ jobs:
     - name: Build cross-platform projects
       run: |
         dotnet build src/TodoTxt.Lib/ToDoLib.csproj --configuration ${{ matrix.configuration }} --no-restore
-        dotnet build src/TodoTxt.Shared/CommonExtensions.csproj --configuration ${{ matrix.configuration }} --no-restore
+        dotnet build src/TodoTxt.Shared/TodoTxt.Shared.csproj --configuration ${{ matrix.configuration }} --no-restore
         dotnet build src/TodoTxt.Platform/TodoTxt.Platform.csproj --configuration ${{ matrix.configuration }} --no-restore
         dotnet build src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj --configuration ${{ matrix.configuration }} --no-restore
         dotnet build src/TodoTxt.Lib.Tests/ToDoTests.csproj --configuration ${{ matrix.configuration }} --no-restore
