@@ -83,8 +83,14 @@ jobs:
         output: both
         thresholds: '60 80'
 
-    - name: Add Coverage PR Comment
+    - name: Add Coverage to build Run Summary
       if: always()
+      run: |
+        echo "## Code Coverage Results" >> $GITHUB_STEP_SUMMARY
+        cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+    - name: Add Coverage PR Comment
+      if: github.event_name == 'pull_request'
       uses: marocchino/sticky-pull-request-comment@v2  
       with:
         recreate: true
