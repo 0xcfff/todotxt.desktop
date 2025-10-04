@@ -13,9 +13,9 @@ name: TodoTxt.Desktop Cross-Platform CI
 
 on:
   push:
-    branches: [ "main", "feature/avalonia-migration" ]
+    branches: [ "main", "feature/*" ]
   pull_request:
-    branches: [ "main", "feature/avalonia-migration" ]
+    branches: [ "main" ]
 
 jobs:
 
@@ -38,32 +38,13 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore ToDo.Net.sln
-
-    - name: Build cross-platform solution
-      run: dotnet build ToDo.Net.sln --configuration ${{ matrix.configuration }} --no-restore
-
-    - name: Run core library tests
-      run: dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj --configuration ${{ matrix.configuration }} --no-build --logger "console;verbosity=normal"
-
-    - name: Run Avalonia tests
-      run: dotnet test src/TodoTxt.Avalonia.Tests/TodoTxt.Avalonia.Tests.csproj --configuration ${{ matrix.configuration }} --no-build --logger "console;verbosity=normal"
-
-    - name: Test Avalonia application build
-      run: dotnet build src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj --configuration ${{ matrix.configuration }} --no-restore
-
-    - name: Collect test coverage
-      if: matrix.configuration == 'Debug'
-      run: |
-        dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj --configuration Debug --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
-        dotnet test src/TodoTxt.Avalonia.Tests/TodoTxt.Avalonia.Tests.csproj --configuration Debug --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
+    - name: Build, test, and collect coverage using Makefile
+      run: make build test coverage CONFIGURATION=${{ matrix.configuration }}
 
     - name: Upload coverage reports
-      if: matrix.configuration == 'Debug'
       uses: codecov/codecov-action@v4
       with:
-        directory: ./coverage
+        directory: ./reports/coverage
         flags: ${{ matrix.os }}
         name: codecov-${{ matrix.os }}-${{ matrix.configuration }}
 
