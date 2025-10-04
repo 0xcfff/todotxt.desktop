@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using ToDoLib;
 using TodoTxt.Avalonia.Models;
 using TodoTxt.Avalonia.Controls;
+using TodoTxt.Avalonia.Services;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -79,9 +80,93 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        // Initialize with some sample tasks for demonstration
-        LoadSampleTasks();
+        // Subscribe to property changes to auto-save settings
+        PropertyChanged += OnPropertyChanged;
+        
+        // Initialize asynchronously to avoid blocking the UI thread
+        _ = InitializeAsync();
     }
+    
+    private async System.Threading.Tasks.Task InitializeAsync()
+    {
+        try
+        {
+            await System.Threading.Tasks.Task.Run(() => LoadSettings());
+            
+            // Initialize with some sample tasks for demonstration if no file is loaded
+            if (_taskList == null || _taskList.Tasks.Count == 0)
+            {
+                await System.Threading.Tasks.Task.Run(() => LoadSampleTasks());
+            }
+            
+            // Initialize hotkeys
+            await System.Threading.Tasks.Task.Run(() => InitializeHotkeys());
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to initialize MainWindowViewModel: {ex.Message}");
+            // Fall back to sample tasks
+            await System.Threading.Tasks.Task.Run(() => LoadSampleTasks());
+        }
+    }
+
+    private async void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        // Auto-save certain settings when they change
+        if (e.PropertyName == nameof(AllowGrouping) ||
+            e.PropertyName == nameof(FilterCaseSensitive) ||
+            e.PropertyName == nameof(ShowHiddenTasks) ||
+            e.PropertyName == nameof(FilterFutureTasks) ||
+            e.PropertyName == nameof(FilterText) ||
+            e.PropertyName == nameof(CurrentSortType))
+        {
+            await SaveSettingsAsync();
+        }
+    }
+
+    /// <summary>
+    /// Saves current settings to the settings service (async version)
+    /// </summary>
+    private async System.Threading.Tasks.Task SaveSettingsAsync()
+    {
+        var settings = ServiceLocator.ApplicationSettings;
+        
+        // Save current property values to settings
+        settings.AllowGrouping = AllowGrouping;
+        settings.FilterCaseSensitive = FilterCaseSensitive;
+        settings.ShowHiddenTasks = ShowHiddenTasks;
+        settings.FilterFutureTasks = FilterFutureTasks;
+        settings.FilterText = FilterText;
+        settings.CurrentSort = (int)CurrentSortType;
+        
+        if (!string.IsNullOrEmpty(_currentFilePath))
+        {
+            settings.FilePath = _currentFilePath;
+        }
+        
+        await ServiceLocator.SaveSettingsAsync();
+    }
+
+    /// <summary>
+    /// Loads settings from the settings service
+    /// </summary>
+    private void LoadSettings()
+    {
+        var settings = ServiceLocator.ApplicationSettings;
+        
+        // Apply settings to properties
+        AllowGrouping = settings.AllowGrouping;
+        FilterCaseSensitive = settings.FilterCaseSensitive;
+        ShowHiddenTasks = settings.ShowHiddenTasks;
+        FilterFutureTasks = settings.FilterFutureTasks;
+        
+        // Load file path if available
+        if (!string.IsNullOrEmpty(settings.FilePath) && File.Exists(settings.FilePath))
+        {
+            LoadTasks(settings.FilePath);
+        }
+    }
+
 
     private void LoadSampleTasks()
     {
@@ -113,10 +198,11 @@ public partial class MainWindowViewModel : ViewModelBase
         UpdateTaskCounts();
     }
 
-    public void LoadTasks(string filePath)
+    public async void LoadTasks(string filePath)
     {
         try
         {
+            _currentFilePath = filePath;
             _taskList = new TaskList(filePath);
             Tasks.Clear();
             _allTasks.Clear();
@@ -128,6 +214,11 @@ public partial class MainWindowViewModel : ViewModelBase
             ApplyFiltersAndSorting();
             
             UpdateTaskCounts();
+            
+            // Save the file path to settings
+            var settings = ServiceLocator.ApplicationSettings;
+            settings.FilePath = filePath;
+            await ServiceLocator.SaveSettingsAsync();
         }
         catch (System.Exception ex)
         {
@@ -515,23 +606,41 @@ public partial class MainWindowViewModel : ViewModelBase
     /// Opens a todo.txt file
     /// </summary>
     [RelayCommand]
-    public void OpenFile()
+    public async System.Threading.Tasks.Task OpenFile()
     {
-        // TODO: Implement file dialog
-        // For now, we'll use a hardcoded path for testing
-        var testFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "todo.txt");
-        
-        if (File.Exists(testFilePath))
+        try
         {
-            LoadTasks(testFilePath);
-            _currentFilePath = testFilePath;
+            var filePath = await ServiceLocator.FileDialogService.ShowOpenFileDialogAsync(
+                title: "Open Todo File",
+                initialDirectory: Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                filter: "Text files (*.txt)|*.txt|All files (*.*)|*.*",
+                defaultExtension: ".txt"
+            );
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                LoadTasks(filePath);
+                _currentFilePath = filePath;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Create a new file if it doesn't exist
-            File.WriteAllText(testFilePath, "");
-            LoadTasks(testFilePath);
-            _currentFilePath = testFilePath;
+            System.Diagnostics.Debug.WriteLine($"Error opening file dialog: {ex.Message}");
+            // Fall back to default behavior
+            var testFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "todo.txt");
+            
+            if (File.Exists(testFilePath))
+            {
+                LoadTasks(testFilePath);
+                _currentFilePath = testFilePath;
+            }
+            else
+            {
+                // Create a new file if it doesn't exist
+                File.WriteAllText(testFilePath, "");
+                LoadTasks(testFilePath);
+                _currentFilePath = testFilePath;
+            }
         }
     }
 
@@ -566,6 +675,127 @@ public partial class MainWindowViewModel : ViewModelBase
                 System.Diagnostics.Debug.WriteLine($"Error saving file: {ex.Message}");
             }
         }
+    }
+
+    /// <summary>
+    /// Saves the current task list to a new file
+    /// </summary>
+    [RelayCommand]
+    public async System.Threading.Tasks.Task SaveAsFile()
+    {
+        if (_taskList == null) return;
+
+        try
+        {
+            var filePath = await ServiceLocator.FileDialogService.ShowSaveFileDialogAsync(
+                title: "Save Todo File As",
+                initialDirectory: Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                initialFileName: "todo.txt",
+                filter: "Text files (*.txt)|*.txt|All files (*.*)|*.*",
+                defaultExtension: ".txt"
+            );
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                // Save tasks to the new file
+                using (var writer = new StreamWriter(filePath))
+                {
+                    foreach (var task in _allTasks)
+                    {
+                        writer.WriteLine(task.Raw);
+                    }
+                }
+                
+                _currentFilePath = filePath;
+                System.Diagnostics.Debug.WriteLine($"Tasks saved to {filePath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error saving file as: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Prints the current task list
+    /// </summary>
+    [RelayCommand]
+    public async System.Threading.Tasks.Task PrintTasks()
+    {
+        if (_allTasks.Count == 0)
+        {
+            System.Diagnostics.Debug.WriteLine("No tasks to print");
+            return;
+        }
+
+        try
+        {
+            // Create a formatted text representation of the tasks
+            var printContent = FormatTasksForPrinting();
+            
+            // Use the platform print service
+            var success = await ServiceLocator.PrintService.PrintTextAsync(printContent);
+            
+            if (success)
+            {
+                System.Diagnostics.Debug.WriteLine("Tasks printed successfully");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Printing failed or was cancelled");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error printing tasks: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Formats tasks for printing
+    /// </summary>
+    private string FormatTasksForPrinting()
+    {
+        var content = new System.Text.StringBuilder();
+        
+        // Add header
+        content.AppendLine("Todo List");
+        content.AppendLine("=========");
+        content.AppendLine();
+        
+        // Add file info
+        if (!string.IsNullOrEmpty(_currentFilePath))
+        {
+            content.AppendLine($"File: {_currentFilePath}");
+            content.AppendLine($"Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            content.AppendLine();
+        }
+        
+        // Add task counts
+        content.AppendLine($"Total Tasks: {TotalTasks}");
+        content.AppendLine($"Incomplete: {IncompleteTasks}");
+        content.AppendLine($"Completed: {TotalTasks - IncompleteTasks}");
+        content.AppendLine();
+        
+        // Add tasks
+        if (_allTasks.Count > 0)
+        {
+            content.AppendLine("Tasks:");
+            content.AppendLine("------");
+            
+            foreach (var task in _allTasks)
+            {
+                var status = task.Completed ? "[X]" : "[ ]";
+                var priority = !string.IsNullOrEmpty(task.Priority) ? $"({task.Priority})" : "";
+                var dueDate = !string.IsNullOrEmpty(task.DueDate) ? $" due:{task.DueDate}" : "";
+                var context = task.Contexts.Count > 0 ? $" @{string.Join(" @", task.Contexts)}" : "";
+                var project = task.Projects.Count > 0 ? $" +{string.Join(" +", task.Projects)}" : "";
+                
+                content.AppendLine($"{status} {priority}{task.Body}{dueDate}{context}{project}");
+            }
+        }
+        
+        return content.ToString();
     }
 
     /// <summary>
@@ -854,11 +1084,55 @@ public partial class MainWindowViewModel : ViewModelBase
     public async System.Threading.Tasks.Task ShowOptionsDialog()
     {
         var dialog = new OptionsDialog();
-        // TODO: Load current settings into dialog
+        var settings = ServiceLocator.ApplicationSettings;
+        
+        // Load current settings into dialog
+        dialog.ArchiveFile = settings.ArchiveFilePath;
+        dialog.AutoArchive = settings.AutoArchive;
+        dialog.AutoSelectArchivePath = settings.AutoSelectArchivePath;
+        dialog.CurrentFont = $"{settings.TaskListFontFamily}, {settings.TaskListFontSize}pt";
+        dialog.AddCreationDate = settings.AddCreationDate;
+        dialog.MoveFocusToTaskListAfterAddingNewTask = settings.MoveFocusToTaskListAfterAddingNewTask;
+        dialog.AutoRefresh = settings.AutoRefresh;
+        dialog.CaseSensitiveFilter = settings.FilterCaseSensitive;
+        dialog.IntellisenseCaseSensitive = settings.IntellisenseCaseSensitive;
+        dialog.MinToSysTray = settings.MinimiseToSystemTray;
+        dialog.MinOnClose = settings.MinimiseOnClose;
+        dialog.DebugOn = settings.DebugLoggingOn;
+        dialog.RequireCtrlEnter = settings.RequireCtrlEnter;
+        dialog.AllowGrouping = settings.AllowGrouping;
+        dialog.PreserveWhiteSpace = settings.PreserveWhiteSpace;
+        dialog.WordWrap = settings.WordWrap;
+        dialog.DisplayStatusBar = settings.DisplayStatusBar;
+        dialog.CheckForUpdates = settings.CheckForUpdates;
+        
         var result = await dialog.ShowDialog();
         if (result == true)
         {
-            // TODO: Save settings from dialog
+            // Save settings from dialog
+            settings.ArchiveFilePath = dialog.ArchiveFile;
+            settings.AutoArchive = dialog.AutoArchive;
+            settings.AutoSelectArchivePath = dialog.AutoSelectArchivePath;
+            settings.AddCreationDate = dialog.AddCreationDate;
+            settings.MoveFocusToTaskListAfterAddingNewTask = dialog.MoveFocusToTaskListAfterAddingNewTask;
+            settings.AutoRefresh = dialog.AutoRefresh;
+            settings.FilterCaseSensitive = dialog.CaseSensitiveFilter;
+            settings.IntellisenseCaseSensitive = dialog.IntellisenseCaseSensitive;
+            settings.MinimiseToSystemTray = dialog.MinToSysTray;
+            settings.MinimiseOnClose = dialog.MinOnClose;
+            settings.DebugLoggingOn = dialog.DebugOn;
+            settings.RequireCtrlEnter = dialog.RequireCtrlEnter;
+            settings.AllowGrouping = dialog.AllowGrouping;
+            settings.PreserveWhiteSpace = dialog.PreserveWhiteSpace;
+            settings.WordWrap = dialog.WordWrap;
+            settings.DisplayStatusBar = dialog.DisplayStatusBar;
+            settings.CheckForUpdates = dialog.CheckForUpdates;
+            
+            // Apply settings to current view model
+            AllowGrouping = settings.AllowGrouping;
+            FilterCaseSensitive = settings.FilterCaseSensitive;
+            
+            await ServiceLocator.SaveSettingsAsync();
             System.Diagnostics.Debug.WriteLine("Options saved");
         }
     }
@@ -953,6 +1227,87 @@ public partial class MainWindowViewModel : ViewModelBase
             return dialog.DaysToPostpone;
         }
         return null;
+    }
+
+    #endregion
+
+    #region Hotkey Management
+
+    /// <summary>
+    /// Initializes global hotkeys for the application
+    /// </summary>
+    private void InitializeHotkeys()
+    {
+        try
+        {
+            var hotkeyService = ServiceLocator.HotkeyService;
+            
+            if (!hotkeyService.IsSupported)
+            {
+                System.Diagnostics.Debug.WriteLine("Global hotkeys are not supported on this platform");
+                return;
+            }
+
+            // Subscribe to hotkey events
+            hotkeyService.HotkeyPressed += OnHotkeyPressed;
+
+            // Register common hotkeys (these are placeholder implementations)
+            // In a real implementation, these would be configurable through settings
+            // For now, we'll just log that hotkeys are initialized
+            System.Diagnostics.Debug.WriteLine("Hotkey system initialized (placeholder implementation)");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to initialize hotkeys: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Handles global hotkey press events
+    /// </summary>
+    private void OnHotkeyPressed(object? sender, TodoTxt.Platform.HotkeyPressedEventArgs e)
+    {
+        try
+        {
+            // Handle different hotkey IDs
+            switch (e.HotkeyId)
+            {
+                case 1: // Example: Show/hide main window
+                    System.Diagnostics.Debug.WriteLine("Hotkey 1 pressed: Show/hide main window");
+                    break;
+                case 2: // Example: Add new task
+                    System.Diagnostics.Debug.WriteLine("Hotkey 2 pressed: Add new task");
+                    break;
+                case 3: // Example: Quick save
+                    System.Diagnostics.Debug.WriteLine("Hotkey 3 pressed: Quick save");
+                    SaveFile();
+                    break;
+                default:
+                    System.Diagnostics.Debug.WriteLine($"Unknown hotkey {e.HotkeyId} pressed");
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error handling hotkey press: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Disposes of hotkey resources
+    /// </summary>
+    private void DisposeHotkeys()
+    {
+        try
+        {
+            var hotkeyService = ServiceLocator.HotkeyService;
+            hotkeyService.HotkeyPressed -= OnHotkeyPressed;
+            hotkeyService.UnregisterAllHotkeys();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error disposing hotkeys: {ex.Message}");
+        }
     }
 
     #endregion
