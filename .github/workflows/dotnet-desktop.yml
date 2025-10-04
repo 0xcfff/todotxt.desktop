@@ -62,20 +62,18 @@ jobs:
       with:
         path: coverage-artifacts/
 
+    - name: Install dotnet-coverage tool
+      run: dotnet tool install -g dotnet-coverage
+
     - name: Merge coverage reports
-      id: coverage
-      uses: selfagency/merge-coverage@v1.2.0
-      with:
-        source: ${{ github.workspace }}
-        coverage-reports: ${{ github.workspace }}/coverage-artifacts
-        output-folder: ${{ github.workspace }}/merged-coverage
-        formats: cobertura
-        artifacts: false
+      run: |
+        mkdir -p merged-coverage
+        dotnet coverage merge --reports "coverage-artifacts/**/coverage.cobertura.xml" -f cobertura -o merged-coverage/coverage.xml
 
     - name: Generate consolidated coverage report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
-        filename: merged-coverage/coverage.cobertura.xml
+        filename: merged-coverage/coverage.xml
         badge: true
         fail_below_min: true
         format: markdown
