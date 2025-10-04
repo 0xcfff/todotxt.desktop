@@ -75,7 +75,11 @@ namespace ToDoLib
                 {
                     UniqueContexts.Add(c);
                 }
-                UniquePriorities.Add(t.Priority);
+                // Only add non-empty priorities to avoid including empty strings
+                if (!string.IsNullOrEmpty(t.Priority))
+                {
+                    UniquePriorities.Add(t.Priority);
+                }
             }
 
             this.Projects = UniqueProjects.ToList<string>();

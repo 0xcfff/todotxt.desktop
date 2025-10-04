@@ -133,7 +133,7 @@ public static class TestDataValidator
         var trimmedText = taskText.Trim();
         
         // Check if it starts with priority
-        if (trimmedText.StartsWith("(") && trimmedText.Length >= 4 && trimmedText[3] == ')')
+        if (trimmedText.StartsWith("(") && trimmedText.Length >= 3 && trimmedText[2] == ')')
         {
             return true;
         }
@@ -142,7 +142,7 @@ public static class TestDataValidator
         if (trimmedText.Length >= 11 && trimmedText[4] == '-' && trimmedText[7] == '-' && trimmedText[10] == ' ')
         {
             var afterDate = trimmedText.Substring(11);
-            if (afterDate.StartsWith("(") && afterDate.Length >= 4 && afterDate[3] == ')')
+            if (afterDate.StartsWith("(") && afterDate.Length >= 3 && afterDate[2] == ')')
             {
                 return true;
             }
