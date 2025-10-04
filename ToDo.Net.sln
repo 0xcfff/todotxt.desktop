@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Lib", "src\TodoTxt.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoTests", "src\TodoTxt.Lib.Tests\ToDoTests.csproj", "{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "src\TodoTxt.UI\Client.csproj", "{FC3F905A-DEE1-454E-8746-936492D66CF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "src\TodoTxt.Client_original\Client.csproj", "{FC3F905A-DEE1-454E-8746-936492D66CF2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D319B4BA-4A63-44EE-8B73-1CE76F48A108}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Updates.xml = Updates.xml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorFont", "src\TodoTxt.UI\ColorFont\ColorFont.csproj", "{C51DEEDA-B581-401B-870B-DBB7D10119BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorFont", "src\TodoTxt.Client_original\ColorFont\ColorFont.csproj", "{C51DEEDA-B581-401B-870B-DBB7D10119BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Shared", "src\TodoTxt.Shared\TodoTxt.Shared.csproj", "{5CE19CC1-833A-4950-B86E-CBF59FA00D6F}"
 EndProject
