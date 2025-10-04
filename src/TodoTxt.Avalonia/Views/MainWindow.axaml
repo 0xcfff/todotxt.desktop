@@ -18,6 +18,32 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
+    <!-- Key Bindings for hotkeys -->
+    <Window.KeyBindings>
+        <!-- File operations -->
+        <KeyBinding Gesture="Ctrl+N" Command="{Binding NewFileCommand}"/>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenFileCommand}"/>
+        <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFileCommand}"/>
+        <KeyBinding Gesture="F5" Command="{Binding ReloadFileCommand}"/>
+        <KeyBinding Gesture="Ctrl+A" Command="{Binding ArchiveCompletedTasksCommand}"/>
+        
+        <!-- Task operations -->
+        <KeyBinding Gesture="Ctrl+Shift+N" Command="{Binding AddTaskCommand}"/>
+        <KeyBinding Gesture="F2" Command="{Binding EditSelectedTaskCommand}"/>
+        <KeyBinding Gesture="Delete" Command="{Binding DeleteSelectedTaskCommand}"/>
+        <KeyBinding Gesture="Ctrl+X" Command="{Binding ToggleTaskCompletionCommand}"/>
+        
+        <!-- Edit operations -->
+        <KeyBinding Gesture="Ctrl+C" Command="{Binding CopySelectedTaskCommand}"/>
+        <KeyBinding Gesture="Ctrl+V" Command="{Binding PasteTasksCommand}"/>
+        
+        <!-- Window operations -->
+        <KeyBinding Gesture="Ctrl+Alt+M" Command="{Binding ToggleWindowVisibilityCommand}"/>
+        
+        <!-- Search -->
+        <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}"/>
+    </Window.KeyBindings>
+
     <Grid Name="MainGrid" ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>

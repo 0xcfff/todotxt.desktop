@@ -1253,10 +1253,34 @@ public partial class MainWindowViewModel : ViewModelBase
             // Subscribe to hotkey events
             hotkeyService.HotkeyPressed += OnHotkeyPressed;
 
-            // Register common hotkeys (these are placeholder implementations)
-            // In a real implementation, these would be configurable through settings
-            // For now, we'll just log that hotkeys are initialized
-            System.Diagnostics.Debug.WriteLine("Hotkey system initialized (placeholder implementation)");
+            // Register useful hotkeys based on the application's functionality
+            // These match the keyboard shortcuts mentioned in the README
+            
+            // Ctrl+Alt+M: Hide/Show main window (minimize to tray)
+            var hideShowHotkey = new TodoTxt.Platform.Hotkey(true, true, false, false, 77); // M key
+            hotkeyService.RegisterHotkey(hideShowHotkey, 1);
+            
+            // Ctrl+O: Open file
+            var openFileHotkey = new TodoTxt.Platform.Hotkey(true, false, false, false, 79); // O key
+            hotkeyService.RegisterHotkey(openFileHotkey, 2);
+            
+            // Ctrl+N: New file
+            var newFileHotkey = new TodoTxt.Platform.Hotkey(true, false, false, false, 78); // N key
+            hotkeyService.RegisterHotkey(newFileHotkey, 3);
+            
+            // Ctrl+S: Save file
+            var saveFileHotkey = new TodoTxt.Platform.Hotkey(true, false, false, false, 83); // S key
+            hotkeyService.RegisterHotkey(saveFileHotkey, 4);
+            
+            // F5: Reload file
+            var reloadFileHotkey = new TodoTxt.Platform.Hotkey(false, false, false, false, 116); // F5 key
+            hotkeyService.RegisterHotkey(reloadFileHotkey, 5);
+            
+            // Ctrl+A: Archive completed tasks
+            var archiveHotkey = new TodoTxt.Platform.Hotkey(true, false, false, false, 65); // A key
+            hotkeyService.RegisterHotkey(archiveHotkey, 6);
+            
+            System.Diagnostics.Debug.WriteLine("Hotkey system initialized with 6 global hotkeys");
         }
         catch (Exception ex)
         {
@@ -1274,15 +1298,29 @@ public partial class MainWindowViewModel : ViewModelBase
             // Handle different hotkey IDs
             switch (e.HotkeyId)
             {
-                case 1: // Example: Show/hide main window
-                    System.Diagnostics.Debug.WriteLine("Hotkey 1 pressed: Show/hide main window");
+                case 1: // Ctrl+Alt+M: Hide/Show main window
+                    System.Diagnostics.Debug.WriteLine("Hotkey 1 pressed: Hide/Show main window");
+                    ToggleMainWindowVisibility();
                     break;
-                case 2: // Example: Add new task
-                    System.Diagnostics.Debug.WriteLine("Hotkey 2 pressed: Add new task");
+                case 2: // Ctrl+O: Open file
+                    System.Diagnostics.Debug.WriteLine("Hotkey 2 pressed: Open file");
+                    OpenFileCommand.Execute(null);
                     break;
-                case 3: // Example: Quick save
-                    System.Diagnostics.Debug.WriteLine("Hotkey 3 pressed: Quick save");
+                case 3: // Ctrl+N: New file
+                    System.Diagnostics.Debug.WriteLine("Hotkey 3 pressed: New file");
+                    NewFileCommand.Execute(null);
+                    break;
+                case 4: // Ctrl+S: Save file
+                    System.Diagnostics.Debug.WriteLine("Hotkey 4 pressed: Save file");
                     SaveFile();
+                    break;
+                case 5: // F5: Reload file
+                    System.Diagnostics.Debug.WriteLine("Hotkey 5 pressed: Reload file");
+                    ReloadFileCommand.Execute(null);
+                    break;
+                case 6: // Ctrl+A: Archive completed tasks
+                    System.Diagnostics.Debug.WriteLine("Hotkey 6 pressed: Archive completed tasks");
+                    ArchiveCompletedTasksCommand.Execute(null);
                     break;
                 default:
                     System.Diagnostics.Debug.WriteLine($"Unknown hotkey {e.HotkeyId} pressed");
@@ -1292,6 +1330,38 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error handling hotkey press: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Toggles the main window visibility (hide/show)
+    /// </summary>
+    private void ToggleMainWindowVisibility()
+    {
+        try
+        {
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                if (desktop.MainWindow != null)
+                {
+                    if (desktop.MainWindow.IsVisible)
+                    {
+                        desktop.MainWindow.Hide();
+                        System.Diagnostics.Debug.WriteLine("Main window hidden via hotkey");
+                    }
+                    else
+                    {
+                        desktop.MainWindow.Show();
+                        desktop.MainWindow.WindowState = WindowState.Normal;
+                        desktop.MainWindow.Activate();
+                        System.Diagnostics.Debug.WriteLine("Main window shown via hotkey");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error toggling main window visibility: {ex.Message}");
         }
     }
 
@@ -1326,6 +1396,68 @@ public partial class MainWindowViewModel : ViewModelBase
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Shutdown();
+        }
+    }
+
+
+    /// <summary>
+    /// Toggles the main window visibility (hide/show)
+    /// </summary>
+    [RelayCommand]
+    public void ToggleWindowVisibility()
+    {
+        try
+        {
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                if (desktop.MainWindow != null)
+                {
+                    if (desktop.MainWindow.IsVisible)
+                    {
+                        desktop.MainWindow.Hide();
+                        System.Diagnostics.Debug.WriteLine("Main window hidden via command");
+                    }
+                    else
+                    {
+                        desktop.MainWindow.Show();
+                        desktop.MainWindow.WindowState = WindowState.Normal;
+                        desktop.MainWindow.Activate();
+                        System.Diagnostics.Debug.WriteLine("Main window shown via command");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error toggling main window visibility: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Focuses the search text box
+    /// </summary>
+    [RelayCommand]
+    public void FocusSearch()
+    {
+        try
+        {
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                if (desktop.MainWindow != null)
+                {
+                    // Find the search text box and focus it
+                    var searchTextBox = desktop.MainWindow.FindControl<TextBox>("SearchTextBox");
+                    if (searchTextBox != null)
+                    {
+                        searchTextBox.Focus();
+                        System.Diagnostics.Debug.WriteLine("Search text box focused");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error focusing search: {ex.Message}");
         }
     }
 
