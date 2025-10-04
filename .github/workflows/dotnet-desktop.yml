@@ -62,16 +62,32 @@ jobs:
       with:
         path: coverage-artifacts/
 
+    - name: Merge coverage reports
+      id: coverage
+      uses: selfagency/merge-coverage@v1.2.0
+      with:
+        source: ${{ github.workspace }}
+        coverage-reports: ${{ github.workspace }}/coverage-artifacts
+        output-folder: ${{ github.workspace }}/merged-coverage
+        formats: cobertura
+        artifacts: false
+
     - name: Generate consolidated coverage report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
-        filename: coverage-artifacts/**/coverage.cobertura.xml
+        filename: merged-coverage/coverage.cobertura.xml
         badge: true
         fail_below_min: true
         format: markdown
         hide_branch_rate: false
-        hide_complexity: true
+        hide_complexity: false
         indicators: true
         output: both
         thresholds: '60 80'
 
+    - name: Add Coverage PR Comment
+      if: always()
+      uses: marocchino/sticky-pull-request-comment@v2  
+      with:
+        recreate: true
+        path: code-coverage-results.md
