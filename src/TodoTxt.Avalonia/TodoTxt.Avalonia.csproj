@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TodoTxt.Lib\ToDoLib.csproj" />
+    <ProjectReference Include="..\TodoTxt.Lib\TodoTxt.Lib.csproj" />
     <ProjectReference Include="..\TodoTxt.Shared\TodoTxt.Shared.csproj" />
     <ProjectReference Include="..\TodoTxt.Platform\TodoTxt.Platform.csproj" />
   </ItemGroup>

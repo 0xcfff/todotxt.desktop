@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 using CollectionAssert = NUnit.Framework.Legacy.CollectionAssert;
-using ToDoLib;
-using Task = ToDoLib.Task;
+using TodoTxt.Lib;
+using Task = TodoTxt.Lib.Task;
 
 namespace ToDoTests
 {

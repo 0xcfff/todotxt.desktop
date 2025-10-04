@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using TodoTxt.Shared.Extensions;
 
-namespace ToDoLib
+namespace TodoTxt.Lib
 {
     public enum Due
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToDoLib
+namespace TodoTxt.Lib
 {
     public class TaskException : Exception
     {

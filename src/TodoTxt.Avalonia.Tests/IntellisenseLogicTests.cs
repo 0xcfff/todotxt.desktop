@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using ToDoLib;
+using TodoTxt.Lib;
 using System.IO;
-using Task = ToDoLib.Task;
+using Task = TodoTxt.Lib.Task;
 
 namespace TodoTxt.Avalonia.Tests;
 

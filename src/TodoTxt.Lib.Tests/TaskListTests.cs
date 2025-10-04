@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using ToDoLib;
+using TodoTxt.Lib;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
-using Task = ToDoLib.Task;
+using Task = TodoTxt.Lib.Task;
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace ToDoTests

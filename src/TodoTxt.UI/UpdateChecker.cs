@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Xml;
-using ToDoLib;
+using TodoTxt.Lib;
 using System.ComponentModel;
 
 namespace Client

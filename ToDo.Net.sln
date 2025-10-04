@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoLib", "src\TodoTxt.Lib\ToDoLib.csproj", "{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Lib", "src\TodoTxt.Lib\TodoTxt.Lib.csproj", "{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoTests", "src\TodoTxt.Lib.Tests\ToDoTests.csproj", "{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}"
 EndProject

@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TodoTxt.Avalonia\TodoTxt.Avalonia.csproj" />
-    <ProjectReference Include="..\TodoTxt.Lib\ToDoLib.csproj" />
+    <ProjectReference Include="..\TodoTxt.Lib\TodoTxt.Lib.csproj" />
     <ProjectReference Include="..\TodoTxt.Shared\TodoTxt.Shared.csproj" />
   </ItemGroup>
 

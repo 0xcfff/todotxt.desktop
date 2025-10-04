@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
-using ToDoLib;
+using TodoTxt.Lib;
 
 namespace Client
 {

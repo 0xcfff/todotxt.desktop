@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Forms;
-using ToDoLib;
+using TodoTxt.Lib;
 using System.IO;
 
 using System.Windows.Input;
