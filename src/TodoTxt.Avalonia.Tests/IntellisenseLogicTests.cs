@@ -1,18 +1,24 @@
 using NUnit.Framework;
 using ToDoLib;
+using System.IO;
 using Task = ToDoLib.Task;
 
-namespace TodoTxt.Avalonia.Logic.Tests;
+namespace TodoTxt.Avalonia.Tests;
 
 [TestFixture]
 public class IntellisenseLogicTests
 {
     private TaskList _taskList = null!;
+    private string _tempFilePath = null!;
 
     [SetUp]
     public void Setup()
     {
-        _taskList = new TaskList("test.txt", false);
+        // Create a temporary file for testing
+        _tempFilePath = Path.GetTempFileName();
+        File.WriteAllText(_tempFilePath, "");
+        
+        _taskList = new TaskList(_tempFilePath, false);
         
         // Add some test tasks with projects and contexts
         _taskList.Add(new Task("Buy groceries +shopping @home"));
@@ -20,6 +26,16 @@ public class IntellisenseLogicTests
         _taskList.Add(new Task("Finish project report +work @office"));
         _taskList.Add(new Task("(A) High priority task +important"));
         _taskList.Add(new Task("(B) Medium priority task +work"));
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        // Clean up the temporary file
+        if (File.Exists(_tempFilePath))
+        {
+            File.Delete(_tempFilePath);
+        }
     }
 
     [Test]
@@ -51,24 +67,42 @@ public class IntellisenseLogicTests
     [Test]
     public void Should_Handle_Empty_TaskList()
     {
-        var emptyTaskList = new TaskList("empty.txt", false);
+        // arrange
+        var emptyFilePath = Path.GetTempFileName();
+        File.WriteAllText(emptyFilePath, "");
         
+        // act
+        var emptyTaskList = new TaskList(emptyFilePath, false);
+        
+        // assert
         Assert.That(emptyTaskList.Tasks.Count, Is.EqualTo(0));
         Assert.That(emptyTaskList.Projects.Count, Is.EqualTo(0));
         Assert.That(emptyTaskList.Contexts.Count, Is.EqualTo(0));
         Assert.That(emptyTaskList.Priorities.Count, Is.EqualTo(0));
+        
+        // Clean up
+        File.Delete(emptyFilePath);
     }
 
     [Test]
     public void Should_Handle_Multiple_Projects_And_Contexts()
     {
-        var complexTaskList = new TaskList("complex.txt", false);
+        // arrange
+        var complexFilePath = Path.GetTempFileName();
+        File.WriteAllText(complexFilePath, "");
+        var complexTaskList = new TaskList(complexFilePath, false);
+        
+        // act
         complexTaskList.Add(new Task("Task with +project1 +project2 @context1 @context2"));
         
+        // assert
         Assert.That(complexTaskList.Projects, Contains.Item("+project1"));
         Assert.That(complexTaskList.Projects, Contains.Item("+project2"));
         Assert.That(complexTaskList.Contexts, Contains.Item("@context1"));
         Assert.That(complexTaskList.Contexts, Contains.Item("@context2"));
+        
+        // Clean up
+        File.Delete(complexFilePath);
     }
 
     [Test]

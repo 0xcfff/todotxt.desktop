@@ -11,68 +11,83 @@
     
     <Window.Styles>
         <Style Selector="Label">
-            <Setter Property="Margin" Value="0,0,0,0"/>            
+            <Setter Property="Margin" Value="0,0,0,5"/>            
         </Style>
         <Style Selector="CheckBox">
-            <Setter Property="Margin" Value="0,8,0,0"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
             <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
         <Style Selector="Button">
             <Setter Property="Width" Value="75"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Margin" Value="0,0,5,0"/>
         </Style>
     </Window.Styles>
 
     <ScrollViewer>
         <StackPanel Margin="12">
-            <Grid>
+            <!-- Archive File Section -->
+            <Grid Margin="0,0,0,15">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="23"/>
-                    <RowDefinition Height="55"/>
-                    <RowDefinition Height="23"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="82" />
+                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="82" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 
                 <Label Grid.Row="0" 
                        Grid.Column="0" 
-                       HorizontalAlignment="Left" 
+                       VerticalAlignment="Center"
                        Content="Archive File" />
                 <TextBox Grid.Row="0" 
                          Grid.Column="1" 
-                         Name="ArchiveFileTextBox" />
+                         Name="ArchiveFileTextBox" 
+                         VerticalAlignment="Center" />
                 <Button Grid.Row="0" 
                         Grid.Column="2" 
-                        HorizontalAlignment="Right" 
                         Content="Select..." 
                         Name="SelectArchiveButton" 
                         Click="SelectArchive_Click" />
                 
-                <StackPanel Grid.Row="1" Grid.Column="1">
+                <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,8,0,0">
                     <CheckBox Content="Automatically archive completed tasks" 
                               Name="AutoArchiveCheckBox" />
                     <CheckBox Content="Automatically select archive path" 
                               Name="AutoSelectArchivePathCheckBox" />
                 </StackPanel>
+            </Grid>
+            
+            <!-- Font Selection Section -->
+            <Grid Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 
-                <Label Grid.Row="2" 
-                       Grid.Column="0" 
+                <Label Grid.Column="0" 
+                       VerticalAlignment="Center"
                        Content="Current Font" />
-                <TextBox Grid.Row="2" 
-                         Grid.Column="1" 
+                <TextBox Grid.Column="1" 
                          Name="CurrentFontDisplayTextBox" 
-                         IsReadOnly="True" />
-                <Button Grid.Row="2" 
-                        Grid.Column="2" 
-                        HorizontalAlignment="Right" 
+                         IsReadOnly="True" 
+                         VerticalAlignment="Center" />
+                <Button Grid.Column="2" 
                         Content="Select Font..." 
                         Name="SelectFontButton" 
                         Click="SelectFont_Click" />
             </Grid>
             
-            <StackPanel Margin="0,23,0,8">
+            <!-- General Options Section -->
+            <StackPanel Margin="0,10,0,15">
+                <TextBlock Text="General Options" 
+                           FontWeight="Bold" 
+                           Margin="0,0,0,10" />
                 <CheckBox Content="Add created date to new tasks" 
                           x:Name="AddCreationDateCheckBox" />
                 <CheckBox Content="Move focus to task list after creating new task" 

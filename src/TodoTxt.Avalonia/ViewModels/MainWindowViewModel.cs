@@ -2,7 +2,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -1307,6 +1309,23 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error disposing hotkeys: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    #region Application Lifecycle
+
+    /// <summary>
+    /// Exits the application
+    /// </summary>
+    [RelayCommand]
+    public void Exit()
+    {
+        // Get the application lifetime and request shutdown
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.Shutdown();
         }
     }
 
