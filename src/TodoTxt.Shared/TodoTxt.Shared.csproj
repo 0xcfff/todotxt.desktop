@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <RootNamespace>CommonExtensions</RootNamespace>
-    <AssemblyName>CommonExtensions</AssemblyName>
+    <RootNamespace>TodoTxt.Shared</RootNamespace>
+    <AssemblyName>TodoTxt.Shared</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 

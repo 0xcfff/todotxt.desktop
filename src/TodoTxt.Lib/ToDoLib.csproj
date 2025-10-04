@@ -11,7 +11,7 @@
   
 
   <ItemGroup>
-    <ProjectReference Include="..\TodoTxt.Shared\CommonExtensions.csproj" />
+    <ProjectReference Include="..\TodoTxt.Shared\TodoTxt.Shared.csproj" />
   </ItemGroup>
 
 </Project>

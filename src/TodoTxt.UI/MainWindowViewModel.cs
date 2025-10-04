@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.IO;
 using ColorFont;
-using CommonExtensions;
+using TodoTxt.Shared.Extensions;
 using System.Reflection;
 using System.Diagnostics;
 using System.ComponentModel;

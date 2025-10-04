@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Linq;
-using CommonExtensions;
+using TodoTxt.Shared.Extensions;
 
 namespace ToDoLib
 {

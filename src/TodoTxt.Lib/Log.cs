@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Threading;
-using CommonExtensions;
+using TodoTxt.Shared.Extensions;
 
 namespace ToDoLib
 {
