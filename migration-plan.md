@@ -172,7 +172,9 @@ jobs:
       - name: Test
         run: dotnet test --no-build --verbosity normal
       - name: Code Coverage
-        run: dotnet test --collect:"XPlat Code Coverage"
+        run: |
+          mkdir -p reports/coverage
+          dotnet test --collect:"XPlat Code Coverage" --results-directory reports/coverage
 ```
 
 #### 5.2 Build and Release Pipeline

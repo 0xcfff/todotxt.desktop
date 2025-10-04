@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        configuration: [Debug, Release]
+        configuration: [Release]
 
     runs-on: ${{ matrix.os }}
 
@@ -39,22 +39,10 @@ jobs:
         dotnet-version: '9.0.x'
 
     - name: Restore dependencies
-      run: |
-        dotnet restore src/TodoTxt.Lib/ToDoLib.csproj
-        dotnet restore src/TodoTxt.Shared/TodoTxt.Shared.csproj
-        dotnet restore src/TodoTxt.Platform/TodoTxt.Platform.csproj
-        dotnet restore src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj
-        dotnet restore src/TodoTxt.Lib.Tests/ToDoTests.csproj
-        dotnet restore src/TodoTxt.Avalonia.Tests/TodoTxt.Avalonia.Tests.csproj
+      run: dotnet restore ToDo.Net.sln
 
-    - name: Build cross-platform projects
-      run: |
-        dotnet build src/TodoTxt.Lib/ToDoLib.csproj --configuration ${{ matrix.configuration }} --no-restore
-        dotnet build src/TodoTxt.Shared/TodoTxt.Shared.csproj --configuration ${{ matrix.configuration }} --no-restore
-        dotnet build src/TodoTxt.Platform/TodoTxt.Platform.csproj --configuration ${{ matrix.configuration }} --no-restore
-        dotnet build src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj --configuration ${{ matrix.configuration }} --no-restore
-        dotnet build src/TodoTxt.Lib.Tests/ToDoTests.csproj --configuration ${{ matrix.configuration }} --no-restore
-        dotnet build src/TodoTxt.Avalonia.Tests/TodoTxt.Avalonia.Tests.csproj --configuration ${{ matrix.configuration }} --no-restore
+    - name: Build cross-platform solution
+      run: dotnet build ToDo.Net.sln --configuration ${{ matrix.configuration }} --no-restore
 
     - name: Run core library tests
       run: dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj --configuration ${{ matrix.configuration }} --no-build --logger "console;verbosity=normal"

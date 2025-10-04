@@ -10,6 +10,61 @@ There is installer for the latest version available from the [releases page](htt
 
 Please note that todotxt.net is now in maintenence mode. I am happy to receive bug reports and bug fixes, but no new features will be added at this stage.
 
+## Building and Testing
+
+This project includes a comprehensive Makefile for building and testing. The Makefile provides cross-platform support and follows .NET best practices.
+
+### Quick Start
+
+```bash
+# Show all available targets
+make help
+
+# Build entire cross-platform solution (recommended)
+make build
+
+# Run all tests (automatically builds first)
+make test
+
+# Build and test release version
+make release
+
+# Clean build artifacts
+make clean
+```
+
+### Available Targets
+
+- **Build targets**: `build` (builds entire cross-platform solution)
+- **Test targets**: `test`, `test-lib`, `test-avalonia`, `test-coverage`, `test-coverage-cobertura`
+- **Development targets**: `watch`, `watch-tests`, `format`, `check-format`
+- **CI targets**: `ci`, `ci-build`, `ci-test`
+- **Utility targets**: `clean`, `clean-all`, `info`, `help`
+
+### Configuration
+
+You can customize the build using variables:
+
+```bash
+# Build in Release mode
+make build CONFIGURATION=Release
+
+# Use detailed verbosity
+make build VERBOSITY=detailed
+
+# Run tests with coverage
+make test-coverage-cobertura
+```
+
+### Cross-Platform Testing
+
+The project includes cross-platform testing capabilities:
+
+```bash
+# Run cross-platform tests
+make test-cross-platform
+```
+
 ## Note for contributors
 
 If you change any of the files in the [`ToDoLib`](ToDoLib) folder, please make sure the current unit tests pass, and add new tests where appropriate.

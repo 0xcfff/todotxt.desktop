@@ -192,6 +192,7 @@ namespace TodoTxt.Lib
             if(Modified != null)
             {
                 Modified(this, new EventArgs());
+				
             }
         }
 

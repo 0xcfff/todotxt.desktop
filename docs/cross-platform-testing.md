@@ -197,7 +197,7 @@ dotnet build src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj --configuration Releas
 - **Content**: Platform, configuration, timestamp, and results
 
 ### Coverage Reports
-- **Location**: `coverage/` directory
+- **Location**: `reports/coverage/` directory
 - **Format**: Cobertura XML format
 - **Usage**: Upload to code coverage services
 
