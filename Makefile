@@ -115,7 +115,7 @@ coverage: build ## Run tests with Cobertura coverage format using cross-platform
 	@echo "$(BLUE)[INFO]$(NC) Running tests with Cobertura coverage using cross-platform solution..."
 	@mkdir -p $(COVERAGE_DIR)
 	@mkdir -p $(TEST_REPORTS_DIR)
-	@$(DOTNET) test $(SOLUTION) --configuration $(CONFIGURATION) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(PWD)/$(COVERAGE_DIR)/coverage.xml --results-directory $(TEST_REPORTS_DIR) --logger "console;verbosity=normal"
+	@$(DOTNET) test $(SOLUTION) --configuration $(CONFIGURATION) --no-build --collect:"XPlat Code Coverage" --results-directory $(TEST_REPORTS_DIR) --logger "console;verbosity=normal" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Output=$(COVERAGE_DIR)/coverage.xml
 	@echo "$(GREEN)[SUCCESS]$(NC) Cobertura coverage tests completed"
 
 # Clean targets
