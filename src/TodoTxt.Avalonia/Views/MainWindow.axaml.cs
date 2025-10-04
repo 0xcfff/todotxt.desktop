@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Platform;
 using TodoTxt.Avalonia.ViewModels;
 
 namespace TodoTxt.Avalonia.Views;
@@ -12,6 +13,18 @@ public partial class MainWindow : Window
         System.Diagnostics.Debug.WriteLine("MainWindow constructor started");
         
         InitializeComponent();
+        
+        // Set the window icon programmatically for macOS compatibility
+        try
+        {
+            var iconUri = new Uri("avares://TodoTxt.Avalonia/Assets/todotxt-icon.ico");
+            this.Icon = new WindowIcon(AssetLoader.Open(iconUri));
+            System.Diagnostics.Debug.WriteLine("Window icon set successfully");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to set window icon: {ex.Message}");
+        }
         
         System.Diagnostics.Debug.WriteLine("InitializeComponent completed");
         

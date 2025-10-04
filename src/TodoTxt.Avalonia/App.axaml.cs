@@ -36,8 +36,20 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             
-            // Create the main window first to show UI immediately
-            desktop.MainWindow = new MainWindow();
+            // Set application icon for macOS dock/taskbar
+            try
+            {
+                var iconUri = new Uri("avares://TodoTxt.Avalonia/Assets/todotxt-icon.ico");
+                desktop.MainWindow = new MainWindow();
+                desktop.MainWindow.Icon = new WindowIcon(AssetLoader.Open(iconUri));
+                System.Diagnostics.Debug.WriteLine("Application icon set successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to set application icon: {ex.Message}");
+                // Fallback: create window without custom icon
+                desktop.MainWindow = new MainWindow();
+            }
             
             // Initialize native menu for macOS (delayed to override defaults)
             _ = System.Threading.Tasks.Task.Run(async () =>
