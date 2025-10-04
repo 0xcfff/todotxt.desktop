@@ -41,10 +41,77 @@ jobs:
     - name: Build, test, and collect coverage using Makefile
       run: make build test coverage CONFIGURATION=${{ matrix.configuration }}
 
-    - name: Upload coverage reports
-      uses: codecov/codecov-action@v4
-      with:
-        directory: ./reports/coverage
-        flags: ${{ matrix.os }}
-        name: codecov-${{ matrix.os }}-${{ matrix.configuration }}
+    - name: Generate coverage summary
+      run: |
+        echo "## 📊 Test Coverage Report - ${{ matrix.os }} (${{ matrix.configuration }})" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Find the latest coverage file
+        COVERAGE_FILE=$(find ./reports/coverage -name "coverage.cobertura.xml" -type f | head -1)
+        
+        if [ -f "$COVERAGE_FILE" ]; then
+          echo "### Coverage Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Extract coverage data using grep and sed
+          LINE_RATE=$(grep -o 'line-rate="[^"]*"' "$COVERAGE_FILE" | sed 's/line-rate="//;s/"//' | head -1)
+          BRANCH_RATE=$(grep -o 'branch-rate="[^"]*"' "$COVERAGE_FILE" | sed 's/branch-rate="//;s/"//' | head -1)
+          LINES_COVERED=$(grep -o 'lines-covered="[^"]*"' "$COVERAGE_FILE" | sed 's/lines-covered="//;s/"//' | head -1)
+          LINES_VALID=$(grep -o 'lines-valid="[^"]*"' "$COVERAGE_FILE" | sed 's/lines-valid="//;s/"//' | head -1)
+          BRANCHES_COVERED=$(grep -o 'branches-covered="[^"]*"' "$COVERAGE_FILE" | sed 's/branches-covered="//;s/"//' | head -1)
+          BRANCHES_VALID=$(grep -o 'branches-valid="[^"]*"' "$COVERAGE_FILE" | sed 's/branches-valid="//;s/"//' | head -1)
+          
+          # Calculate percentages
+          LINE_PERCENT=$(echo "scale=1; $LINE_RATE * 100" | bc -l 2>/dev/null || echo "0")
+          BRANCH_PERCENT=$(echo "scale=1; $BRANCH_RATE * 100" | bc -l 2>/dev/null || echo "0")
+          
+          # Create coverage badges
+          if (( $(echo "$LINE_PERCENT >= 90" | bc -l 2>/dev/null || echo "0") )); then
+            LINE_BADGE="🟢"
+          elif (( $(echo "$LINE_PERCENT >= 70" | bc -l 2>/dev/null || echo "0") )); then
+            LINE_BADGE="🟡"
+          else
+            LINE_BADGE="🔴"
+          fi
+          
+          if (( $(echo "$BRANCH_PERCENT >= 90" | bc -l 2>/dev/null || echo "0") )); then
+            BRANCH_BADGE="🟢"
+          elif (( $(echo "$BRANCH_PERCENT >= 70" | bc -l 2>/dev/null || echo "0") )); then
+            BRANCH_BADGE="🟡"
+          else
+            BRANCH_BADGE="🔴"
+          fi
+          
+          echo "| Metric | Coverage | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Lines** | ${LINE_PERCENT}% (${LINES_COVERED}/${LINES_VALID}) | ${LINE_BADGE} |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Branches** | ${BRANCH_PERCENT}% (${BRANCHES_COVERED}/${BRANCHES_VALID}) | ${BRANCH_BADGE} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Add detailed file coverage if available
+          echo "### File Coverage Details" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Line Coverage | Branch Coverage |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|---------------|-----------------|" >> $GITHUB_STEP_SUMMARY
+          
+          # Extract file-level coverage (simplified version)
+          grep -o 'filename="[^"]*"' "$COVERAGE_FILE" | sed 's/filename="//;s/"//' | while read -r filename; do
+            if [ -n "$filename" ]; then
+              file_line_rate=$(grep -A 20 "filename=\"$filename\"" "$COVERAGE_FILE" | grep -o 'line-rate="[^"]*"' | head -1 | sed 's/line-rate="//;s/"//')
+              file_branch_rate=$(grep -A 20 "filename=\"$filename\"" "$COVERAGE_FILE" | grep -o 'branch-rate="[^"]*"' | head -1 | sed 's/branch-rate="//;s/"//')
+              
+              if [ -n "$file_line_rate" ] && [ -n "$file_branch_rate" ]; then
+                file_line_percent=$(echo "scale=1; $file_line_rate * 100" | bc -l 2>/dev/null || echo "0")
+                file_branch_percent=$(echo "scale=1; $file_branch_rate * 100" | bc -l 2>/dev/null || echo "0")
+                echo "| \`$(basename "$filename")\` | ${file_line_percent}% | ${file_branch_percent}% |" >> $GITHUB_STEP_SUMMARY
+              fi
+            fi
+          done
+          
+        else
+          echo "❌ No coverage file found at $COVERAGE_FILE" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
 
