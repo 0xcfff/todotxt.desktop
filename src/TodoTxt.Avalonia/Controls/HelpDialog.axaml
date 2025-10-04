@@ -126,7 +126,7 @@
             </StackPanel>
             
             <!-- Website Link Section -->
-            <TextBlock Text="More info available at benrhughes.com/todotxt.net"
+            <TextBlock Text="More info available at github.com/0xcfff/todotxt.desktop"
                        FontSize="12"
                        Foreground="Blue"
                        Cursor="Hand"

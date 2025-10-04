@@ -19,7 +19,7 @@ namespace TodoTxt.Avalonia.Controls
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "https://benrhughes.com/todotxt.net",
+                    FileName = "https://github.com/0xcfff/todotxt.desktop?tab=readme-ov-file#features",
                     UseShellExecute = true
                 });
             }
