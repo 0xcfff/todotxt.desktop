@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <RootNamespace>TodoTxt.Lib</RootNamespace>
-    <AssemblyName>TodoTxt.Lib</AssemblyName>
+    <RootNamespace>TodoTxt.Core</RootNamespace>
+    <AssemblyName>TodoTxt.Core</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Nullable>disable</Nullable>
   </PropertyGroup>

@@ -8,7 +8,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 using TodoTxt.Avalonia.Models;
 using TodoTxt.Avalonia.Controls;
 using TodoTxt.Avalonia.Services;
@@ -22,10 +22,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private TaskList? _taskList;
     
     [ObservableProperty]
-    private ObservableCollection<TodoTxt.Lib.Task> _tasks = new();
+    private ObservableCollection<TodoTxt.Core.Task> _tasks = new();
     
     [ObservableProperty]
-    private TodoTxt.Lib.Task? _selectedItem;
+    private TodoTxt.Core.Task? _selectedItem;
     
     [ObservableProperty]
     private int _totalTasks;
@@ -39,7 +39,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string _taskInputText = string.Empty;
     
-    private TodoTxt.Lib.Task? _updatingTask;
+    private TodoTxt.Core.Task? _updatingTask;
     private string? _currentFilePath;
     
     [ObservableProperty]
@@ -72,8 +72,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private int _tasksDueThisWeek = 0;
     
-    private List<TodoTxt.Lib.Task> _allTasks = new();
-    private List<TodoTxt.Lib.Task> _currentFilteredTasks = new();
+    private List<TodoTxt.Core.Task> _allTasks = new();
+    private List<TodoTxt.Core.Task> _currentFilteredTasks = new();
 
     /// <summary>
     /// Exposes the TaskList for IntellisenseTextBox autocompletion
@@ -185,11 +185,11 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         
         _taskList = new TaskList(tempFilePath);
-        _taskList.Add(new TodoTxt.Lib.Task("(A) Call Mom +family @home due:2024-01-20"));
-        _taskList.Add(new TodoTxt.Lib.Task("(B) Buy groceries @errands due:2024-01-18"));
-        _taskList.Add(new TodoTxt.Lib.Task("x 2024-01-15 Complete project documentation +work"));
-        _taskList.Add(new TodoTxt.Lib.Task("(C) Review code +work @office due:2024-01-19"));
-        _taskList.Add(new TodoTxt.Lib.Task("h:1 Private task +personal"));
+        _taskList.Add(new TodoTxt.Core.Task("(A) Call Mom +family @home due:2024-01-20"));
+        _taskList.Add(new TodoTxt.Core.Task("(B) Buy groceries @errands due:2024-01-18"));
+        _taskList.Add(new TodoTxt.Core.Task("x 2024-01-15 Complete project documentation +work"));
+        _taskList.Add(new TodoTxt.Core.Task("(C) Review code +work @office due:2024-01-19"));
+        _taskList.Add(new TodoTxt.Core.Task("h:1 Private task +personal"));
         
         // Store all tasks in the internal list
         _allTasks.AddRange(_taskList.Tasks);
@@ -235,7 +235,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private void ApplyFiltersAndSorting()
     {
         // Start with all tasks
-        var tasks = new List<TodoTxt.Lib.Task>(_allTasks);
+        var tasks = new List<TodoTxt.Core.Task>(_allTasks);
         
         // Apply filters
         tasks = ApplyFilters(tasks);
@@ -265,9 +265,9 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Applies filters to the task list
     /// </summary>
-    private List<TodoTxt.Lib.Task> ApplyFilters(List<TodoTxt.Lib.Task> tasks)
+    private List<TodoTxt.Core.Task> ApplyFilters(List<TodoTxt.Core.Task> tasks)
     {
-        var filteredTasks = new List<TodoTxt.Lib.Task>();
+        var filteredTasks = new List<TodoTxt.Core.Task>();
         var comparer = FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
         
         foreach (var task in tasks)
@@ -314,7 +314,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Applies a single filter to a task
     /// </summary>
-    private bool ApplySingleFilter(TodoTxt.Lib.Task task, string filter, StringComparison comparer)
+    private bool ApplySingleFilter(TodoTxt.Core.Task task, string filter, StringComparison comparer)
     {
         // Handle special date filters
         if (filter.Equals("due:today", StringComparison.OrdinalIgnoreCase))
@@ -390,7 +390,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Applies search to the task list
     /// </summary>
-    private List<TodoTxt.Lib.Task> ApplySearch(List<TodoTxt.Lib.Task> tasks, string searchText)
+    private List<TodoTxt.Core.Task> ApplySearch(List<TodoTxt.Core.Task> tasks, string searchText)
     {
         var comparer = FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
         return tasks.Where(t => t.Raw.Contains(searchText, comparer)).ToList();
@@ -433,7 +433,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         try
         {
-            var newTask = new TodoTxt.Lib.Task(TaskInputText.Trim());
+            var newTask = new TodoTxt.Core.Task(TaskInputText.Trim());
             
             if (_taskList != null)
             {
@@ -467,7 +467,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         try
         {
-            var updatedTask = new TodoTxt.Lib.Task(TaskInputText.Trim());
+            var updatedTask = new TodoTxt.Core.Task(TaskInputText.Trim());
             
             if (_taskList != null)
             {
@@ -568,7 +568,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (SelectedItem != null)
         {
-            var updatedTask = new TodoTxt.Lib.Task(SelectedItem.Raw);
+            var updatedTask = new TodoTxt.Core.Task(SelectedItem.Raw);
             updatedTask.Completed = !updatedTask.Completed;
             
             if (_taskList != null)
@@ -685,8 +685,6 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     public async System.Threading.Tasks.Task SaveAsFile()
     {
-        if (_taskList == null) return;
-
         try
         {
             var filePath = await ServiceLocator.FileDialogService.ShowSaveFileDialogAsync(
@@ -707,9 +705,10 @@ public partial class MainWindowViewModel : ViewModelBase
                         writer.WriteLine(task.Raw);
                     }
                 }
-                
-                _currentFilePath = filePath;
-                System.Diagnostics.Debug.WriteLine($"Tasks saved to {filePath}");
+				
+				// Re-point the in-memory list to the newly saved file and refresh bindings
+				LoadTasks(filePath);
+				System.Diagnostics.Debug.WriteLine($"Tasks saved to {filePath}");
             }
         }
         catch (Exception ex)
@@ -938,7 +937,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Sorts a collection of tasks based on the specified sort type
     /// </summary>
-    private IEnumerable<TodoTxt.Lib.Task> SortTasks(IEnumerable<TodoTxt.Lib.Task> tasks, SortType sortType)
+    private IEnumerable<TodoTxt.Core.Task> SortTasks(IEnumerable<TodoTxt.Core.Task> tasks, SortType sortType)
     {
         return sortType switch
         {

@@ -1,6 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 
 namespace TodoTxt.Avalonia.Controls
 {

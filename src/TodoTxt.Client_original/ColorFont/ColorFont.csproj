@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\TodoTxt.Lib\TodoTxt.Lib.csproj" />
+    <ProjectReference Include="..\..\TodoTxt.Core\TodoTxt.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

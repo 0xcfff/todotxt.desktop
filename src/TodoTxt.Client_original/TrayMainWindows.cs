@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 
 namespace Client
 {

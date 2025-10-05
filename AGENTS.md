@@ -23,7 +23,7 @@ dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj
 
 ## Code Structure
 
-*   **`src/TodoTxt.Lib`:** Core business logic (Model).
+*   **`src/TodoTxt.Core`:** Core business logic (Model).
 *   **`src/TodoTxt.UI`:** WPF user interface (View and ViewModel). Follows the MVVM pattern.
 *   **`src/TodoTxt.Shared`:** Shared utility code.
 *   **`src/TodoTxt.Lib.Tests`:** Unit tests for the core library.

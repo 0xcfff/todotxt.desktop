@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 using System.Windows;
 using System.Windows.Input;
 using System.IO;

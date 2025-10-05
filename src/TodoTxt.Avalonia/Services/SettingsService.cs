@@ -44,13 +44,13 @@ namespace TodoTxt.Avalonia.Services
                     appName),
                 PlatformID.Unix => Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    ".config", appName),
+                    ".config", appName.ToLower()),
                 PlatformID.MacOSX => Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                     "Library", "Application Support", appName),
                 _ => Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    ".config", appName)
+                    ".config", appName.ToLower())
             };
         }
 

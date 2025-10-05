@@ -25,7 +25,7 @@
 
 #### Step 1.3: Basic Project Configuration ✅
 - [x] Configure project references:
-  - [x] TodoTxt.Avalonia → TodoTxt.Lib
+  - [x] TodoTxt.Avalonia → TodoTxt.Core
   - [x] TodoTxt.Avalonia → TodoTxt.Shared
   - [x] TodoTxt.Avalonia → TodoTxt.Avalonia.Core
   - [x] TodoTxt.Avalonia → TodoTxt.Platform

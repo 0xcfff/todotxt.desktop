@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using TodoTxt.Shared.Extensions;
 
-namespace TodoTxt.Lib
+namespace TodoTxt.Core
 {
 	/// <summary>
 	/// A thin data access abstraction over the actual todo.txt file

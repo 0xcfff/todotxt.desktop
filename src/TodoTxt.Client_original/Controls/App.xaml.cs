@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 
 namespace Client
 {

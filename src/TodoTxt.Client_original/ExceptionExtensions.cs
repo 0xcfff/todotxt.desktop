@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 using System.Windows;
 
 namespace Client

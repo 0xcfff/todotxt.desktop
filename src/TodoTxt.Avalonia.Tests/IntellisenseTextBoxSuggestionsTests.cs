@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 using TodoTxt.Avalonia.Controls;
-using Task = TodoTxt.Lib.Task;
+using Task = TodoTxt.Core.Task;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 

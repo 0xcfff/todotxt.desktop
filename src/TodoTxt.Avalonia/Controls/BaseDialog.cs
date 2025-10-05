@@ -55,7 +55,15 @@ namespace TodoTxt.Avalonia.Controls
         {
             if (owner != null)
                 Owner = owner;
-            return await base.ShowDialog<bool?>(owner ?? this);
+            var fallbackOwner = owner ?? (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow as Window ?? null;
+            if (fallbackOwner != null)
+            {
+                return await base.ShowDialog<bool?>(fallbackOwner);
+            }
+            
+            // If no owner is available, show non-modally as a safe fallback
+            Show();
+            return true;
         }
 
         /// <summary>

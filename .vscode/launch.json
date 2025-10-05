@@ -6,7 +6,7 @@
         "request": "launch",
         "preLaunchTask": "build",
         "program": "${workspaceFolder}/src/TodoTxt.Avalonia/bin/Debug/net9.0/TodoTxt.Avalonia.dll"
-    }
+    },
     ]
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.

@@ -158,12 +158,12 @@
   - Implements ObservableCollection<Task> for task binding
   - Includes task counting logic (Total, Filtered, Incomplete)
   - Sample task loading for demonstration
-  - Integration with TodoTxt.Lib business logic
+  - Integration with TodoTxt.Core business logic
 
 #### Project Configuration
 - **`ToDo.Net.sln`** - Updated to include new Avalonia projects
 - **Project References Configured:**
-  - TodoTxt.Avalonia → TodoTxt.Lib (business logic)
+  - TodoTxt.Avalonia → TodoTxt.Core (business logic)
   - TodoTxt.Avalonia → TodoTxt.Shared (utilities)
   - TodoTxt.Avalonia → TodoTxt.Avalonia.Core (UI components)
   - TodoTxt.Avalonia → TodoTxt.Platform (platform services)
@@ -190,7 +190,7 @@
 - **Styling**: Basic styling to match original appearance
 
 ### Business Logic Integration ✅
-- Successfully integrated with existing TodoTxt.Lib
+- Successfully integrated with existing TodoTxt.Core
 - Task loading and display functionality working
 - Property change notifications working correctly
 - Sample data demonstrates end-to-end functionality
@@ -231,7 +231,7 @@
   - Added file operations (New, Open, Reload, Archive)
   - Implemented Edit operations (Cut, Copy, Paste) with placeholder clipboard functionality
   - Added comprehensive sorting system with SortType enum
-  - Integrated with TodoTxt.Lib business logic for all operations
+  - Integrated with TodoTxt.Core business logic for all operations
 
 ### View Enhancements
 - **`src/TodoTxt.Avalonia/Views/MainWindow.axaml`**
@@ -314,7 +314,7 @@
    - Menu integration complete
 
 5. **No data loss or corruption** ✅
-   - All operations use TodoTxt.Lib business logic
+   - All operations use TodoTxt.Core business logic
    - Proper error handling throughout
    - File operations maintain data integrity
 
@@ -339,7 +339,7 @@
 
 ### Project Configuration Updates
 - **`src/TodoTxt.Avalonia.Core/TodoTxt.Avalonia.Core.csproj`**
-  - Added reference to TodoTxt.Lib for TaskList integration
+  - Added reference to TodoTxt.Core for TaskList integration
   - Maintains Avalonia 11.3.6 package references
 
 ### MainWindow Integration

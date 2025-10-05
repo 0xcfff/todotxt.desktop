@@ -1,10 +1,10 @@
 using NUnit.Framework;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 using TodoTxt.Avalonia.Controls;
 using TodoTxt.Avalonia.Tests.TestDataBuilders;
 using TodoTxt.Avalonia.Tests.TestUtilities;
 using Avalonia.Input;
-using Task = TodoTxt.Lib.Task;
+using Task = TodoTxt.Core.Task;
 
 namespace TodoTxt.Avalonia.Tests;
 

@@ -33,7 +33,7 @@ else
 endif
 
 # Project paths (for reference in info target)
-LIB_PROJECT := src/TodoTxt.Lib/TodoTxt.Lib.csproj
+LIB_PROJECT := src/TodoTxt.Core/TodoTxt.Core.csproj
 SHARED_PROJECT := src/TodoTxt.Shared/TodoTxt.Shared.csproj
 PLATFORM_PROJECT := src/TodoTxt.Platform/TodoTxt.Platform.csproj
 AVALONIA_PROJECT := src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj
@@ -129,8 +129,8 @@ clean: ## Clean build artifacts
 clean-all: ## Clean all build artifacts and temporary files
 	@echo "$(BLUE)[INFO]$(NC) Cleaning all artifacts..."
 	@rm -rf $(REPORTS_DIR)
-	@find . -name "bin" -type d -exec rm -rf {} + 2>/dev/null || true
-	@find . -name "obj" -type d -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name "bin" -prune -exec rm -rf {} \; 2>/dev/null || true
+	@find . -type d -name "obj" -prune -exec rm -rf {} \; 2>/dev/null || true
 	@echo "$(GREEN)[SUCCESS]$(NC) All artifacts cleaned"
 
 # Development targets

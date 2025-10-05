@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Windows;
 using System.Windows.Media;
-using TodoTxt.Lib;
+using TodoTxt.Core;
 
 namespace ColorFont
 {

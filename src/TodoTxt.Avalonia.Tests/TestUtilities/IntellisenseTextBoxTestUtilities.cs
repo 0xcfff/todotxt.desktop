@@ -356,16 +356,16 @@ public static class IntellisenseTextBoxTestUtilities
     /// <param name="textBox">The IntellisenseTextBox instance to set up.</param>
     /// <param name="taskList">The TaskList to use (optional, will create default if null).</param>
     /// <returns>The configured TaskList.</returns>
-    public static TodoTxt.Lib.TaskList CreateStandardTestSetup(IntellisenseTextBox textBox, TodoTxt.Lib.TaskList? taskList = null)
+    public static TodoTxt.Core.TaskList CreateStandardTestSetup(IntellisenseTextBox textBox, TodoTxt.Core.TaskList? taskList = null)
     {
         if (taskList == null)
         {
-            taskList = new TodoTxt.Lib.TaskList();
-            taskList.Tasks.Add(new TodoTxt.Lib.Task("Buy groceries +shopping @home"));
-            taskList.Tasks.Add(new TodoTxt.Lib.Task("Call mom @phone"));
-            taskList.Tasks.Add(new TodoTxt.Lib.Task("Finish project report +work @office"));
-            taskList.Tasks.Add(new TodoTxt.Lib.Task("(A) High priority task +important"));
-            taskList.Tasks.Add(new TodoTxt.Lib.Task("(B) Medium priority task +work"));
+            taskList = new TodoTxt.Core.TaskList();
+            taskList.Tasks.Add(new TodoTxt.Core.Task("Buy groceries +shopping @home"));
+            taskList.Tasks.Add(new TodoTxt.Core.Task("Call mom @phone"));
+            taskList.Tasks.Add(new TodoTxt.Core.Task("Finish project report +work @office"));
+            taskList.Tasks.Add(new TodoTxt.Core.Task("(A) High priority task +important"));
+            taskList.Tasks.Add(new TodoTxt.Core.Task("(B) Medium priority task +work"));
             taskList.UpdateTaskListMetaData();
         }
         

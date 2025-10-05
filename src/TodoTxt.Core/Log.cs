@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using TodoTxt.Shared.Extensions;
 
-namespace TodoTxt.Lib
+namespace TodoTxt.Core
 {
     public enum LogLevel
     {

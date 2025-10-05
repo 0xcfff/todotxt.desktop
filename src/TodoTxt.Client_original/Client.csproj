@@ -23,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="ColorFont\ColorFont.csproj" />
     <ProjectReference Include="..\TodoTxt.Shared\TodoTxt.Shared.csproj" />
-    <ProjectReference Include="..\TodoTxt.Lib\TodoTxt.Lib.csproj" />
+    <ProjectReference Include="..\TodoTxt.Core\TodoTxt.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
