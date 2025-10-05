@@ -7,12 +7,7 @@
 **Summary**: Successfully set up comprehensive cross-platform testing infrastructure for Windows, macOS, and Linux platforms.
 
 ### Files Created
-1. **Cross-Platform Testing Scripts**:
-   - `scripts/cross-platform-test.sh` - Unix/macOS/Linux testing script
-   - `scripts/cross-platform-test.bat` - Windows testing script
-   - `docs/cross-platform-testing.md` - Comprehensive testing documentation
-
-2. **GitHub Actions Workflow**:
+1. **GitHub Actions Workflow**:
    - Updated `.github/workflows/dotnet-desktop.yml` for cross-platform CI/CD
    - Matrix strategy testing Windows, macOS, Linux × Debug, Release
    - Automated test execution and coverage collection
@@ -26,8 +21,6 @@
 
 ### Key Features
 - **Automated Cross-Platform Testing**: GitHub Actions runs tests on all three platforms
-- **Local Testing Scripts**: Easy-to-use scripts for local development testing
-- **Comprehensive Documentation**: Detailed testing guide with troubleshooting
 - **Test Coverage**: Automated coverage collection and reporting
 - **Platform-Specific Validation**: Tests platform-specific features and services
 
