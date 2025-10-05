@@ -88,5 +88,5 @@ gen
 tags
 .tags
 
-# coverage output
-coverage/
+# reports
+reports/

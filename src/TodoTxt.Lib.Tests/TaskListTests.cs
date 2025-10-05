@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using ToDoLib;
+using TodoTxt.Core;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
-using Task = ToDoLib.Task;
+using Task = TodoTxt.Core.Task;
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace ToDoTests
 {
@@ -30,139 +31,161 @@ namespace ToDoTests
 		}
         
 		[Test]
-        public void Construct()
+        public void TaskListCtor_WithValidFilePathProvided_CreatesTaskListInstance()
         {
-            var tl = new TaskList(Data.TestDataPath);
+            // arrange
+            var filePath = Data.TestDataPath;
+            
+            // act
+            var actual = new TaskList(filePath);
+            
+            // assert
+            Assert.IsNotNull(actual);
         }
 
 
         [Test]
-        public void Load_From_File()
+        public void Tasks_WithTaskListCreatedFromFileProvided_ReturnsTaskCollection()
         {
-            var tl = new TaskList(Data.TestDataPath);
-            var tasks = tl.Tasks;
+            // arrange
+            var filePath = Data.TestDataPath;
+            
+            // act
+            var taskList = new TaskList(filePath);
+            var actual = taskList.Tasks;
+            
+            // assert
+            Assert.IsNotNull(actual);
         }
 
         [Test]
-        public void Add_ToCollection()
+        public void Add_WithValidTaskProvided_AddsTaskToCollection()
         {
-            var task = new Task("(B) Add_ToCollection +test @task");
-
-            var tl = new TaskList(Data.TestDataPath);
-
-            var tasks = new List<Task>(tl.Tasks);
-            tasks.Add(task);
-
-            tl.Add(task);
-
-            var newTasks = tl.Tasks.ToList();
-
-            Assert.That(newTasks.Count, Is.EqualTo(tasks.Count));
-
-            for (int i = 0; i < tasks.Count; i++)
-                Assert.That(newTasks[i].ToString(), Is.EqualTo(tasks[i].ToString()));
+            // arrange
+            var taskString = "(B) Add_ToCollection +test @task";
+            var task = new Task(taskString);
+            var taskList = new TaskList(Data.TestDataPath);
+            var initialCount = taskList.Tasks.Count();
+            
+            // act
+            taskList.Add(task);
+            
+            // assert
+            Assert.AreEqual(initialCount + 1, taskList.Tasks.Count());
+            Assert.That(taskList.Tasks.ToList(), Contains.Item(task));
         }
 
         [Test]
-        public void Add_ToFile()
+        public void Add_WithValidTaskProvided_WritesTaskToFile()
         {
+            // arrange
             var fileContents = File.ReadAllLines(Data.TestDataPath).ToList();
-            fileContents.Add("(B) Add_ToFile +test @task");
-
-            var task = new Task(fileContents.Last());
-            var tl = new TaskList(Data.TestDataPath);
-            tl.Add(task);
-
+            var taskString = "(B) Add_ToFile +test @task";
+            fileContents.Add(taskString);
+            var task = new Task(taskString);
+            var taskList = new TaskList(Data.TestDataPath);
+            
+            // act
+            taskList.Add(task);
+            
+            // assert
             var newFileContents = File.ReadAllLines(Data.TestDataPath);
             Assert.That(newFileContents, Is.EquivalentTo(fileContents));
         }
 
         [Test]
-        public void Add_To_Empty_File()
+        public void Add_WithTaskAddedToEmptyFileProvided_AddsTaskSuccessfully()
         {
+            // arrange
             // v0.3 and earlier contained a bug where a blank task was added
-
             File.WriteAllLines(Data.TestDataPath, new string[] { }); // empties the file
-
-            var tl = new TaskList(Data.TestDataPath);
-            tl.Add(new Task("A task"));
-
-            Assert.That(tl.Tasks.Count(), Is.EqualTo(1));
-
-        }
-
-        [Test]
-        public void Add_Multiple()
-        {
-            var tl = new TaskList(Data.TestDataPath);
-            var c = tl.Tasks.Count();
-
-            var task = new Task("Add_Multiple task one");
-            tl.Add(task);
-
-            var task2 = new Task("Add_Multiple task two");
-            tl.Add(task2);
-
-            Assert.That(tl.Tasks.Count(), Is.EqualTo(c + 2));
-        }
-
-        [Test]
-        public void Delete_InCollection()
-        {
-            var task = new Task("(B) Delete_InCollection +test @task");
-            var tl = new TaskList(Data.TestDataPath);
-            tl.Add(task);
-
-            var tasks = new List<Task>(tl.Tasks);
-            tasks.Remove(tasks.Where(x => x.Raw == task.Raw).First());
-
+            var taskString = "A task";
+            var task = new Task(taskString);
+            var taskList = new TaskList(Data.TestDataPath);
             
-            tl.Delete(task);
-
-            var newTasks = tl.Tasks.ToList();
-
-            Assert.That(newTasks.Count, Is.EqualTo(tasks.Count));
-
-            for (int i = 0; i < tasks.Count; i++)
-                Assert.That(newTasks[i].ToString(), Is.EqualTo(tasks[i].ToString()));
+            // act
+            taskList.Add(task);
+            
+            // assert
+            Assert.AreEqual(1, taskList.Tasks.Count());
         }
 
         [Test]
-        public void Delete_InFile()
+        public void Add_WithMultipleTasksProvided_AddsAllTasksToCollection()
         {
+            // arrange
+            var taskList = new TaskList(Data.TestDataPath);
+            var initialCount = taskList.Tasks.Count();
+            var task1 = new Task("Add_Multiple task one");
+            var task2 = new Task("Add_Multiple task two");
+            
+            // act
+            taskList.Add(task1);
+            taskList.Add(task2);
+            
+            // assert
+            Assert.AreEqual(initialCount + 2, taskList.Tasks.Count());
+        }
+
+        [Test]
+        public void Delete_WithExistingTaskProvided_RemovesTaskFromCollection()
+        {
+            // arrange
+            var taskString = "(B) Delete_InCollection +test @task";
+            var task = new Task(taskString);
+            var taskList = new TaskList(Data.TestDataPath);
+            taskList.Add(task);
+            var countAfterAdd = taskList.Tasks.Count();
+            
+            // act
+            taskList.Delete(task);
+            
+            // assert
+            Assert.AreEqual(countAfterAdd - 1, taskList.Tasks.Count());
+            Assert.IsFalse(taskList.Tasks.Contains(task));
+        }
+
+        [Test]
+        public void Delete_WithExistingTaskProvided_RemovesTaskFromFile()
+        {
+            // arrange
             var fileContents = File.ReadAllLines(Data.TestDataPath).ToList();
             var task = new Task(fileContents.Last());
             fileContents.Remove(fileContents.Last());
-
-            var tl = new TaskList(Data.TestDataPath);
-            tl.Delete(task);
-
+            var taskList = new TaskList(Data.TestDataPath);
+            
+            // act
+            taskList.Delete(task);
+            
+            // assert
             var newFileContents = File.ReadAllLines(Data.TestDataPath);
             Assert.That(newFileContents, Is.EquivalentTo(fileContents));
         }
 
         [Test]
-        public void Update_InCollection()
+        public void Update_WithTaskAndUpdatedTaskProvided_UpdatesTaskInCollection()
         {
-            var task = new Task("(B) Update_InCollection +test @task");
-
-            var tl = new TaskList(Data.TestDataPath);
-            tl.Add(task);
-
-            var task2 = new Task(task.Raw);
-            task2.Completed = true;
-
-            tl.Update(task, task2);
-
-            var newTask = tl.Tasks.Last();
-            Assert.That(newTask.Completed, Is.True);
+            // arrange
+            var taskString = "(B) Update_InCollection +test @task";
+            var originalTask = new Task(taskString);
+            var taskList = new TaskList(Data.TestDataPath);
+            taskList.Add(originalTask);
+            var updatedTask = new Task(originalTask.Raw);
+            updatedTask.Completed = true;
+            
+            // act
+            taskList.Update(originalTask, updatedTask);
+            
+            // assert
+            var newTask = taskList.Tasks.Last();
+            Assert.IsTrue(newTask.Completed);
         }
 
 		[Test]
-		public void Read_when_file_is_open_in_another_process()
+		public void ReloadTasks_WithFileOpenInAnotherProcessProvided_HandlesFileAccessGracefully()
 		{
-			var t = new TaskList(Data.TestDataPath);
-		
+			// arrange
+			var taskList = new TaskList(Data.TestDataPath);
 			var thread = new Thread(x =>
 				{
 					try
@@ -173,7 +196,7 @@ namespace ToDoTests
 							s.WriteLine("hello");
 							s.Flush();
 						}
-						Thread.Sleep(500);						
+						Thread.Sleep(500);
 					}
 					catch (Exception ex)
 					{
@@ -184,19 +207,20 @@ namespace ToDoTests
 			thread.Start();
 			Thread.Sleep(100);
 
+			// act & assert
 			try
 			{
-				t.ReloadTasks();
+				taskList.ReloadTasks();
+				// If we get here without exception, the test passes
 			}
 			catch (Exception ex)
 			{
-				Assert.That(false, Is.True, ex.Message);
+				Assert.Fail($"ReloadTasks failed with exception: {ex.Message}");
 			}
 			finally
 			{
 				thread.Join();
 			}
-
 		}
 
         private List<Task> getTestList()
