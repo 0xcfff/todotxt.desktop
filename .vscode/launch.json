@@ -1,0 +1,14 @@
+{
+    "configurations": [
+    {
+        "name": "debug",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/src/TodoTxt.Avalonia/bin/Debug/net9.0/TodoTxt.Avalonia.dll"
+    },
+    ]
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+}

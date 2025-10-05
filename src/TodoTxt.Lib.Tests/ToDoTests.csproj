@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- <ProjectReference Include="..\TodoTxt.UI\Client.csproj" /> -->
-    <ProjectReference Include="..\TodoTxt.Lib\ToDoLib.csproj" />
+    <!-- <ProjectReference Include="..\TodoTxt.Client_original\Client.csproj" /> -->
+    <ProjectReference Include="..\TodoTxt.Core\TodoTxt.Core.csproj" />
   </ItemGroup>
 </Project>

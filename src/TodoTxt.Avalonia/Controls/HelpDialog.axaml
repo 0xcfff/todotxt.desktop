@@ -1,0 +1,137 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TodoTxt.Avalonia.Controls"
+        x:Class="TodoTxt.Avalonia.Controls.HelpDialog"
+        Title="Help"
+        Width="450"
+        Height="600"
+        WindowStartupLocation="CenterScreen"
+        CanResize="True">
+    
+    <ScrollViewer MaxHeight="600">
+        <StackPanel Margin="20" Spacing="16">
+            <!-- Header Section -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Name="TitleTextBlock"
+                           Grid.Column="0"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Text="todotxt.net" />
+                <TextBlock Name="VersionTextBlock"
+                           Grid.Column="1"
+                           FontSize="14"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,0,4"
+                           Text="Version 1.0" />
+            </Grid>
+            
+            <!-- Description Section -->
+            <TextBlock Text="A cross-platform todo.txt client built with Avalonia UI."
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="Gray" />
+            
+            <!-- Features Section -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Features:"
+                           FontSize="16"
+                           FontWeight="SemiBold" />
+                
+                <StackPanel Margin="16,0,0,0" Spacing="4">
+                    <TextBlock Text="• Create, edit, and manage todo.txt tasks" />
+                    <TextBlock Text="• Cross-platform support (Windows, macOS, Linux)" />
+                    <TextBlock Text="• Intellisense autocompletion for projects and contexts" />
+                    <TextBlock Text="• Task filtering and sorting" />
+                    <TextBlock Text="• Keyboard shortcuts for efficient task management" />
+                </StackPanel>
+            </StackPanel>
+            
+            <!-- Keyboard Shortcuts Section -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Keyboard Shortcuts:"
+                           FontSize="16"
+                           FontWeight="SemiBold" />
+                
+                <StackPanel Margin="16,0,0,0" Spacing="4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Ctrl+N:" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="New file" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Ctrl+O:" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Open file" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="F5:" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Reload file" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="F2:" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Edit selected task" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="X:" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Toggle task completion" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Delete:" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Delete selected task" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Enter:" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Add new task" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Escape:" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Cancel editing" />
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+            
+            <!-- Website Link Section -->
+            <TextBlock Text="More info available at github.com/0xcfff/todotxt.desktop"
+                       FontSize="12"
+                       Foreground="Blue"
+                       Cursor="Hand"
+                       PointerPressed="WebsiteLink_PointerPressed"
+                       TextDecorations="Underline" />
+        </StackPanel>
+    </ScrollViewer>
+</Window>

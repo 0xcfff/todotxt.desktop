@@ -1,0 +1,125 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:TodoTxt.Avalonia.Controls"
+        x:Class="TodoTxt.Avalonia.Controls.FilterDialog"
+        Title="Filter"
+        Width="405"
+        Height="500"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        CanResize="False">
+    
+    <Window.Styles>
+        <Style Selector="Label">
+            <Setter Property="Margin" Value="0,8,0,0"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Width" Value="75"/>
+        </Style>
+        <Style Selector="controls|IntellisenseTextBox">
+            <Setter Property="Height" Value="70"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+        </Style>
+    </Window.Styles>
+
+    <StackPanel>
+        <StackPanel Margin="12">
+            <Label Margin="0">
+                <TextBlock TextWrapping="Wrap">
+                    To invoke a filter from the main window, press a number key (<Run FontWeight="Bold">1</Run>-<Run FontWeight="Bold">9</Run>).
+                    <LineBreak/>
+                    <Run FontWeight="Bold">0</Run> will clear current active filter.
+                </TextBlock>
+            </Label>
+        </StackPanel>
+        
+        <Border Margin="0" 
+                BorderThickness="0,1,0,1" 
+                BorderBrush="LightGray" 
+                Background="LightGray">
+            <ScrollViewer Height="430">
+                <StackPanel Margin="12">
+                    <Label Content="Currently active filter:" Margin="0"/>
+                    <controls:IntellisenseTextBox x:Name="ActiveFilterTextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #1:"/>
+                    <controls:IntellisenseTextBox x:Name="PresetFilter1TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #2:" />
+                    <controls:IntellisenseTextBox x:Name="PresetFilter2TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #3:" />
+                    <controls:IntellisenseTextBox x:Name="PresetFilter3TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #4:" />
+                    <controls:IntellisenseTextBox x:Name="PresetFilter4TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #5:" />
+                    <controls:IntellisenseTextBox x:Name="PresetFilter5TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #6:" />
+                    <controls:IntellisenseTextBox x:Name="PresetFilter6TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #7:" />
+                    <controls:IntellisenseTextBox x:Name="PresetFilter7TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #8:" />
+                    <controls:IntellisenseTextBox x:Name="PresetFilter8TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                    
+                    <Label Content="Preset filter #9:" />
+                    <controls:IntellisenseTextBox x:Name="PresetFilter9TextBox" 
+                                                  KeyUp="FilterTextBox_KeyUp" />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="23"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="82"/>
+                <ColumnDefinition Width="82"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="82"/>
+                <ColumnDefinition Width="82"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button Grid.Row="0" 
+                    Grid.Column="0" 
+                    Content="_Clear Active" 
+                    HorizontalAlignment="Left" 
+                    Name="ClearActiveButton" 
+                    Click="ClearActive_Click" />
+            <Button Grid.Row="0" 
+                    Grid.Column="1" 
+                    Content="Clear _All" 
+                    HorizontalAlignment="Left" 
+                    Name="ClearAllButton" 
+                    Click="ClearAll_Click" />
+            <Button Grid.Row="0" 
+                    Grid.Column="3" 
+                    Content="Cancel" 
+                    HorizontalAlignment="Right" 
+                    Name="CancelButton" 
+                    Click="OnCancelClick" />
+            <Button Grid.Row="0" 
+                    Grid.Column="4" 
+                    Content="_OK" 
+                    HorizontalAlignment="Right" 
+                    Name="OkButton" 
+                    IsDefault="True" 
+                    Click="OnOkClick" />
+        </Grid>
+    </StackPanel>
+</Window>

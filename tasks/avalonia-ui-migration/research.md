@@ -12,7 +12,7 @@ The current TodoTxt.UI project is a WPF application with the following key compo
   - Output Type: `WinExe`
   - Platform: `x86` (limited to Windows)
 
-- **TodoTxt.Lib** (`src/TodoTxt.Lib/ToDoLib.csproj`): Business logic
+- **TodoTxt.Core** (`src/TodoTxt.Core/ToDoLib.csproj`): Business logic
   - Target Framework: `net9.0` (cross-platform compatible)
   - Contains `Task`, `TaskList`, `TaskException`, `Log` classes
   - No platform-specific dependencies
