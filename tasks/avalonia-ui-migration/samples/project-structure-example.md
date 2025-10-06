@@ -84,7 +84,7 @@ ToDo.Net.sln
 │       │   └── PrintService.cs
 │       └── TodoTxt.Platform.csproj
 └── tests/
-    ├── TodoTxt.Lib.Tests/               # Existing
+    ├── TodoTxt.Core.Tests/               # Existing
     ├── TodoTxt.Avalonia.Tests/          # New - UI Tests
     └── TodoTxt.Platform.Tests/          # New - Platform Tests
 ```

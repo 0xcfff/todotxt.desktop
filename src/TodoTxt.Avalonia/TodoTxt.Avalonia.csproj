@@ -43,6 +43,5 @@
   <ItemGroup>
     <ProjectReference Include="..\TodoTxt.Core\TodoTxt.Core.csproj" />
     <ProjectReference Include="..\TodoTxt.Shared\TodoTxt.Shared.csproj" />
-    <ProjectReference Include="..\TodoTxt.Platform\TodoTxt.Platform.csproj" />
   </ItemGroup>
 </Project>

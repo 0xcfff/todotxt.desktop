@@ -7,7 +7,7 @@ dotnet build ToDo.Net.sln
 
 **Test:**
 ```sh
-dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj
+dotnet test src/TodoTxt.Core.Tests/TodoTxt.Core.Tests.csproj
 ```
 
 **Note:** The project currently has build errors. These will be addressed separately.
@@ -26,7 +26,7 @@ dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj
 *   **`src/TodoTxt.Core`:** Core business logic (Model).
 *   **`src/TodoTxt.UI`:** WPF user interface (View and ViewModel). Follows the MVVM pattern.
 *   **`src/TodoTxt.Shared`:** Shared utility code.
-*   **`src/TodoTxt.Lib.Tests`:** Unit tests for the core library.
+*   **`src/TodoTxt.Core.Tests`:** Unit tests for the core library.
 
 **Important:** The `src/TodoTxt.UI` project is a WPF application and cannot be built on macOS and Linux. Do not attempt to build or run this project.
 
@@ -55,11 +55,11 @@ When starting a new task that requires code modifications, follow these steps:
 2.  **Testing and Coverage:**
     *   Before making any changes, run the tests with coverage and save the report:
         ```sh
-        dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=reports/coverage/baseline.xml
+        dotnet test src/TodoTxt.Core.Tests/TodoTxt.Core.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=reports/coverage/baseline.xml
         ```
     *   After completing the task, run the coverage report again:
         ```sh
-        dotnet test src/TodoTxt.Lib.Tests/ToDoTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=reports/coverage/current.xml
+        dotnet test src/TodoTxt.Core.Tests/TodoTxt.Core.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=reports/coverage/current.xml
         ```
     *   Compare `reports/coverage/current.xml` with `reports/coverage/baseline.xml` to ensure that test coverage has not decreased. If it has, notify the user and suggest which parts of the code are easiest to add tests for.
 

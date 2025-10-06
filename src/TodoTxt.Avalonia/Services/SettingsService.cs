@@ -102,7 +102,7 @@ namespace TodoTxt.Avalonia.Services
         /// </summary>
         public ApplicationSettings GetCurrentSettings()
         {
-            return _cachedSettings ?? new ApplicationSettings();
+            return _cachedSettings ??= new ApplicationSettings();
         }
 
         /// <summary>

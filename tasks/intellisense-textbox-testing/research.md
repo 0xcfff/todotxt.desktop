@@ -70,7 +70,7 @@ This causes `FileNotFoundException` in the `TaskList.ReloadTasks()` method.
 ## Architecture Patterns
 
 ### Test Infrastructure Patterns
-From `src/TodoTxt.Lib.Tests/TaskListTests.cs`:
+From `src/TodoTxt.Core.Tests/TaskListTests.cs`:
 - Uses `Data.TestDataPath` resource for test file path
 - Creates temporary test files in `[OneTimeSetUp]`
 - Cleans up files in `[OneTimeTearDown]`

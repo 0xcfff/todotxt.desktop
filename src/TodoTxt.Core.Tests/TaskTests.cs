@@ -7,7 +7,7 @@ using CollectionAssert = NUnit.Framework.Legacy.CollectionAssert;
 using TodoTxt.Core.Tasks;
 using Task = TodoTxt.Core.Tasks.Task;
 
-namespace ToDoTests
+namespace TodoTxt.Core.Tests
 {
     [TestFixture]
     public class TaskTests

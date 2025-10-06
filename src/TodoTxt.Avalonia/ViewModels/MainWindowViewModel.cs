@@ -9,6 +9,8 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TodoTxt.Core;
+using TodoTxt.Core.Tasks;
+using Task = TodoTxt.Core.Tasks.Task;
 using TodoTxt.Avalonia.Models;
 using TodoTxt.Avalonia.Controls;
 using TodoTxt.Avalonia.Services;
@@ -22,10 +24,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private TaskList? _taskList;
     
     [ObservableProperty]
-    private ObservableCollection<TodoTxt.Core.Task> _tasks = new();
+    private ObservableCollection<Task> _tasks = new();
     
     [ObservableProperty]
-    private TodoTxt.Core.Task? _selectedItem;
+    private Task? _selectedItem;
     
     [ObservableProperty]
     private int _totalTasks;
@@ -39,7 +41,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string _taskInputText = string.Empty;
     
-    private TodoTxt.Core.Task? _updatingTask;
+    private Task? _updatingTask;
     private string? _currentFilePath;
     
     [ObservableProperty]
@@ -72,8 +74,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private int _tasksDueThisWeek = 0;
     
-    private List<TodoTxt.Core.Task> _allTasks = new();
-    private List<TodoTxt.Core.Task> _currentFilteredTasks = new();
+    private List<Task> _allTasks = new();
+    private List<Task> _currentFilteredTasks = new();
 
     /// <summary>
     /// Exposes the TaskList for IntellisenseTextBox autocompletion
@@ -185,11 +187,11 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         
         _taskList = new TaskList(tempFilePath);
-        _taskList.Add(new TodoTxt.Core.Task("(A) Call Mom +family @home due:2024-01-20"));
-        _taskList.Add(new TodoTxt.Core.Task("(B) Buy groceries @errands due:2024-01-18"));
-        _taskList.Add(new TodoTxt.Core.Task("x 2024-01-15 Complete project documentation +work"));
-        _taskList.Add(new TodoTxt.Core.Task("(C) Review code +work @office due:2024-01-19"));
-        _taskList.Add(new TodoTxt.Core.Task("h:1 Private task +personal"));
+        _taskList.Add(new Task("(A) Call Mom +family @home due:2024-01-20"));
+        _taskList.Add(new Task("(B) Buy groceries @errands due:2024-01-18"));
+        _taskList.Add(new Task("x 2024-01-15 Complete project documentation +work"));
+        _taskList.Add(new Task("(C) Review code +work @office due:2024-01-19"));
+        _taskList.Add(new Task("h:1 Private task +personal"));
         
         // Store all tasks in the internal list
         _allTasks.AddRange(_taskList.Tasks);
@@ -235,7 +237,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private void ApplyFiltersAndSorting()
     {
         // Start with all tasks
-        var tasks = new List<TodoTxt.Core.Task>(_allTasks);
+        var tasks = new List<Task>(_allTasks);
         
         // Apply filters
         tasks = ApplyFilters(tasks);
@@ -265,9 +267,9 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Applies filters to the task list
     /// </summary>
-    private List<TodoTxt.Core.Task> ApplyFilters(List<TodoTxt.Core.Task> tasks)
+    private List<Task> ApplyFilters(List<Task> tasks)
     {
-        var filteredTasks = new List<TodoTxt.Core.Task>();
+        var filteredTasks = new List<Task>();
         var comparer = FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
         
         foreach (var task in tasks)
@@ -314,7 +316,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Applies a single filter to a task
     /// </summary>
-    private bool ApplySingleFilter(TodoTxt.Core.Task task, string filter, StringComparison comparer)
+    private bool ApplySingleFilter(Task task, string filter, StringComparison comparer)
     {
         // Handle special date filters
         if (filter.Equals("due:today", StringComparison.OrdinalIgnoreCase))
@@ -390,7 +392,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Applies search to the task list
     /// </summary>
-    private List<TodoTxt.Core.Task> ApplySearch(List<TodoTxt.Core.Task> tasks, string searchText)
+    private List<Task> ApplySearch(List<Task> tasks, string searchText)
     {
         var comparer = FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
         return tasks.Where(t => t.Raw.Contains(searchText, comparer)).ToList();
@@ -433,7 +435,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         try
         {
-            var newTask = new TodoTxt.Core.Task(TaskInputText.Trim());
+            var newTask = new Task(TaskInputText.Trim());
             
             if (_taskList != null)
             {
@@ -449,7 +451,7 @@ public partial class MainWindowViewModel : ViewModelBase
             // Clear the input text
             TaskInputText = string.Empty;
         }
-        catch (TaskException ex)
+        catch (TodoTxt.Core.Tasks.TaskException ex)
         {
             // TODO: Show error dialog
             System.Diagnostics.Debug.WriteLine($"Error adding task: {ex.Message}");
@@ -467,7 +469,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         try
         {
-            var updatedTask = new TodoTxt.Core.Task(TaskInputText.Trim());
+            var updatedTask = new Task(TaskInputText.Trim());
             
             if (_taskList != null)
             {
@@ -488,7 +490,7 @@ public partial class MainWindowViewModel : ViewModelBase
             TaskInputText = string.Empty;
             _updatingTask = null;
         }
-        catch (TaskException ex)
+        catch (TodoTxt.Core.Tasks.TaskException ex)
         {
             // TODO: Show error dialog
             System.Diagnostics.Debug.WriteLine($"Error updating task: {ex.Message}");
@@ -568,7 +570,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (SelectedItem != null)
         {
-            var updatedTask = new TodoTxt.Core.Task(SelectedItem.Raw);
+            var updatedTask = new Task(SelectedItem.Raw);
             updatedTask.Completed = !updatedTask.Completed;
             
             if (_taskList != null)
@@ -937,7 +939,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Sorts a collection of tasks based on the specified sort type
     /// </summary>
-    private IEnumerable<TodoTxt.Core.Task> SortTasks(IEnumerable<TodoTxt.Core.Task> tasks, SortType sortType)
+    private IEnumerable<Task> SortTasks(IEnumerable<Task> tasks, SortType sortType)
     {
         return sortType switch
         {
@@ -1256,27 +1258,27 @@ public partial class MainWindowViewModel : ViewModelBase
             // These match the keyboard shortcuts mentioned in the README
             
             // Ctrl+Alt+M: Hide/Show main window (minimize to tray)
-            var hideShowHotkey = new TodoTxt.Platform.Hotkey(true, true, false, false, 77); // M key
+            var hideShowHotkey = new Hotkey(true, true, false, false, 77); // M key
             hotkeyService.RegisterHotkey(hideShowHotkey, 1);
             
             // Ctrl+O: Open file
-            var openFileHotkey = new TodoTxt.Platform.Hotkey(true, false, false, false, 79); // O key
+            var openFileHotkey = new Hotkey(true, false, false, false, 79); // O key
             hotkeyService.RegisterHotkey(openFileHotkey, 2);
             
             // Ctrl+N: New file
-            var newFileHotkey = new TodoTxt.Platform.Hotkey(true, false, false, false, 78); // N key
+            var newFileHotkey = new Hotkey(true, false, false, false, 78); // N key
             hotkeyService.RegisterHotkey(newFileHotkey, 3);
             
             // Ctrl+S: Save file
-            var saveFileHotkey = new TodoTxt.Platform.Hotkey(true, false, false, false, 83); // S key
+            var saveFileHotkey = new Hotkey(true, false, false, false, 83); // S key
             hotkeyService.RegisterHotkey(saveFileHotkey, 4);
             
             // F5: Reload file
-            var reloadFileHotkey = new TodoTxt.Platform.Hotkey(false, false, false, false, 116); // F5 key
+            var reloadFileHotkey = new Hotkey(false, false, false, false, 116); // F5 key
             hotkeyService.RegisterHotkey(reloadFileHotkey, 5);
             
             // Ctrl+A: Archive completed tasks
-            var archiveHotkey = new TodoTxt.Platform.Hotkey(true, false, false, false, 65); // A key
+            var archiveHotkey = new Hotkey(true, false, false, false, 65); // A key
             hotkeyService.RegisterHotkey(archiveHotkey, 6);
             
             System.Diagnostics.Debug.WriteLine("Hotkey system initialized with 6 global hotkeys");
@@ -1290,7 +1292,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// Handles global hotkey press events
     /// </summary>
-    private void OnHotkeyPressed(object? sender, TodoTxt.Platform.HotkeyPressedEventArgs e)
+    private void OnHotkeyPressed(object? sender, HotkeyPressedEventArgs e)
     {
         try
         {

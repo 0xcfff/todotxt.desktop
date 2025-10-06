@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using TodoTxt.Platform;
+using TodoTxt.Avalonia.Services;
 using System.Runtime.InteropServices;
 
 namespace TodoTxt.Avalonia.Tests;

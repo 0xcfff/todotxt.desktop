@@ -1,0 +1,67 @@
+# TodoTxt Configuration File
+
+# File Management
+[files]
+file_path = "/Users/mikhailtyuzin/todo.txt"
+archive_file_path = ""
+auto_archive = false
+auto_select_archive_path = false
+
+# Window Settings
+[window]
+height = 400
+width = 400
+left = 0
+top = 0
+minimise_to_system_tray = false
+minimise_on_close = false
+display_status_bar = true
+
+# Filtering and Display
+[filtering]
+filter_text = ""
+filter_case_sensitive = false
+filter_future_tasks = false
+show_hidden_tasks = false
+current_sort = 0
+allow_grouping = true
+
+# Filter Presets
+[filter_presets]
+preset_1 = ""
+preset_2 = ""
+preset_3 = ""
+preset_4 = ""
+preset_5 = ""
+preset_6 = ""
+preset_7 = ""
+preset_8 = ""
+preset_9 = ""
+
+# Task List Appearance
+[task_list.font]
+family = "Segoe UI"
+size = 12
+style = "Normal"
+stretch = "Normal"
+weight = "Normal"
+color = "Black"
+
+# Task List Behavior
+[task_list.behavior]
+auto_refresh = false
+add_creation_date = true
+move_focus_to_task_list_after_adding_new_task = true
+require_ctrl_enter = false
+preserve_white_space = false
+word_wrap = false
+
+# Intellisense
+[intellisense]
+case_sensitive = false
+
+# Application Behavior
+[application]
+check_for_updates = true
+debug_logging_on = false
+first_run = true

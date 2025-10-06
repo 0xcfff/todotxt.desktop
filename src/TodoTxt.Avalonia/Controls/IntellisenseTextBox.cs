@@ -5,7 +5,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using TodoTxt.Core;
+using TodoTxt.Core.Tasks;
 
 namespace TodoTxt.Avalonia.Controls
 {

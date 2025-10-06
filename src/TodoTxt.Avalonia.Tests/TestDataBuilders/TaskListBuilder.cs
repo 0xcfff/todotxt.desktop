@@ -1,5 +1,5 @@
-using TodoTxt.Core;
-using Task = TodoTxt.Core.Task;
+using TodoTxt.Core.Tasks;
+using Task = TodoTxt.Core.Tasks.Task;
 
 namespace TodoTxt.Avalonia.Tests.TestDataBuilders;
 

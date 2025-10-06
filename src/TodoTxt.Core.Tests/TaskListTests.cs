@@ -10,7 +10,7 @@ using System.Diagnostics;
 using Task = TodoTxt.Core.Tasks.Task;
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
-namespace ToDoTests
+namespace TodoTxt.Core.Tests
 {
     [TestFixture]
     class TaskListTests

@@ -1,6 +1,5 @@
 using System;
 using TodoTxt.Avalonia.Models;
-using TodoTxt.Platform;
 
 namespace TodoTxt.Avalonia.Services
 {
@@ -11,7 +10,7 @@ namespace TodoTxt.Avalonia.Services
     {
         private static SettingsService? _settingsService;
         private static ApplicationSettings? _applicationSettings;
-        private static TodoTxt.Platform.IServiceProvider? _platformServiceProvider;
+        private static IServiceProvider? _platformServiceProvider;
 
         /// <summary>
         /// Gets the settings service instance
@@ -50,7 +49,7 @@ namespace TodoTxt.Avalonia.Services
         /// <summary>
         /// Gets the platform service provider
         /// </summary>
-        public static TodoTxt.Platform.IServiceProvider PlatformServiceProvider
+        public static IServiceProvider PlatformServiceProvider
         {
             get
             {

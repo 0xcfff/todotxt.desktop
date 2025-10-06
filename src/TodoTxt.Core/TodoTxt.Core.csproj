@@ -14,4 +14,10 @@
     <ProjectReference Include="..\TodoTxt.Shared\TodoTxt.Shared.csproj" />
   </ItemGroup>
 
+  
+
+  <ItemGroup>
+    <PackageReference Include="Samboy063.Tomlet" Version="6.1.0" />
+  </ItemGroup>
+
 </Project>
