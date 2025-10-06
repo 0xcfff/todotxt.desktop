@@ -1,7 +1,7 @@
-﻿using Avalonia;
+using Avalonia;
 using System;
 
-namespace TodoTxt.Avalonia;
+namespace TodoTxt.Desktop;
 
 sealed class Program
 {
@@ -14,8 +14,9 @@ sealed class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+        => AppBuilder.Configure<TodoTxt.Avalonia.App>()
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
 }
+
