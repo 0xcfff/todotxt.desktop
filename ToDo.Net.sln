@@ -23,9 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{3A0A57
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Avalonia", "src\TodoTxt.Avalonia\TodoTxt.Avalonia.csproj", "{90354C3D-8F65-4633-B3E0-7E2AF4AD7F1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.UI", "src\TodoTxt.UI\TodoTxt.UI.csproj", "{90354C3D-8F65-4633-B3E0-7E2AF4AD7F1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Avalonia.Tests", "src\TodoTxt.Avalonia.Tests\TodoTxt.Avalonia.Tests.csproj", "{B8F2E1A3-4C5D-4E6F-8A9B-1C2D3E4F5A6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.UI.Tests", "src\TodoTxt.UI.Tests\TodoTxt.UI.Tests.csproj", "{B8F2E1A3-4C5D-4E6F-8A9B-1C2D3E4F5A6B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTxt.Desktop", "src\TodoTxt.Desktop\TodoTxt.Desktop.csproj", "{C9F3E2B4-5D6E-4F7G-9A0B-2D3E4F5A6B7C}"
 EndProject

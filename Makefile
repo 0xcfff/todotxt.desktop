@@ -35,9 +35,9 @@ endif
 # Project paths (for reference in info target)
 LIB_PROJECT := src/TodoTxt.Core/TodoTxt.Core.csproj
 SHARED_PROJECT := src/TodoTxt.Shared/TodoTxt.Shared.csproj
-AVALONIA_PROJECT := src/TodoTxt.Avalonia/TodoTxt.Avalonia.csproj
+UI_PROJECT := src/TodoTxt.UI/TodoTxt.UI.csproj
 LIB_TESTS_PROJECT := src/TodoTxt.Core.Tests/TodoTxt.Core.Tests.csproj
-AVALONIA_TESTS_PROJECT := src/TodoTxt.Avalonia.Tests/TodoTxt.Avalonia.Tests.csproj
+UI_TESTS_PROJECT := src/TodoTxt.UI.Tests/TodoTxt.UI.Tests.csproj
 
 # Colors for output
 RED := \033[0;31m
@@ -185,9 +185,9 @@ info: ## Show project information
 	@echo "Projects:"
 	@echo "  Core Library: $(LIB_PROJECT)"
 	@echo "  Shared Library: $(SHARED_PROJECT)"
-	@echo "  Avalonia App: $(AVALONIA_PROJECT)"
+	@echo "  UI App: $(UI_PROJECT)"
 	@echo "  Core Tests: $(LIB_TESTS_PROJECT)"
-	@echo "  Avalonia Tests: $(AVALONIA_TESTS_PROJECT)"
+	@echo "  UI Tests: $(UI_TESTS_PROJECT)"
 	@echo ""
 	@echo "Current .NET Version: $$($(DOTNET) --version)"
 	@echo "Current Platform: $$(uname -s)"
