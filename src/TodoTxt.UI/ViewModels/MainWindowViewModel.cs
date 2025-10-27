@@ -12,7 +12,7 @@ using TodoTxt.Core;
 using TodoTxt.Core.Tasks;
 using Task = TodoTxt.Core.Tasks.Task;
 using TodoTxt.UI.Models;
-using TodoTxt.UI.Controls;
+using TodoTxt.UI.Dialogs;
 using TodoTxt.UI.Services;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;

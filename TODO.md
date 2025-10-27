@@ -1,0 +1,6 @@
+- Introduce normal container
+- Move configuration service to container
+- Make configuration service universal
+- Change configuration layer to toml to make it human readable
+- Restructure configuration object
+- Change logger to something meaningful supporting structured logging

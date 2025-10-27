@@ -19,7 +19,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace TodoTxt.UI;
 
-public partial class App : Application
+public partial class Application : Avalonia.Application
 {
     private TrayIcon? _trayIcon;
 
@@ -104,7 +104,7 @@ public partial class App : Application
             // Load custom icon from assets
             try
             {
-                var iconUri = new Uri("avares://TodoTxt.Avalonia/Assets/todotxt-icon.ico");
+                var iconUri = new Uri("avares://TodoTxt.UI/Assets/todotxt-icon.ico");
                 _trayIcon.Icon = new WindowIcon(AssetLoader.Open(iconUri));
                 System.Diagnostics.Debug.WriteLine("Using custom TodoTxt icon");
             }

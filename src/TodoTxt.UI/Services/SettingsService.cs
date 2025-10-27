@@ -9,7 +9,39 @@ namespace TodoTxt.UI.Services
     /// <summary>
     /// Cross-platform settings service for persisting application settings
     /// </summary>
-    public class SettingsService
+    /// 
+    /// <summary>
+    /// Interface for cross-platform settings service
+    /// </summary>
+    public interface ISettingsService
+    {
+        /// <summary>
+        /// Loads settings from disk
+        /// </summary>
+        Task<ApplicationSettings> LoadSettingsAsync();
+
+        /// <summary>
+        /// Saves settings to disk
+        /// </summary>
+        Task SaveSettingsAsync(ApplicationSettings settings);
+
+        /// <summary>
+        /// Gets the current settings (cached or loaded)
+        /// </summary>
+        ApplicationSettings GetCurrentSettings();
+
+        /// <summary>
+        /// Resets settings to default values
+        /// </summary>
+        Task ResetToDefaultsAsync();
+
+        /// <summary>
+        /// Migrates settings from WPF version if they exist
+        /// TODO: Remove this method once settings refactoring is complete
+        /// </summary>
+        Task<bool> MigrateFromWpfAsync();
+    }
+    public class SettingsService : ISettingsService
     {
         private readonly string _settingsFilePath;
         private readonly JsonSerializerOptions _jsonOptions;

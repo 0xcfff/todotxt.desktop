@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:TodoTxt.UI.Controls"
-        x:Class="TodoTxt.UI.Controls.HelpDialog"
+        x:Class="TodoTxt.UI.Dialogs.HelpDialog"
         Title="Help"
         Width="450"
         Height="600"

@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System.Diagnostics;
 
-namespace TodoTxt.UI.Controls
+namespace TodoTxt.UI.Dialogs
 {
     public partial class HelpDialog : BaseDialog
     {

@@ -5,11 +5,11 @@
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>Assets\todotxt-icon.ico</ApplicationIcon>
   </PropertyGroup>
 
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.4.0" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.6" />
   </ItemGroup>
 

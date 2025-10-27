@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:TodoTxt.UI.Controls"
-        x:Class="TodoTxt.UI.Controls.OptionsDialog"
+        x:Class="TodoTxt.UI.Dialogs.OptionsDialog"
         Title="Options"
         Width="512"
         Height="400"

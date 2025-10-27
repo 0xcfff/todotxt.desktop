@@ -5,6 +5,9 @@ using TodoTxt.UI.ViewModels;
 
 namespace TodoTxt.UI;
 
+/// <summary>
+/// This class is used to automatically locate the view for a given view model.
+/// </summary>
 public class ViewLocator : IDataTemplate
 {
 

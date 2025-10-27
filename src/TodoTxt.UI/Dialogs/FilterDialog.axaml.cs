@@ -5,7 +5,7 @@ using Avalonia.Interactivity;
 using System;
 using System.Collections.Generic;
 
-namespace TodoTxt.UI.Controls
+namespace TodoTxt.UI.Dialogs
 {
     public partial class FilterDialog : BaseDialog
     {

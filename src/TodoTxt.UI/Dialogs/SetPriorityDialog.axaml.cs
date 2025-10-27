@@ -4,7 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using System;
 
-namespace TodoTxt.UI.Controls
+namespace TodoTxt.UI.Dialogs
 {
     public partial class SetPriorityDialog : BaseDialog
     {

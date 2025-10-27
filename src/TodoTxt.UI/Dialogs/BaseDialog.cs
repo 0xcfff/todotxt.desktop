@@ -4,7 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using System;
 
-namespace TodoTxt.UI.Controls
+namespace TodoTxt.UI.Dialogs
 {
     /// <summary>
     /// Base class for all dialogs in the Avalonia application

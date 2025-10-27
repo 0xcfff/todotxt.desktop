@@ -8,14 +8,14 @@ namespace TodoTxt.UI.Services
     /// </summary>
     public static class ServiceLocator
     {
-        private static SettingsService? _settingsService;
+        private static ISettingsService? _settingsService;
         private static ApplicationSettings? _applicationSettings;
         private static IServiceProvider? _platformServiceProvider;
 
         /// <summary>
         /// Gets the settings service instance
         /// </summary>
-        public static SettingsService SettingsService
+        public static ISettingsService SettingsService
         {
             get
             {

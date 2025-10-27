@@ -4,23 +4,28 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using System;
 
-namespace TodoTxt.UI.Controls
+namespace TodoTxt.UI.Dialogs
 {
-    public partial class SetDueDateDialog : BaseDialog
+    public partial class PostponeDialog : BaseDialog
     {
-        public DateTime? DueDate
+        public int DaysToPostpone
         {
-            get { return DueDatePicker.SelectedDate?.DateTime; }
-            set { DueDatePicker.SelectedDate = value; }
+            get 
+            { 
+                if (int.TryParse(PostponeTextBox.Text, out int days))
+                    return days;
+                return 0;
+            }
+            set { PostponeTextBox.Text = value.ToString(); }
         }
 
-        public SetDueDateDialog()
+        public PostponeDialog()
         {
             InitializeComponent();
-            DueDatePicker.Focus();
+            PostponeTextBox.Focus();
         }
 
-        private void DueDatePicker_KeyUp(object? sender, KeyEventArgs e)
+        private void PostponeTextBox_KeyUp(object? sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {

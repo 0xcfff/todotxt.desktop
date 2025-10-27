@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:TodoTxt.UI.Controls"
-        x:Class="TodoTxt.UI.Controls.FilterDialog"
+        x:Class="TodoTxt.UI.Dialogs.FilterDialog"
         Title="Filter"
         Width="405"
         Height="500"

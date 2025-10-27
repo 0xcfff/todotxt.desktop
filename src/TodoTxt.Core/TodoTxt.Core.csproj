@@ -17,6 +17,7 @@
   
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.4.0" />
     <PackageReference Include="Samboy063.Tomlet" Version="6.1.0" />
   </ItemGroup>
 

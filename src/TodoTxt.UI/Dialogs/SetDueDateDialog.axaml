@@ -1,8 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:TodoTxt.UI.Controls"
-        x:Class="TodoTxt.UI.Controls.SetPriorityDialog"
-        Title="Set priority"
+        x:Class="TodoTxt.UI.Dialogs.SetDueDateDialog"
+        Title="Set date"
         Width="300"
         Height="120"
         WindowStartupLocation="CenterOwner"
@@ -10,9 +10,8 @@
         CanResize="False">
     
     <Window.Styles>
-        <Style Selector="TextBox">
-            <Setter Property="Height" Value="23" />
-            <Setter Property="TextWrapping" Value="NoWrap" />
+        <Style Selector="DatePicker">
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style Selector="Button">
             <Setter Property="Height" Value="23"/>
@@ -22,13 +21,11 @@
     </Window.Styles>
 
     <StackPanel Orientation="Horizontal" Margin="12">
-        <TextBlock Text="Set priority to:" 
-                   Padding="0,5,5,5" 
+        <TextBlock Text="Set date to:" 
+                   Padding="0,2,5,2" 
                    VerticalAlignment="Center" />
-        <TextBox Name="PriorityTextBox" 
-                 MaxLength="1" 
-                 Width="75"
-                 KeyUp="PriorityTextBox_KeyUp" />
+        <DatePicker Name="DueDatePicker" 
+                    KeyUp="DueDatePicker_KeyUp" />
         <Button Content="OK" 
                 Name="OkButton" 
                 IsDefault="True" 
