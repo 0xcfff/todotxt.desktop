@@ -16,18 +16,33 @@ using Avalonia.Layout;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Autofac;
+using System;
 
 namespace TodoTxt.UI;
 
 public partial class Application : Avalonia.Application
 {
+    private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
     private TrayIcon? _trayIcon;
+
+    private readonly Func<MainWindow> _mainWindowFactory;
+    public Application()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Application(Func<MainWindow> mainWindowFactory)
+    {
+        _mainWindowFactory = mainWindowFactory;
+    }
 
     public override void Initialize()
     {
+        Log.Info("Initializing Avalonia application");
         AvaloniaXamlLoader.Load(this);
     }
-
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -37,32 +52,17 @@ public partial class Application : Avalonia.Application
             DisableAvaloniaDataAnnotationValidation();
             
             // Set application icon for macOS dock/taskbar
-            try
-            {
-                var iconUri = new Uri("avares://TodoTxt.Avalonia/Assets/todotxt-icon.ico");
-                desktop.MainWindow = new MainWindow();
-                desktop.MainWindow.Icon = new WindowIcon(AssetLoader.Open(iconUri));
-                System.Diagnostics.Debug.WriteLine("Application icon set successfully");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to set application icon: {ex.Message}");
-                // Fallback: create window without custom icon
-                desktop.MainWindow = new MainWindow();
-            }
+            desktop.MainWindow = _mainWindowFactory.Invoke();
             
             // Initialize native menu for macOS (delayed to override defaults)
-            _ = System.Threading.Tasks.Task.Run(async () =>
+            _ = System.Threading.Tasks.Task.Run(() =>
             {
-                await System.Threading.Tasks.Task.Delay(100); // Small delay to ensure app is fully initialized
+                // await System.Threading.Tasks.Task.Delay(100); // Small delay to ensure app is fully initialized
                 Dispatcher.UIThread.Post(() => InitializeNativeMenu(desktop));
             });
             
             // Initialize tray icon
             InitializeTrayIcon(desktop);
-            
-            // Initialize settings and view model asynchronously
-            _ = InitializeAsync((MainWindow)desktop.MainWindow);
             
             // Clean up tray icon when application shuts down
             desktop.ShutdownRequested += (s, e) => 
@@ -75,25 +75,6 @@ public partial class Application : Avalonia.Application
         base.OnFrameworkInitializationCompleted();
     }
     
-    private async System.Threading.Tasks.Task InitializeAsync(MainWindow mainWindow)
-    {
-        try
-        {
-            // Initialize settings service
-            await ServiceLocator.InitializeAsync();
-            
-            // Create and set the view model after settings are loaded
-            var viewModel = new MainWindowViewModel();
-            mainWindow.DataContext = viewModel;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Failed to initialize application: {ex.Message}");
-            // Fall back to a basic view model
-            mainWindow.DataContext = new MainWindowViewModel();
-        }
-    }
-
     private void InitializeTrayIcon(IClassicDesktopStyleApplicationLifetime desktop)
     {
         try

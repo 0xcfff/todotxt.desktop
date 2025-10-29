@@ -7,6 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TodoTxt.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        xmlns:ext="clr-namespace:TodoTxt.UI.MarkupExtensions"
         Icon="/Assets/todotxt-icon.ico"
         Title="todotxt.net"
         Width="562" 
@@ -17,6 +18,10 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at Application.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+
+    <Window.DataContext>
+        <ext:DIExtension Type="vm:MainWindowViewModel"/>
+    </Window.DataContext>
 
     <!-- Key Bindings for hotkeys -->
     <Window.KeyBindings>

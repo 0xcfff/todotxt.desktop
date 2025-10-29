@@ -84,6 +84,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
+        
         // Subscribe to property changes to auto-save settings
         PropertyChanged += OnPropertyChanged;
         

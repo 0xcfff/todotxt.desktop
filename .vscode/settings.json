@@ -1,5 +1,6 @@
 {
     "dotrush.roslyn.projectOrSolutionFiles": [
         "/Users/mikhailtyuzin/personal/projects/todotxt.desktop/src/TodoTxt.Desktop/TodoTxt.Desktop.csproj"
-    ]
+    ],
+    "dotnet.defaultSolution": "ToDo.Net.sln"
 }

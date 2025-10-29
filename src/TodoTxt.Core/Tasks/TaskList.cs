@@ -11,6 +11,9 @@ namespace TodoTxt.Core.Tasks
 	/// </summary>
 	public class TaskList
 	{
+		private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
+		
 		// It may look like an overly simple approach has been taken here, but it's well considered. This class
 		// represents *the file itself* - when you call a method it should be as though you directly edited the file.
 		// This reduces the likelihood of concurrent update conflicts by making each action as autonomous as possible.
